@@ -14,17 +14,17 @@ def handle_keys():
         #Alt+Enter: toggle fullscreen
         libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
     elif key.vk == libtcod.KEY_ESCAPE:
-        return true     #exit game
-
+        return True     #exit game
     #movement keys
-    if libtcod.console_is_key_pressed(libtcod.KEY_CHAR 'k' ):
-        playery -= 1
-    elif libtcod.console_is_key_pressed(libtcod.KEY_DOWN):
-        playery += 1
-    elif libtcod.console_is_key_pressed(libtcod.KEY_LEFT):
-        playerx -= 1
-    elif libtcod.console_is_key_pressed(libtcod.KEY_RIGHT):
-        playerx += 1
+    if key.vk == libtcod.KEY_CHAR:
+        if key.c == ord('k'):
+            playery -= 1
+        elif key.c == ord('j'):
+            playery += 1
+        elif key.c == ord('h'):
+            playerx -= 1
+        elif key.c == ord('l'):
+            playerx += 1
 
 
 libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)

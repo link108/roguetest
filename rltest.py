@@ -6,6 +6,23 @@ SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 50
 LIMIT_FPS = 20
 
+MAP_WIDTH = 80
+MAP_HEIGHT = 45 
+
+color_dark_wall = libtcod.Color(0, 0, 100)
+color_dark_ground = libtcod.Color(50, 50, 150)
+
+class Tile:
+    #a tile of the map and its properties
+
+    def __init__(self, blocked, block_sight = None):
+        self.blocked = blocked
+
+        #by default, if a tile is blocked, also blocks sight
+        if block_sight is None: block_sight = blocked
+        self.block_sight = block_sight
+
+
 def handle_keys():
 
     #key = libtcod.console_check_for_keypress()    #real-time
@@ -41,8 +58,9 @@ class Object:
 
     def move(self, dx, dy):
         #move by the given amount
-        self.x += dx
-        self.y += dy
+        if not map[self.x + dx][self.y + dy].blocked:
+            self.x += dx
+            self.y += dy
 
     def draw(self):
         #set the color and then draw the char that represents this object at its position
@@ -52,6 +70,33 @@ class Object:
     def clear(self):
         #erase the character that represents this object
         libtcod.console_put_char(con, self.x, self.y, ' ', libtcod.BKGND_NONE)
+
+def make_map():
+    global map
+
+    #fill map with "unblocked" tiles
+    map = [[ Tile(False)
+        for y in range(MAP_HEIGHT) ]
+            for x in range(MAP_WIDTH) ]
+
+    map[30][22].blocked = True
+    map[30][22].block_sight = True
+    map[50][22].blocked = True
+    map[50][22].block_sight = True
+    
+def render_all():
+    #draw all objects in the list
+    for object in objects:
+        object.draw()
+    
+    for y in range(MAP_HEIGHT):
+        for x in range(MAP_WIDTH):
+            wall = map[x][y].block_sight
+            if wall:
+                libtcod.console_set_char_background(con, x, y, color_dark_wall, libtcod.BKGND_SET)
+            else: 
+                libtcod.console_set_char_background(con, x, y, color_dark_ground, libtcod.BKGND_SET)
+    libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
 
 libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'rltest', False)
@@ -63,17 +108,15 @@ con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
 player = Object(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, '@', libtcod.white)
 npc = Object(SCREEN_WIDTH/2 - 5, SCREEN_HEIGHT/2, '@', libtcod.yellow)
 objects = [npc, player]
+make_map()
 
 ###########################################
 #main loop
 ###########################################
 while not libtcod.console_is_window_closed():
 
-    #draw all the objects on the list
-    for object in objects:
-        object.draw()
+    render_all()
 
-    libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
     libtcod.console_flush()
 
     #erase all objects at their old locations, before they move

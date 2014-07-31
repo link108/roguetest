@@ -1,16 +1,15 @@
 __author__ = 'cmotevasselani'
 
-import libtcodpy as libtcod
 import math
-from util import *
 
+from util import *
 
 
 class Object:
     #generic object class: player, monsters, items, etc.
     #the object should always be represented by a char on the screen
 
-    def __init__(self, x, y, char, name, color, blocks = False, fighter = None, ai = None):
+    def __init__(self, x, y, char, name, color, blocks = False, fighter = None, ai = None, item = None):
         self.name = name
         self.blocks = blocks
         self.x = x
@@ -23,6 +22,9 @@ class Object:
         self.ai = ai        #let the ai component know who owns it
         if self.ai:
             self.ai.owner = self
+        self.item = item        #let the item component know who owns it
+        if self.item:
+            self.item.owner = self
 
     def move(self, objects, game_map, dx, dy):
         #move by the given amount

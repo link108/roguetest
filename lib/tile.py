@@ -1,9 +1,5 @@
 __author__ = 'cmotevasselani'
 
-
-
-
-
 class Tile:
     #a tile of the map and its properties
 

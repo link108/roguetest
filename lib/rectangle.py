@@ -1,6 +1,5 @@
 __author__ = 'cmotevasselani'
 
-
 class Rect:
     #a rectangl on the map, used for a room (usually)
     def __init__(self, x, y, w, h):

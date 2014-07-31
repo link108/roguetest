@@ -1,6 +1,7 @@
+from lib import libtcodpy as libtcod
+
 __author__ = 'cmotevasselani'
 
-import libtcodpy as libtcod
 
 class BasicMonster:
     #AI for basic monsters
@@ -14,7 +15,5 @@ class BasicMonster:
 
             #attack if close enough
             elif player.fighter.hp > 0:
-                monster.fighter.attack(player, objects)
-
-
+                monster.fighter.attack(player, objects, game_map.status_panel)
 

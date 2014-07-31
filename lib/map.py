@@ -1,13 +1,14 @@
+from lib import libtcodpy as libtcod
+
 __author__ = 'cmotevasselani'
 
-
-import libtcodpy as libtcod
-from tile import Tile
-from rectangle import Rect
-from object import Object
-from util import Util
-from fighter import Fighter
-from basic_monster import BasicMonster
+from lib.tile import Tile
+from lib.rectangle import Rect
+from lib.object import Object
+from lib.util import Util
+from lib.fighter import Fighter
+from lib.basic_monster import BasicMonster
+from lib.item import Item
 
 
 SCREEN_WIDTH = 80
@@ -19,6 +20,7 @@ MAP_HEIGHT = 45
 ROOM_MAX_SIZE = 10
 ROOM_MIN_SIZE = 6
 MAX_ROOMS = 30
+MAX_ROOM_ITEMS = 2
 
 FOV_ALGO = 0    #default FOV algorithm
 FOV_LIGHT_WALLS = True
@@ -32,10 +34,17 @@ color_light_ground = libtcod.Color(200, 180, 50)
 
 class Map:
 
-    def __init__(self):
+    def __init__(self, status_panel):
+        self.status_panel = status_panel
         self.game_map = [[ Tile(True)
             for y in range(MAP_HEIGHT) ]
                 for x in range(MAP_WIDTH) ]
+
+    def get_objects(self):
+        return self.objects
+
+    def get_status_panel(self):
+        return self.status_panel
 
     def is_blocked(self, objects, x, y):
         #first test the map tile
@@ -85,8 +94,8 @@ class Map:
 
         for i in range(num_monsters):
             #choose random spot for this monster
-            x = libtcod.random_get_int(0, room.x1, room.x2)
-            y = libtcod.random_get_int(0, room.y1, room.y2)
+            x = libtcod.random_get_int(0, room.x1 + 1, room.x2 - 1)
+            y = libtcod.random_get_int(0, room.y1 + 1, room.y2 - 1)
 
             if not self.is_blocked(objects, x, y):
                 if libtcod.random_get_int(0, 0, 100) < 80: #80% chance of getting an orc
@@ -102,6 +111,23 @@ class Map:
                     monster = Object(x, y, 'T', 'troll', libtcod.darker_green, blocks = True,
                             fighter = fighter_component, ai= ai_component)
                 objects.append(monster)
+
+        #choose random number of items
+        num_items = libtcod.random_get_int(0, 0, MAX_ROOM_ITEMS)
+
+        for i in range(num_items):
+            #choose random spot for this item
+            x = libtcod.random_get_int(0, room.x1+1, room.x2-1)
+            y = libtcod.random_get_int(0, room.y1+1, room.y2-1)
+
+            #only place it if the tile is not blocked
+            if not self.is_blocked(objects, x, y):
+                #create a healing potion
+                item_component = Item()
+                item = Object(x, y, '!', 'healing potion', libtcod.violet, item = item_component)
+
+                objects.append(item)
+                item.send_to_back(objects)  #items appear below other objects
 
     def make_map(self, objects, player):
         # global map, player

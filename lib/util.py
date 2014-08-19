@@ -31,7 +31,7 @@ class Util:
             fov_recompute = True
 
     @staticmethod
-    def handle_keys(player, objects, game_state, game_map, status_panel, inventory):
+    def handle_keys(player, objects, game_state, game_map, status_panel, inventory, con, screen_width, screen_height):
         global fov_recompute
 
         #key = libtcod.console_check_for_keypress()    #real-time
@@ -63,6 +63,8 @@ class Util:
                     Util.player_move_or_attack(player, objects, game_map, -1, 1, status_panel)
                 elif key.c == ord('n'):
                     Util.player_move_or_attack(player, objects, game_map, 1, 1, status_panel)
+                elif key.c == ord('i'):
+                    inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', con, screen_width, screen_height)
                 elif key.c == ord('g'):
                     #pick up an item
                     for object in objects:  #look for an item in the player's tile

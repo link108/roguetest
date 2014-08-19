@@ -6,7 +6,7 @@ from lib.util import Util
 from lib.fighter import Fighter
 from lib.map import Map
 from lib.inventory import Inventory
-from lib.consoles.panel import Panel
+from lib.consoles.status_panel import StatusPanel
 
 SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 50
@@ -96,7 +96,7 @@ libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | 
 libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'rltest', False)
 con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-status_panel = Panel(SCREEN_WIDTH, PANEL_HEIGHT, MSG_WIDTH, MSG_HEIGHT)
+status_panel = StatusPanel(SCREEN_WIDTH, PANEL_HEIGHT, MSG_WIDTH, MSG_HEIGHT)
 
 #a warm welcoming message!
 status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
@@ -133,7 +133,8 @@ while not libtcod.console_is_window_closed():
         object.clear(con)
 
     #handle keys and exit game 
-    player_action = Util.handle_keys(player, objects, game_state, game_map, status_panel, player_inventory)
+    player_action = Util.handle_keys(player, objects, game_state, game_map, status_panel,
+                                     player_inventory, con, SCREEN_WIDTH, SCREEN_HEIGHT)
     if player_action == 'exit' or player.color == libtcod.dark_red:
         break
 

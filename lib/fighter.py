@@ -33,3 +33,9 @@ class Fighter:
             target.fighter.take_damage(damage, objects, status_panel)
         else:
             status_panel.message(self.owner.name.capitalize() + ' attacks ' + target.name + ' but it has no effect!', libtcod.gray)
+
+    def heal(self, amount):
+        self.hp += amount
+        # dont go over max hp limit
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp

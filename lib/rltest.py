@@ -107,7 +107,7 @@ player = Object(0, 0, '@', 'player', libtcod.white, blocks = True, fighter = fig
 #the list of all objects
 objects = [player]
 player_inventory = Inventory(status_panel, objects)
-game_map = Map(status_panel)
+game_map = Map(status_panel, player)
 game_map.make_map(objects, player)
 fov_map = libtcod.map_new(MAP_WIDTH, MAP_HEIGHT)
 for y in range(MAP_HEIGHT):

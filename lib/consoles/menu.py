@@ -36,3 +36,8 @@ class Menu:
         #present the root console to the player and wait for a key-press
         libtcod.console_flush()
         key = libtcod.console_wait_for_keypress(True)
+
+        #convert the ASCII code to an index; if it corresponds to an option, return it
+        index = key.c - ord('a')
+        if index >= 0 and index < len(options): return index
+        return None

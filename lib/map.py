@@ -2,6 +2,7 @@ from lib import libtcodpy as libtcod
 
 __author__ = 'cmotevasselani'
 
+from lib.potion_functions import PotionFunctions
 from lib.tile import Tile
 from lib.rectangle import Rect
 from lib.object import Object
@@ -34,8 +35,9 @@ color_light_ground = libtcod.Color(200, 180, 50)
 
 class Map:
 
-    def __init__(self, status_panel):
+    def __init__(self, status_panel, player):
         self.status_panel = status_panel
+        self.player = player
         self.game_map = [[ Tile(True)
             for y in range(MAP_HEIGHT) ]
                 for x in range(MAP_WIDTH) ]
@@ -123,11 +125,12 @@ class Map:
             #only place it if the tile is not blocked
             if not self.is_blocked(objects, x, y):
                 #create a healing potion
-                item_component = Item()
+                item_component = Item(use_function=PotionFunctions.cast_heal)
                 item = Object(x, y, '!', 'healing potion', libtcod.violet, item = item_component)
 
                 objects.append(item)
                 item.send_to_back(objects)  #items appear below other objects
+
 
     def make_map(self, objects, player):
         # global map, player

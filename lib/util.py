@@ -5,8 +5,9 @@ __author__ = 'cmotevasselani'
 
 class Util:
 
-    def __init__(self, status_panel):
-        self.status_panel = status_panel
+    # def __init__(self, status_panel, player):
+    #     self.status_panel = status_panel
+    #     self.player = player
 
     @staticmethod
     def player_move_or_attack(player, objects, game_map, dx, dy, status_panel):
@@ -64,7 +65,9 @@ class Util:
                 elif key.c == ord('n'):
                     Util.player_move_or_attack(player, objects, game_map, 1, 1, status_panel)
                 elif key.c == ord('i'):
-                    inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', con, screen_width, screen_height)
+                    chosen_item = inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', con, screen_width, screen_height)
+                    if chosen_item is not None:
+                        chosen_item.use(status_panel, inventory, player)
                 elif key.c == ord('g'):
                     #pick up an item
                     for object in objects:  #look for an item in the player's tile

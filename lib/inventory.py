@@ -24,3 +24,6 @@ class Inventory:
             options = [item.name for item in self.inventory]
 
         index = self.menu.display_menu(header, options, INVENTORY_WIDTH, con, screen_width, screen_height)
+
+        if index is None or len(self.inventory) == 0: return None;
+        return self.inventory[index].item

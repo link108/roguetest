@@ -5,9 +5,21 @@ __author__ = 'cmotevasselani'
 
 class Util:
 
-    # def __init__(self, status_panel, player):
-    #     self.status_panel = status_panel
-    #     self.player = player
+    def __init__(self):
+        self.status_panel = None
+        self.player = None
+        self.fov_map = None
+        self.objects = None
+        self.inventory = None
+        self.game_map = None
+
+    def set_attr(self, player, status_panel, fov_map, objects, inventory, game_map):
+        self.player = player
+        self.status_panel = status_panel
+        self.fov_map = fov_map
+        self.objects = objects
+        self.inventory = inventory
+        self.game_map = game_map
 
     @staticmethod
     def player_move_or_attack(player, objects, game_map, dx, dy, status_panel):
@@ -32,7 +44,7 @@ class Util:
             fov_recompute = True
 
     @staticmethod
-    def handle_keys(player, objects, game_state, game_map, status_panel, inventory, con, screen_width, screen_height):
+    def handle_keys(player, objects, game_state, game_map, status_panel, inventory, con, screen_width, screen_height, util):
         global fov_recompute
 
         #key = libtcod.console_check_for_keypress()    #real-time
@@ -67,7 +79,7 @@ class Util:
                 elif key.c == ord('i'):
                     chosen_item = inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', con, screen_width, screen_height)
                     if chosen_item is not None:
-                        chosen_item.use(status_panel, inventory, player)
+                        chosen_item.use(util)
                 elif key.c == ord('g'):
                     #pick up an item
                     for object in objects:  #look for an item in the player's tile

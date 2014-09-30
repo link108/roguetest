@@ -2,6 +2,7 @@ from lib import libtcodpy as libtcod
 
 __author__ = 'cmotevasselani'
 
+from lib.scroll_functions import ScrollFunctions
 from lib.potion_functions import PotionFunctions
 from lib.tile import Tile
 from lib.rectangle import Rect
@@ -124,9 +125,17 @@ class Map:
 
             #only place it if the tile is not blocked
             if not self.is_blocked(objects, x, y):
-                #create a healing potion
-                item_component = Item(use_function=PotionFunctions.cast_heal)
-                item = Object(x, y, '!', 'healing potion', libtcod.violet, item = item_component)
+                dice = libtcod.random_get_int(0, 0, 100)
+                if dice < 10:
+                    #create a healing potion
+                    item_component = Item(use_function=PotionFunctions.cast_heal)
+                    item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component)
+                elif dice < 99:
+                    item_component = Item(use_function=ScrollFunctions.cast_confuse)
+                    item = Object(x, y, '#', 'scorr of CONFUSE', libtcod.light_yellow, item=item_component)
+                else:
+                    item_component = Item(use_function=ScrollFunctions.cast_lightning)
+                    item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component)
 
                 objects.append(item)
                 item.send_to_back(objects)  #items appear below other objects

@@ -19,10 +19,10 @@ class Item:
             inventory.objects.remove(self.owner)
             inventory.status_panel.message('You picked up a ' + self.owner.name + '!', libtcod.green)
 
-    def use(self, status_panel, inventory, player):
+    def use(self, util):
         #call use_function if defined
         if self.use_function is None:
-            status_panel.message('The ' + self.owner.name + ' cannot be used.')
+            util.status_panel.message('The ' + self.owner.name + ' cannot be used.')
         else:
-            if self.use_function(player, status_panel) != CANCELLED:
-                inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled
+            if self.use_function(util) != CANCELLED:
+                util.inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled

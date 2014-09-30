@@ -34,6 +34,8 @@ color_light_wall = libtcod.Color(130, 110, 50)
 color_dark_ground = libtcod.Color(50, 50, 150)
 color_light_ground = libtcod.Color(200, 180, 50)
 
+util = Util()
+
 def render_all(game_map, fov_map, fov_recompute, status_panel):
     global color_dark_wall, color_light_wall
     global color_dark_ground, color_light_ground
@@ -110,6 +112,7 @@ player_inventory = Inventory(status_panel, objects)
 game_map = Map(status_panel, player)
 game_map.make_map(objects, player)
 fov_map = libtcod.map_new(MAP_WIDTH, MAP_HEIGHT)
+util.set_attr(player, status_panel, fov_map, objects, player_inventory, game_map)
 for y in range(MAP_HEIGHT):
     for x in range(MAP_WIDTH):
         libtcod.map_set_properties(fov_map, x, y, not game_map.is_blocked_sight(objects, x, y), not game_map.is_blocked_sight(objects, x, y))
@@ -133,8 +136,8 @@ while not libtcod.console_is_window_closed():
         object.clear(con)
 
     #handle keys and exit game 
-    player_action = Util.handle_keys(player, objects, game_state, game_map, status_panel,
-                                     player_inventory, con, SCREEN_WIDTH, SCREEN_HEIGHT)
+    player_action = util.handle_keys(player, objects, game_state, game_map, status_panel,
+                                     player_inventory, con, SCREEN_WIDTH, SCREEN_HEIGHT, util)
     if player_action == 'exit' or player.color == libtcod.dark_red:
         break
 
@@ -142,4 +145,4 @@ while not libtcod.console_is_window_closed():
     if game_state == 'playing' and player_action != 'didnt-take-turn':
         for object in objects:
             if object.ai:
-                object.ai.take_turn(fov_map, player, objects, game_map)
+                object.ai.take_turn(util)

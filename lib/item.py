@@ -25,4 +25,4 @@ class Item:
             util.status_panel.message('The ' + self.owner.name + ' cannot be used.')
         else:
             if self.use_function(util) != CANCELLED:
-                util.inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled
+                util.player_inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled

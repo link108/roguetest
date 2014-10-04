@@ -2,6 +2,7 @@ __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
 from lib import item
+from lib import util as Util
 from lib.ai.confused_monster import ConfusedMonster
 
 
@@ -10,6 +11,10 @@ class ScrollFunctions:
     CONFUSE_RANGE = 8
     LIGHTNING_RANGE = 5
     LIGHTNING_DAMAGE = 20
+
+    @staticmethod
+    def cast_fireball(util):
+        x, y = Util.target_tile(util)
 
     @staticmethod
     def cast_confuse(util):

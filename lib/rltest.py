@@ -136,8 +136,7 @@ while not libtcod.console_is_window_closed():
         object.clear(con)
 
     #handle keys and exit game 
-    player_action = util.handle_keys(player, objects, game_state, game_map, status_panel,
-                                     player_inventory, con, SCREEN_WIDTH, SCREEN_HEIGHT, util)
+    player_action = util.handle_keys(game_state, con, SCREEN_WIDTH, SCREEN_HEIGHT, util)
     if player_action == 'exit' or player.color == libtcod.dark_red:
         break
 

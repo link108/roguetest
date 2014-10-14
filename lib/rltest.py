@@ -103,23 +103,24 @@ status_panel = StatusPanel(SCREEN_WIDTH, PANEL_HEIGHT, MSG_WIDTH, MSG_HEIGHT)
 #a warm welcoming message!
 status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
 #create the player object
-        
-fighter_component = Fighter(hp = 30, defense = 2, power = 5, death_function = Util.player_death)
-player = Object(0, 0, '@', 'player', libtcod.white, blocks = True, fighter = fighter_component)
+
+# fighter_component = Fighter(hp = 30, defense = 2, power = 5, death_function = Util.player_death)
+fighter_component = Fighter(hp=300, defense=20, power=50, death_function=Util.player_death)
+player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
 #the list of all objects
 objects = [player]
 player_inventory = Inventory(status_panel, objects)
 game_map = Map(status_panel, player)
 game_map.make_map(objects, player)
 fov_map = libtcod.map_new(MAP_WIDTH, MAP_HEIGHT)
-util.set_attr(player, status_panel, fov_map, objects, player_inventory, game_map)
+util.set_attr(player, status_panel, fov_map, objects, player_inventory, game_map, con, SCREEN_WIDTH, SCREEN_HEIGHT)
 for y in range(MAP_HEIGHT):
     for x in range(MAP_WIDTH):
         libtcod.map_set_properties(fov_map, x, y, not game_map.is_blocked_sight(objects, x, y), not game_map.is_blocked_sight(objects, x, y))
         # libtcod.map_set_properties(fov_map, x, y, not game_map[x][y].is_blocked_sight, not game_map[x][y].is_blocked_sight)
 
 fov_recompute = True
-game_state = 'playing'
+game_state = Util.PLAYING
 player_action = None
 
 ###########################################
@@ -135,13 +136,13 @@ while not libtcod.console_is_window_closed():
     for object in objects:
         object.clear(con)
 
-    #handle keys and exit game 
-    player_action = util.handle_keys(game_state, con, SCREEN_WIDTH, SCREEN_HEIGHT, util)
-    if player_action == 'exit' or player.color == libtcod.dark_red:
+    #handle keys and exit game
+    player_action = util.handle_keys(game_state, util)
+    if player_action == Util.EXIT or player.color == libtcod.dark_red:
         break
 
     #let monsters take their turn
-    if game_state == 'playing' and player_action != 'didnt-take-turn':
+    if game_state == Util.PLAYING and player_action != Util.DID_NOT_TAKE_TURN:
         for object in objects:
             if object.ai:
                 object.ai.take_turn(util)

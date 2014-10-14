@@ -9,7 +9,7 @@ class Object:
     #generic object class: player, monsters, items, etc.
     #the object should always be represented by a char on the screen
 
-    def __init__(self, x, y, char, name, color, blocks = False, fighter = None, ai = None, item = None):
+    def __init__(self, x, y, char, name, color, blocks=False, fighter=None, ai=None, item=None):
         self.name = name
         self.blocks = blocks
         self.x = x
@@ -17,12 +17,12 @@ class Object:
         self.char = char
         self.color = color
         self.fighter = fighter
-        if self.fighter:    #let the fighter component know who owns it
+        if self.fighter:    # let the fighter component know who owns it
             self.fighter.owner = self
-        self.ai = ai        #let the ai component know who owns it
+        self.ai = ai        # let the ai component know who owns it
         if self.ai:
             self.ai.owner = self
-        self.item = item        #let the item component know who owns it
+        self.item = item        # let the item component know who owns it
         if self.item:
             self.item.owner = self
 

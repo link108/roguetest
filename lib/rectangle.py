@@ -12,7 +12,7 @@ class Rect:
         #returns center of room
         center_x = (self.x1 + self.x2) / 2
         center_y = (self.y1 + self.y2) / 2
-        return (center_x, center_y)
+        return center_x, center_y
 
     def intersect(self, other):
         #returns true if this rectangle intersects with another one

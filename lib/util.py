@@ -1,12 +1,21 @@
 from lib import libtcodpy as libtcod
-from lib import item as Item
+from lib.item import Item
 
 __author__ = 'cmotevasselani'
 
 
 class Util:
 
+    TARGETING = 'targeting'
+    PLAYING = 'playing'
+    EXIT = 'exit'
+    DEAD = 'dead'
+    DID_NOT_TAKE_TURN = 'did-not-take-turn'
+
     def __init__(self):
+        self.con = None
+        self.SCREEN_WIDTH = None
+        self.SCREEN_HEIGHT = None
         self.status_panel = None
         self.player = None
         self.fov_map = None
@@ -14,13 +23,16 @@ class Util:
         self.player_inventory = None
         self.game_map = None
 
-    def set_attr(self, player, status_panel, fov_map, objects, inventory, game_map):
+    def set_attr(self, player, status_panel, fov_map, objects, inventory, game_map, con, screen_width, screen_height):
         self.player = player
         self.status_panel = status_panel
         self.fov_map = fov_map
         self.objects = objects
         self.player_inventory = inventory
         self.game_map = game_map
+        self.con = con
+        self.SCREEN_WIDTH = screen_width
+        self.SCREEN_HEIGHT = screen_height
 
     @staticmethod
     def player_move_or_attack(player, objects, game_map, dx, dy, status_panel):
@@ -45,81 +57,135 @@ class Util:
             fov_recompute = True
 
     @staticmethod
-    def handle_keys(game_state, con, screen_width, screen_height, util):
+    def player_target(player, objects, game_map, dx, dy, status_panel):
+
+        #the coordinates the player is moving to/attacking
+        x = player.x + dx
+        y = player.y + dy
+
+        #try tofind an attackable target
+        for object in objects:
+            if object.x == x and object.y == y:
+                status_panel.message('You see a : ' + object.name)
+                break
+        return Util.TARGETING
+
+    @staticmethod
+    def handle_keys(game_state, util):
         global fov_recompute
 
         #key = libtcod.console_check_for_keypress()    #real-time
         key = libtcod.console_wait_for_keypress(True)
         if key.pressed == False:            #to prevent actions from being preformed twice
-            return 'didnt-take-turn'
+            return Util.DID_NOT_TAKE_TURN
 
         if key.vk == libtcod.KEY_ENTER and key.lalt:        # Toggle fullscreen
             libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
-        elif key.vk == libtcod.KEY_ESCAPE:                  # exit game
-            return 'exit'
+        # elif key.vk == libtcod.KEY_ESCAPE:                  # exit game
+        elif key.vk == libtcod.KEY_ESCAPE and key.lalt:                  # exit game
+            return Util.EXIT
 
-        if game_state == 'playing':
-            #movement keys
-            if key.vk == libtcod.KEY_CHAR:
-                if key.c == ord('k'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map,  0, -1, util.status_panel)
-                elif key.c == ord('j'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, 0, 1, util.status_panel)
-                elif key.c == ord('h'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, 0, util.status_panel)
-                elif key.c == ord('l'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, 0, util.status_panel)
-                elif key.c == ord('y'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, -1, util.status_panel)
-                elif key.c == ord('u'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, -1, util.status_panel)
-                elif key.c == ord('b'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, 1, util.status_panel)
-                elif key.c == ord('n'):
-                    Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, 1, util.status_panel)
-                elif key.c == ord('i'):
-                    chosen_item = util.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', con, screen_width, screen_height)
-                    if chosen_item is not None:
-                        chosen_item.use(util)
-                elif key.c == ord('g'):
-                    #pick up an item
-                    for object in util.objects:  #look for an item in the player's tile
-                        if object.x == util.player.x and object.y == util.player.y and object.item:
-                            object.item.pick_up(util.player_inventory)
-                            break
-                else:
-                    return 'didnt-take-turn'
+        if game_state == Util.PLAYING:
+            Util.handle_playing_keys(key, util)
+        elif game_state == Util.TARGETING:
+            Util.handle_targeting_keys(key, util)
 
+    @staticmethod
+    def handle_targeting_keys(key, util):
+        #movement keys
+        if key.vk == libtcod.KEY_CHAR:
+            if key.c == ord('k'):
+                return Util.player_target(util.player, util.objects, util.game_map,  0, -1, util.status_panel)
+            elif key.c == ord('j'):
+                return Util.player_target(util.player, util.objects, util.game_map, 0, 1, util.status_panel)
+            elif key.c == ord('h'):
+                return Util.player_target(util.player, util.objects, util.game_map, -1, 0, util.status_panel)
+            elif key.c == ord('l'):
+                return Util.player_target(util.player, util.objects, util.game_map, 1, 0, util.status_panel)
+            elif key.c == ord('y'):
+                return Util.player_target(util.player, util.objects, util.game_map, -1, -1, util.status_panel)
+            elif key.c == ord('u'):
+                return Util.player_target(util.player, util.objects, util.game_map, 1, -1, util.status_panel)
+            elif key.c == ord('b'):
+                return Util.player_target(util.player, util.objects, util.game_map, -1, 1, util.status_panel)
+            elif key.c == libtcod.KEY_ESCAPE:
+                return Util.PLAYING
+            elif key.c == libtcod.KEY_ENTER:
+                return
+                #pick up an item
+            else:
+                return Util.DID_NOT_TAKE_TURN
 
-
-    # @staticmethod
-    # def handle_playing_keys:
+    @staticmethod
+    def handle_playing_keys(key, util):
+        #movement keys
+        if key.vk == libtcod.KEY_CHAR:
+            if key.c == ord('k'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map,  0, -1, util.status_panel)
+            elif key.c == ord('j'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, 0, 1, util.status_panel)
+            elif key.c == ord('h'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, 0, util.status_panel)
+            elif key.c == ord('l'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, 0, util.status_panel)
+            elif key.c == ord('y'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, -1, util.status_panel)
+            elif key.c == ord('u'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, -1, util.status_panel)
+            elif key.c == ord('b'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, 1, util.status_panel)
+            elif key.c == ord('n'):
+                Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, 1, util.status_panel)
+            elif key.c == ord('i'):
+                chosen_item = util.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', util.con, util.SCREEN_WIDTH, util.SCREEN_HEIGHT)
+                if chosen_item is not None:
+                    chosen_item.use(util)
+            elif key.c == ord('g'):
+                #pick up an item
+                for object in util.objects:  #look for an item in the player's tile
+                    if object.x == util.player.x and object.y == util.player.y and object.item:
+                        object.item.pick_up(util.player_inventory)
+                        break
+            else:
+                return Util.DID_NOT_TAKE_TURN
 
     @staticmethod
     def player_death(player, objects, status_panel):
         #the game ended, yasd?
         # global game_state
-        status_panel.message( 'You died!', libtcod.white)
-        game_state = 'dead'
-
+        status_panel.message('You died!', libtcod.white)
+        game_state = Util.DEAD
         #player is a corpse
         player.char = '%'
         player.color = libtcod.dark_red
 
     @staticmethod
     def target_tile(util):
-        game_map = util.game_map
-        x = 0
-        y = 0
+        game_state = Util.TARGETING
+        x = None
+        y = None
+
+        while game_state == Util.TARGETING:
+            # How to deal with returning either multiple values or single value: ie x, y or gamestate
+            game_state = Util.handle_keys(game_state, util)
+        if game_state == Util.FOUND_TARGET:
+            x, y = Util.get_target_coords(util.player)
+        # TODO: Make target class? how to save/where to save targeting coords?
         # while
         if x is None or y is None:
             return Item.CANCELLED
         return x, y
 
     @staticmethod
+    def get_target_coords(player):
+        x = 0
+        y = 0
+        return x, y
+
+    @staticmethod
     def monster_death(monster, objects, status_panel):
         #monster turns into a corpse, does not block, cant be attacked, does not move
-        status_panel.message( monster.name.capitalize() + ' is dead!', libtcod.white)
+        status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
         monster.char = '%'
         monster.color = libtcod.dark_red
         monster.blocks = False

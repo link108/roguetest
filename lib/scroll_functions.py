@@ -1,8 +1,8 @@
 __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
-from lib import item
-from lib import util as Util
+from lib.item import Item
+from lib.util import Util
 from lib.ai.confused_monster import ConfusedMonster
 
 
@@ -16,12 +16,14 @@ class ScrollFunctions:
     def cast_fireball(util):
         x, y = Util.target_tile(util)
 
+
+
     @staticmethod
     def cast_confuse(util):
         monster = ScrollFunctions.closest_monster(util, ScrollFunctions.CONFUSE_RANGE)
         if monster is None:
             util.status_panel.message('No enemy is close enough to confuse', libtcod.red)
-            return item.CANCELLED
+            return Item.CANCELLED
         old_ai = monster.ai
         monster.ai = ConfusedMonster(old_ai, util)
         monster.ai.owner = monster
@@ -32,7 +34,7 @@ class ScrollFunctions:
         monster = ScrollFunctions.closest_monster(util, ScrollFunctions.LIGHTNING_RANGE)
         if monster is None:
             util.status_panel.message('No enemy is close enough to strike with lightning', libtcod.red)
-            return item.CANCELLED
+            return Item.CANCELLED
         util.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
                             + str(ScrollFunctions.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
         monster.fighter.take_damage(ScrollFunctions.LIGHTNING_DAMAGE, util.objects, util.status_panel)

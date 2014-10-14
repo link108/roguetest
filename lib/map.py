@@ -103,7 +103,7 @@ class Map:
             if not self.is_blocked(objects, x, y):
                 if libtcod.random_get_int(0, 0, 100) < 80: #80% chance of getting an orc
                     #create an orc
-                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function = Util.monster_death)
+                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function= Util.monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks = True,
                             fighter = fighter_component, ai = ai_component)
@@ -126,13 +126,16 @@ class Map:
             #only place it if the tile is not blocked
             if not self.is_blocked(objects, x, y):
                 dice = libtcod.random_get_int(0, 0, 100)
-                if dice < 10:
+                if dice < 1:
                     #create a healing potion
                     item_component = Item(use_function=PotionFunctions.cast_heal)
                     item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component)
                 elif dice < 99:
+                    item_component = Item(use_function=ScrollFunctions.cast_fireball)
+                    item = Object(x, y, '#', 'scroll of FIREBALL', libtcod.light_yellow, item=item_component)
+                elif dice < 98:
                     item_component = Item(use_function=ScrollFunctions.cast_confuse)
-                    item = Object(x, y, '#', 'scorr of CONFUSE', libtcod.light_yellow, item=item_component)
+                    item = Object(x, y, '#', 'scroll of CONFUSE', libtcod.light_yellow, item=item_component)
                 else:
                     item_component = Item(use_function=ScrollFunctions.cast_lightning)
                     item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component)
@@ -143,7 +146,6 @@ class Map:
 
     def make_map(self, objects, player):
         # global map, player
-
         #fill map with "unblocked" tiles
         # self.map = [[ Tile(True)
         #     for y in range(MAP_HEIGHT) ]

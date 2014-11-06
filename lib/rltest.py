@@ -120,8 +120,8 @@ for y in range(MAP_HEIGHT):
         # libtcod.map_set_properties(fov_map, x, y, not game_map[x][y].is_blocked_sight, not game_map[x][y].is_blocked_sight)
 
 fov_recompute = True
-game_state = Util.PLAYING
 player_action = None
+Util.set_game_state(Util.PLAYING)
 
 ###########################################
 #main loop
@@ -137,12 +137,12 @@ while not libtcod.console_is_window_closed():
         object.clear(con)
 
     #handle keys and exit game
-    player_action = util.handle_keys(game_state, util)
-    if player_action == Util.EXIT or player.color == libtcod.dark_red:
+    Util.set_player_action(Util.handle_keys(util))
+    if Util.get_player_action() == Util.EXIT or player.color == libtcod.dark_red:
         break
 
     #let monsters take their turn
-    if game_state == Util.PLAYING and player_action != Util.DID_NOT_TAKE_TURN:
+    if Util.get_game_state() == Util.PLAYING and Util.get_player_action() != Util.DID_NOT_TAKE_TURN:
         for object in objects:
             if object.ai:
                 object.ai.take_turn(util)

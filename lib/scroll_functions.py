@@ -15,6 +15,9 @@ class ScrollFunctions:
     @staticmethod
     def cast_fireball(util):
         x, y = Util.target_tile(util)
+        util.status_panel.message('finished casting fireball ~~', libtcod.turquoise)
+        util.status_panel.message('player x: ' + str(util.player.x) + ', player y: ' + str(util.player.y), libtcod.turquoise)
+        util.status_panel.message('x: ' + str(x) + ', y: ' + str(y), libtcod.turquoise)
 
 
 

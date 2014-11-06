@@ -126,7 +126,6 @@ class Util:
         x = Util.get_target_x() + dx
         y = Util.get_target_y() + dy
         util.game_map.get_map()[x][y].set_targeted(True)
-        util.status_panel.message('x: ' + str(x) + ', y: ' + str(y))
 
         #try tofind an attackable target
         for object in util.objects:
@@ -156,7 +155,6 @@ class Util:
             Util.handle_playing_keys(key, util)
         elif game_state == Util.TARGETING:
             Util.handle_targeting_keys(key, util)
-            util.status_panel.message('Util: x: ' + str(Util.get_target_x()) + ', y: ' + str(Util.get_target_y()), libtcod.turquoise)
         elif game_state == Util.FOUND_TARGET:
             Util.set_game_state(Util.FOUND_TARGET)
 
@@ -180,12 +178,14 @@ class Util:
                 return Util.player_target(util, -1, 1)
             elif key.c == ord('n'):
                 return Util.player_target(util, 1, 1)
-            elif key.c == libtcod.KEY_ESCAPE:
-                Util.set_game_state(Util.PLAYING)
-            elif key.c == libtcod.KEY_ENTER:
-                Util.set_game_state(Util.FOUND_TARGET)
             else:
                 Util.set_player_action(Util.DID_NOT_TAKE_TURN)
+        elif key.vk == libtcod.KEY_ESCAPE:
+            Util.set_game_state(Util.PLAYING)
+        elif key.vk == libtcod.KEY_ENTER:
+            Util.set_game_state(Util.FOUND_TARGET)
+        else:
+            Util.set_player_action(Util.DID_NOT_TAKE_TURN)
 
     @staticmethod
     def handle_playing_keys(key, util):

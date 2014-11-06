@@ -11,14 +11,24 @@ class ScrollFunctions:
     CONFUSE_RANGE = 8
     LIGHTNING_RANGE = 5
     LIGHTNING_DAMAGE = 20
+    FIREBALL_RANGE = 6
+    FIREBALL_DAMAGE = 20
 
     @staticmethod
     def cast_fireball(util):
+        # TODO: Add range check
         x, y = Util.target_tile(util)
-        util.status_panel.message('finished casting fireball ~~', libtcod.turquoise)
-        util.status_panel.message('player x: ' + str(util.player.x) + ', player y: ' + str(util.player.y), libtcod.turquoise)
-        util.status_panel.message('x: ' + str(x) + ', y: ' + str(y), libtcod.turquoise)
-
+        util.game_map.get_map()[x][y].set_targeted(False)
+        for object in util.objects:
+            if object.x == x and object.y == y:
+                if object.fighter:
+                    util.status_panel.message('You sling a fireball at: ' + object.ai.owner.name + ' with a BAMboosh! The damage done is '
+                                        + str(ScrollFunctions.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
+                    object.fighter.take_damage(ScrollFunctions.FIREBALL_DAMAGE, util.objects, util.status_panel)
+                else:
+                    util.status_panel.message('No reason to shoot a fireball at: ' + object.name)
+                    break
+                break
 
 
     @staticmethod

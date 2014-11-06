@@ -10,9 +10,13 @@ class Tile:
         #by default, if a tile is blocked, also blocks sight
         if block_sight is None: block_sight = blocked           #must specify block_sight is false to get transparent, impassable tiles
         self.block_sight = block_sight
+        self.targeted = False
 
     def set_blocked(self, value):
         self.blocked = value
+
+    def set_targeted(self, value):
+        self.targeted = value
 
     def set_explored(self, value):
         self.explored = value

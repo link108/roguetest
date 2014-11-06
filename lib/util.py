@@ -24,6 +24,7 @@ FOV_LIGHT_WALLS = True
 TORCH_RADIUS = 10
 MAX_ROOM_MONSTERS = 3
 
+color_targeted = libtcod.green
 color_dark_wall = libtcod.Color(0, 0, 100)
 color_light_wall = libtcod.Color(130, 110, 50)
 color_dark_ground = libtcod.Color(50, 50, 150)
@@ -96,39 +97,41 @@ class Util:
         return Util.target_y
 
     @staticmethod
-    def player_move_or_attack(player, objects, game_map, dx, dy, status_panel):
+    def player_move_or_attack(util, dx, dy):
         global fov_recompute
 
         #the coordinates the player is moving to/attacking
-        x = player.x + dx
-        y = player.y + dy
+        x = util.player.x + dx
+        y = util.player.y + dy
 
         #try to find an attackable target
         target = None
-        for object in objects:
+        for object in util.objects:
             if object.fighter and object.x == x and object.y == y:
                 target = object
                 break
 
         #attack if target found, move otherwise
         if target is not None:
-            player.fighter.attack(target, objects, status_panel)
+            util.player.fighter.attack(target, util.objects, util.status_panel)
         else:
-            player.move(objects, game_map, dx, dy)
+            util.player.move(util.objects, util.game_map, dx, dy)
             fov_recompute = True
 
     @staticmethod
-    def player_target(player, objects, game_map, dx, dy, status_panel):
+    def player_target(util, dx, dy):
 
         #the coordinates the player is moving to/attacking
+        util.game_map.get_map()[Util.get_target_x()][Util.get_target_y()].set_targeted(False)
         x = Util.get_target_x() + dx
         y = Util.get_target_y() + dy
-        status_panel.message('x: ' + str(x) + ', y: ' + str(y))
+        util.game_map.get_map()[x][y].set_targeted(True)
+        util.status_panel.message('x: ' + str(x) + ', y: ' + str(y))
 
         #try tofind an attackable target
-        for object in objects:
+        for object in util.objects:
             if object.x == x and object.y == y:
-                status_panel.message('You see a : ' + object.name)
+                util.status_panel.message('You see a : ' + object.name)
                 break
         Util.set_target(x, y)
         Util.set_game_state(Util.TARGETING)
@@ -148,15 +151,7 @@ class Util:
         elif key.vk == libtcod.KEY_ESCAPE and key.lalt:                  # exit game
             Util.set_player_action(Util.EXIT)
 
-
-
-        # {
-        #     Util.PLAYING : Util.handle_playing_keys(key, util),
-        #     Util.TARGETING : Util.handle_targeting_keys(key, util),
-        #     Util.FOUND_TARGET : Util.set_game_state(Util.FOUND_TARGET)
-        # }[Util.get_game_state()]
         game_state = Util.get_game_state()
-
         if game_state == Util.PLAYING:
             Util.handle_playing_keys(key, util)
         elif game_state == Util.TARGETING:
@@ -165,25 +160,26 @@ class Util:
         elif game_state == Util.FOUND_TARGET:
             Util.set_game_state(Util.FOUND_TARGET)
 
-
     @staticmethod
     def handle_targeting_keys(key, util):
         #movement keys
         if key.vk == libtcod.KEY_CHAR:
             if key.c == ord('k'):
-                return Util.player_target(util.player, util.objects, util.game_map,  0, -1, util.status_panel)
+                return Util.player_target(util, 0, -1)
             elif key.c == ord('j'):
-                return Util.player_target(util.player, util.objects, util.game_map, 0, 1, util.status_panel)
+                return Util.player_target(util, 0, 1)
             elif key.c == ord('h'):
-                return Util.player_target(util.player, util.objects, util.game_map, -1, 0, util.status_panel)
+                return Util.player_target(util, -1, 0)
             elif key.c == ord('l'):
-                return Util.player_target(util.player, util.objects, util.game_map, 1, 0, util.status_panel)
+                return Util.player_target(util, 1, 0)
             elif key.c == ord('y'):
-                return Util.player_target(util.player, util.objects, util.game_map, -1, -1, util.status_panel)
+                return Util.player_target(util, -1, -1)
             elif key.c == ord('u'):
-                return Util.player_target(util.player, util.objects, util.game_map, 1, -1, util.status_panel)
+                return Util.player_target(util, 1, -1)
             elif key.c == ord('b'):
-                return Util.player_target(util.player, util.objects, util.game_map, -1, 1, util.status_panel)
+                return Util.player_target(util, -1, 1)
+            elif key.c == ord('n'):
+                return Util.player_target(util, 1, 1)
             elif key.c == libtcod.KEY_ESCAPE:
                 Util.set_game_state(Util.PLAYING)
             elif key.c == libtcod.KEY_ENTER:
@@ -196,21 +192,21 @@ class Util:
         #movement keys
         if key.vk == libtcod.KEY_CHAR:
             if key.c == ord('k'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map,  0, -1, util.status_panel)
+                Util.player_move_or_attack(util,  0, -1)
             elif key.c == ord('j'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, 0, 1, util.status_panel)
+                Util.player_move_or_attack(util, 0, 1)
             elif key.c == ord('h'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, 0, util.status_panel)
+                Util.player_move_or_attack(util, -1, 0)
             elif key.c == ord('l'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, 0, util.status_panel)
+                Util.player_move_or_attack(util, 1, 0)
             elif key.c == ord('y'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, -1, util.status_panel)
+                Util.player_move_or_attack(util, -1, -1)
             elif key.c == ord('u'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, -1, util.status_panel)
+                Util.player_move_or_attack(util, 1, -1)
             elif key.c == ord('b'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, -1, 1, util.status_panel)
+                Util.player_move_or_attack(util, -1, 1)
             elif key.c == ord('n'):
-                Util.player_move_or_attack(util.player, util.objects, util.game_map, 1, 1, util.status_panel)
+                Util.player_move_or_attack(util, 1, 1)
             elif key.c == ord('i'):
                 chosen_item = util.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', util.con, util.SCREEN_WIDTH, util.SCREEN_HEIGHT)
                 if chosen_item is not None:
@@ -240,8 +236,6 @@ class Util:
         Util.set_target(util.player.x, util.player.y)
 
         while Util.get_game_state() == Util.TARGETING:
-            util.status_panel.message('player x: ' + str(util.player.x) + ', player y: ' + str(util.player.y), libtcod.turquoise)
-            util.status_panel.message('x: ' + str(Util.get_target_x()) + ', y: ' + str(Util.get_target_y()), libtcod.turquoise)
             # How to deal with returning either multiple values or single value: ie x, y or gamestate
             Util.handle_keys(util)
             Util.refresh(util)
@@ -296,21 +290,25 @@ class Util:
                 for x in range(MAP_WIDTH):
                     visible = libtcod.map_is_in_fov(util.fov_map, x, y)
                     wall = util.game_map.get_map()[x][y].block_sight
+                    targeted = util.game_map.get_map()[x][y].targeted
                     if not visible:
                         #if not visible right now, player can only see if explored
                         if util.game_map.get_map()[x][y].explored:
                             if wall:
                                 libtcod.console_set_char_background(util.con, x, y, color_dark_wall, libtcod.BKGND_SET)
+                            elif targeted:
+                                libtcod.console_set_char_background(util.con, x, y, color_targeted, libtcod.BKGND_SET)
                             else:
                                 libtcod.console_set_char_background(util.con, x, y, color_dark_ground, libtcod.BKGND_SET)
                     else:
                         #it is visible
                         if wall:
                             libtcod.console_set_char_background(util.con, x, y, color_light_wall, libtcod.BKGND_SET)
+                        elif targeted:
+                            libtcod.console_set_char_background(util.con, x, y, color_targeted, libtcod.BKGND_SET)
                         else:
                             libtcod.console_set_char_background(util.con, x, y, color_light_ground, libtcod.BKGND_SET)
                         util.game_map.get_map()[x][y].explored = True
-
 
         #draw all objects in the list
         for object in util.objects:

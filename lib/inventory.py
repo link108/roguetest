@@ -26,7 +26,7 @@ class Inventory:
         else:
             options = [item.name for item in self.inventory]
 
-        index = self.menu.display_menu(header, options, INVENTORY_WIDTH, util.con, MapConstants.SCREEN_WIDTH, MapConstants.SCREEN_HEIGHT)
+        index = self.menu.display_menu(header, options, INVENTORY_WIDTH, util.con)
 
         if index is None or len(self.inventory) == 0: return None;
         return self.inventory[index].item

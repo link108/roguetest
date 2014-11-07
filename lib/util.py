@@ -119,6 +119,7 @@ class Util:
         # elif key.vk == libtcod.KEY_ESCAPE:                  # exit game
         elif key.vk == libtcod.KEY_ESCAPE:
             Util.set_player_action(Util.EXIT)
+            # Util.set_game_state(Util.EXIT)
 
         game_state = Util.get_game_state()
         if game_state == Util.PLAYING:

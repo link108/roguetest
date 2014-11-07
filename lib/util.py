@@ -147,7 +147,7 @@ class Util:
         if key.vk == libtcod.KEY_ENTER and key.lalt:        # Toggle fullscreen
             libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
         # elif key.vk == libtcod.KEY_ESCAPE:                  # exit game
-        elif key.vk == libtcod.KEY_ESCAPE and key.lalt:                  # exit game
+        elif key.vk == libtcod.KEY_ESCAPE:
             Util.set_player_action(Util.EXIT)
 
         game_state = Util.get_game_state()

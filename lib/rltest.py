@@ -34,74 +34,15 @@ color_light_wall = libtcod.Color(130, 110, 50)
 color_dark_ground = libtcod.Color(50, 50, 150)
 color_light_ground = libtcod.Color(200, 180, 50)
 
-util = Util()
-
-# def render_all(game_map, fov_map, fov_recompute, status_panel):
-#     global color_dark_wall, color_light_wall
-#     global color_dark_ground, color_light_ground
-#
-#     if fov_recompute:
-#         #recompute FOV if needed
-#         fov_recompute = False
-#         libtcod.map_compute_fov(fov_map, player.x, player.y, TORCH_RADIUS, FOV_LIGHT_WALLS, FOV_ALGO)
-#         for y in range(MAP_HEIGHT):
-#             for x in range(MAP_WIDTH):
-#                 visible = libtcod.map_is_in_fov(fov_map, x, y)
-#                 wall = game_map.get_map()[x][y].block_sight
-#                 if not visible:
-#                     #if not visible right now, player can only see if explored
-#                     if game_map.get_map()[x][y].explored:
-#                         if wall:
-#                             libtcod.console_set_char_background(con, x, y, color_dark_wall, libtcod.BKGND_SET)
-#                         else:
-#                             libtcod.console_set_char_background(con, x, y, color_dark_ground, libtcod.BKGND_SET)
-#                 else:
-#                     #it is visible
-#                     if wall:
-#                         libtcod.console_set_char_background(con, x, y, color_light_wall, libtcod.BKGND_SET)
-#                     else:
-#                         libtcod.console_set_char_background(con, x, y, color_light_ground, libtcod.BKGND_SET)
-#                     game_map.get_map()[x][y].explored = True
-#
-#
-#     #draw all objects in the list
-#     for object in objects:
-#         if object != player:
-#             object.draw(fov_map, con)
-#     player.draw(fov_map, con)
-#
-#     libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
-#
-#     #prepare to render the GUI panel
-#     libtcod.console_set_default_background(status_panel.get_panel(), libtcod.black)
-#     libtcod.console_clear(status_panel.get_panel())
-#
-#     #print the game messages, one line at a time
-#     y = 1
-#     for (line, color) in status_panel.game_messages:
-#         libtcod.console_set_default_foreground(status_panel.get_panel(), color)
-#         libtcod.console_print_ex(status_panel.get_panel(), MSG_X, y, libtcod.BKGND_NONE, libtcod.LEFT, line)
-#         y += 1
-#     #show the player's stats
-#     status_panel.render_bar(1, 1, BAR_WIDTH, 'HP', player.fighter.hp, player.fighter.max_hp,
-#         libtcod.light_red, libtcod.darker_red)
-#
-#     #blit the contents of "panel" to the root console
-#     libtcod.console_blit(status_panel.get_panel(), 0, 0, SCREEN_WIDTH, PANEL_HEIGHT, 0, 0, PANEL_Y)
-#
-#     #show the player's stats
-#     # libtcod.console_set_default_foreground(con, libtcod.white)
-#     # libtcod.console_print_ex(0, 1, SCREEN_HEIGHT - 2, libtcod.BKGND_NONE, libtcod.LEFT,
-#     #         'HP: ' + str(player.fighter.hp) + '/' + str(player.fighter.max_hp))
 
 libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'rltest', False)
 con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
-
 status_panel = StatusPanel(SCREEN_WIDTH, PANEL_HEIGHT, MSG_WIDTH, MSG_HEIGHT)
 
 #a warm welcoming message!
 status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
+
 #create the player object
 
 # fighter_component = Fighter(hp = 30, defense = 2, power = 5, death_function = Util.player_death)
@@ -113,6 +54,7 @@ player_inventory = Inventory(status_panel, objects, player)
 game_map = Map(status_panel, player)
 game_map.make_map(objects, player)
 fov_map = libtcod.map_new(MAP_WIDTH, MAP_HEIGHT)
+util = Util()
 util.set_attr(player, status_panel, fov_map, objects, player_inventory, game_map, con, SCREEN_WIDTH, SCREEN_HEIGHT)
 for y in range(MAP_HEIGHT):
     for x in range(MAP_WIDTH):

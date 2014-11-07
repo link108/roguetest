@@ -33,8 +33,8 @@ class Inventory:
     def drop(self, object):
         self.objects.append(object.owner)
         self.inventory.remove(object.owner)
-        object.owner.x == self.player.x
-        object.owner.y == self.player.y
+        object.owner.x = self.player.x
+        object.owner.y = self.player.y
         self.status_panel.message('You drop a ' + object.owner.name + '.', libtcod.turquoise)
 
 

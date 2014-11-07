@@ -43,6 +43,10 @@ class Object:
         dy = int(round(dy / distance))
         self.move(objects, game_map, dx, dy)
 
+    def distance(self, x, y):
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+
+
     def distance_to(self, other):
         #return the distance to another object
         dx = other.x - self.x

@@ -12,6 +12,7 @@ class ScrollFunctions:
     LIGHTNING_RANGE = 5
     LIGHTNING_DAMAGE = 20
     FIREBALL_RANGE = 6
+    FIREBALL_RADIUS = 3
     FIREBALL_DAMAGE = 20
 
     @staticmethod
@@ -20,20 +21,16 @@ class ScrollFunctions:
         x, y = Util.target_tile(util)
         util.game_map.get_map()[x][y].set_targeted(False)
         for object in util.objects:
-            if object.x == x and object.y == y:
-                if object.fighter:
-                    util.status_panel.message('You sling a fireball at: ' + object.ai.owner.name + ' with a BAMboosh! The damage done is '
-                                        + str(ScrollFunctions.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
-                    object.fighter.take_damage(ScrollFunctions.FIREBALL_DAMAGE, util.objects, util.status_panel)
-                else:
-                    util.status_panel.message('No reason to shoot a fireball at: ' + object.name)
-                    break
-                break
+            if object.distance(x,y) <= ScrollFunctions.FIREBALL_RADIUS and object.fighter:
+                util.status_panel.message('You sling a fireball at: ' + object.name + ' with a BAMboosh! The damage done is '
+                                    + str(ScrollFunctions.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
+                object.fighter.take_damage(ScrollFunctions.FIREBALL_DAMAGE, util.objects, util.status_panel)
 
 
     @staticmethod
     def cast_confuse(util):
-        monster = ScrollFunctions.closest_monster(util, ScrollFunctions.CONFUSE_RANGE)
+        # monster = ScrollFunctions.closest_monster(util, ScrollFunctions.CONFUSE_RANGE)
+        monster = Util.target_monster(util, ScrollFunctions.CONFUSE_RANGE)
         if monster is None:
             util.status_panel.message('No enemy is close enough to confuse', libtcod.red)
             return Item.CANCELLED

@@ -258,6 +258,17 @@ class Util:
 
 
     @staticmethod
+    def target_monster(util, max_range=None):
+        while True:
+            (x, y) = Util.target_tile(util)
+            if x is None:
+                return None
+
+            for object in util.objects:
+                if object.x == x and object.y == y and object.fighter and object != util.player:
+                    return object
+
+    @staticmethod
     def get_target_coords(util):
         x = util.get_target_y()
         y = util.get_target_y()

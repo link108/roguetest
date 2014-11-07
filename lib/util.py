@@ -208,9 +208,13 @@ class Util:
             elif key.c == ord('n'):
                 Util.player_move_or_attack(util, 1, 1)
             elif key.c == ord('i'):
-                chosen_item = util.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', util.con, util.SCREEN_WIDTH, util.SCREEN_HEIGHT)
+                chosen_item = util.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', util)
                 if chosen_item is not None:
                     chosen_item.use(util)
+            elif key.c == ord('d'):
+                chosen_item = util.player_inventory.inventory_menu('Press the key next to an item to drop it, or any other to cancel.\n', util)
+                if chosen_item is not None:
+                    util.player_inventory.drop(chosen_item)
             elif key.c == ord('g'):
                 #pick up an item
                 for object in util.objects:  #look for an item in the player's tile

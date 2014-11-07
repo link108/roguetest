@@ -1,34 +1,8 @@
 from lib import libtcodpy as libtcod
 from lib.item import Item
+from lib.map_constants import MapConstants
 
 __author__ = 'cmotevasselani'
-
-SCREEN_WIDTH = 80
-SCREEN_HEIGHT = 50
-PANEL_HEIGHT = 7
-PANEL_Y = SCREEN_HEIGHT - PANEL_HEIGHT
-BAR_WIDTH = 20
-MSG_X = BAR_WIDTH + 2
-MSG_WIDTH = SCREEN_WIDTH - BAR_WIDTH - 2
-MSG_HEIGHT = PANEL_HEIGHT - 1
-# LIMIT_FPS = 20
-
-MAP_WIDTH = 80
-MAP_HEIGHT = 43
-ROOM_MAX_SIZE = 10
-ROOM_MIN_SIZE = 6
-MAX_ROOMS = 30
-
-FOV_ALGO = 0    #default FOV algorithm
-FOV_LIGHT_WALLS = True
-TORCH_RADIUS = 10
-MAX_ROOM_MONSTERS = 3
-
-color_targeted = libtcod.green
-color_dark_wall = libtcod.Color(0, 0, 100)
-color_light_wall = libtcod.Color(130, 110, 50)
-color_dark_ground = libtcod.Color(50, 50, 150)
-color_light_ground = libtcod.Color(200, 180, 50)
 
 class Util:
 
@@ -41,8 +15,6 @@ class Util:
 
     def __init__(self):
         self.con = None
-        self.SCREEN_WIDTH = None
-        self.SCREEN_HEIGHT = None
         self.status_panel = None
         self.player = None
         self.fov_map = None
@@ -53,7 +25,7 @@ class Util:
         self.target_y = None
         self.player_action = None
 
-    def set_attr(self, player, status_panel, fov_map, objects, inventory, game_map, con, screen_width, screen_height):
+    def set_attr(self, player, status_panel, fov_map, objects, inventory, game_map, con):
         self.player = player
         self.status_panel = status_panel
         self.fov_map = fov_map
@@ -61,8 +33,6 @@ class Util:
         self.player_inventory = inventory
         self.game_map = game_map
         self.con = con
-        self.SCREEN_WIDTH = screen_width
-        self.SCREEN_HEIGHT = screen_height
         self.target_x = None
         self.target_y = None
         self.player_action = None
@@ -294,15 +264,13 @@ class Util:
 
     @staticmethod
     def render_all(util, fov_recompute):
-        global color_dark_wall, color_light_wall
-        global color_dark_ground, color_light_ground
 
         if fov_recompute:
             #recompute FOV if needed
             fov_recompute = False
-            libtcod.map_compute_fov(util.fov_map, util.player.x, util.player.y, TORCH_RADIUS, FOV_LIGHT_WALLS, FOV_ALGO)
-            for y in range(MAP_HEIGHT):
-                for x in range(MAP_WIDTH):
+            libtcod.map_compute_fov(util.fov_map, util.player.x, util.player.y, MapConstants.TORCH_RADIUS, MapConstants.FOV_LIGHT_WALLS, MapConstants.FOV_ALGO)
+            for y in range(MapConstants.MAP_HEIGHT):
+                for x in range(MapConstants.MAP_WIDTH):
                     visible = libtcod.map_is_in_fov(util.fov_map, x, y)
                     wall = util.game_map.get_map()[x][y].block_sight
                     targeted = util.game_map.get_map()[x][y].targeted
@@ -310,19 +278,19 @@ class Util:
                         #if not visible right now, player can only see if explored
                         if util.game_map.get_map()[x][y].explored:
                             if wall:
-                                libtcod.console_set_char_background(util.con, x, y, color_dark_wall, libtcod.BKGND_SET)
+                                libtcod.console_set_char_background(util.con, x, y, MapConstants.COLOR_DARK_WALL, libtcod.BKGND_SET)
                             elif targeted:
-                                libtcod.console_set_char_background(util.con, x, y, color_targeted, libtcod.BKGND_SET)
+                                libtcod.console_set_char_background(util.con, x, y,  MapConstants.COLOR_TARGETED, libtcod.BKGND_SET)
                             else:
-                                libtcod.console_set_char_background(util.con, x, y, color_dark_ground, libtcod.BKGND_SET)
+                                libtcod.console_set_char_background(util.con, x, y, MapConstants.COLOR_DARK_GROUND, libtcod.BKGND_SET)
                     else:
                         #it is visible
                         if wall:
-                            libtcod.console_set_char_background(util.con, x, y, color_light_wall, libtcod.BKGND_SET)
+                            libtcod.console_set_char_background(util.con, x, y, MapConstants.COLOR_LIGHT_WALL, libtcod.BKGND_SET)
                         elif targeted:
-                            libtcod.console_set_char_background(util.con, x, y, color_targeted, libtcod.BKGND_SET)
+                            libtcod.console_set_char_background(util.con, x, y, MapConstants.COLOR_TARGETED, libtcod.BKGND_SET)
                         else:
-                            libtcod.console_set_char_background(util.con, x, y, color_light_ground, libtcod.BKGND_SET)
+                            libtcod.console_set_char_background(util.con, x, y, MapConstants.COLOR_lIGHT_GROUND, libtcod.BKGND_SET)
                         util.game_map.get_map()[x][y].explored = True
 
         #draw all objects in the list
@@ -331,7 +299,7 @@ class Util:
                 object.draw(util.fov_map, util.con)
         util.player.draw(util.fov_map, util.con)
 
-        libtcod.console_blit(util.con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
+        libtcod.console_blit(util.con, 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.SCREEN_HEIGHT, 0, 0, 0)
 
         #prepare to render the GUI panel
         libtcod.console_set_default_background(util.status_panel.get_panel(), libtcod.black)
@@ -341,14 +309,14 @@ class Util:
         y = 1
         for (line, color) in util.status_panel.game_messages:
             libtcod.console_set_default_foreground(util.status_panel.get_panel(), color)
-            libtcod.console_print_ex(util.status_panel.get_panel(), MSG_X, y, libtcod.BKGND_NONE, libtcod.LEFT, line)
+            libtcod.console_print_ex(util.status_panel.get_panel(), MapConstants.MSG_X, y, libtcod.BKGND_NONE, libtcod.LEFT, line)
             y += 1
         #show the player's stats
-        util.status_panel.render_bar(1, 1, BAR_WIDTH, 'HP', util.player.fighter.hp, util.player.fighter.max_hp,
+        util.status_panel.render_bar(1, 1, MapConstants.BAR_WIDTH, 'HP', util.player.fighter.hp, util.player.fighter.max_hp,
             libtcod.light_red, libtcod.darker_red)
 
         #blit the contents of "panel" to the root console
-        libtcod.console_blit(util.status_panel.get_panel(), 0, 0, SCREEN_WIDTH, PANEL_HEIGHT, 0, 0, PANEL_Y)
+        libtcod.console_blit(util.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)
 
         #show the player's stats
         # libtcod.console_set_default_foreground(con, libtcod.white)

@@ -11,28 +11,7 @@ from lib.util import Util
 from lib.fighter import Fighter
 from lib.basic_monster import BasicMonster
 from lib.item import Item
-
-
-SCREEN_WIDTH = 80
-SCREEN_HEIGHT = 50
-LIMIT_FPS = 20
-
-MAP_WIDTH = 80
-MAP_HEIGHT = 45
-ROOM_MAX_SIZE = 10
-ROOM_MIN_SIZE = 6
-MAX_ROOMS = 30
-MAX_ROOM_ITEMS = 7
-
-FOV_ALGO = 0    #default FOV algorithm
-FOV_LIGHT_WALLS = True
-TORCH_RADIUS = 10
-MAX_ROOM_MONSTERS = 3
-
-color_dark_wall = libtcod.Color(0, 0, 100)
-color_light_wall = libtcod.Color(130, 110, 50)
-color_dark_ground = libtcod.Color(50, 50, 150)
-color_light_ground = libtcod.Color(200, 180, 50)
+from lib.map_constants import MapConstants
 
 class Map:
 
@@ -40,8 +19,8 @@ class Map:
         self.status_panel = status_panel
         self.player = player
         self.game_map = [[ Tile(True)
-            for y in range(MAP_HEIGHT) ]
-                for x in range(MAP_WIDTH) ]
+            for y in range(MapConstants.MAP_HEIGHT) ]
+                for x in range(MapConstants.MAP_WIDTH) ]
 
     def get_objects(self):
         return self.objects
@@ -93,7 +72,7 @@ class Map:
 
     def place_objects(self, room, objects):
         #choose random number of monsters
-        num_monsters = libtcod.random_get_int(0, 0, MAX_ROOM_MONSTERS)
+        num_monsters = libtcod.random_get_int(0, 0, MapConstants.MAX_ROOM_MONSTERS)
 
         for i in range(num_monsters):
             #choose random spot for this monster
@@ -116,7 +95,7 @@ class Map:
                 objects.append(monster)
 
         #choose random number of items
-        num_items = libtcod.random_get_int(0, 0, MAX_ROOM_ITEMS)
+        num_items = libtcod.random_get_int(0, 0, MapConstants.MAX_ROOM_ITEMS)
 
         for i in range(num_items):
             #choose random spot for this item
@@ -153,12 +132,12 @@ class Map:
 
         rooms = []
         num_rooms = 0
-        for r in range(MAX_ROOMS):
+        for r in range(MapConstants.MAX_ROOMS):
             #random width and height
-            w = libtcod.random_get_int(0, ROOM_MIN_SIZE, ROOM_MAX_SIZE)
-            h = libtcod.random_get_int(0, ROOM_MIN_SIZE, ROOM_MAX_SIZE)
-            x = libtcod.random_get_int(0, 0, MAP_WIDTH - w - 1)
-            y = libtcod.random_get_int(0, 0, MAP_HEIGHT -h - 1)
+            w = libtcod.random_get_int(0, MapConstants.ROOM_MIN_SIZE, MapConstants.ROOM_MAX_SIZE)
+            h = libtcod.random_get_int(0, MapConstants.ROOM_MIN_SIZE, MapConstants.ROOM_MAX_SIZE)
+            x = libtcod.random_get_int(0, 0, MapConstants.MAP_WIDTH - w - 1)
+            y = libtcod.random_get_int(0, 0, MapConstants.MAP_HEIGHT -h - 1)
 
             new_room = Rect(x, y, w, h)
 

@@ -1,17 +1,16 @@
 __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
-from lib.item import Item
+from lib.constants import Constants
 
 
 class PotionFunctions:
 
-    HEAL_AMOUNT = 4
 
     @staticmethod
-    def cast_heal(util):
-        if util.player.fighter.hp == util.player.fighter.max_hp:
-            util.status_panel.message('You are already at full health.', libtcod.red)
-            return Item.CANCELLED
-        util.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
-        util.player.fighter.heal(PotionFunctions.HEAL_AMOUNT)
+    def cast_heal(state):
+        if state.player.fighter.hp == state.player.fighter.max_hp:
+            state.status_panel.message('You are already at full health.', libtcod.red)
+            return Constants.CANCELLED
+        state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
+        state.player.fighter.heal(PotionFunctions.HEAL_AMOUNT)

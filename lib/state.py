@@ -19,3 +19,4 @@ class State:
         self.objects = None
         self.player = None
         self.player_inventory = None
+

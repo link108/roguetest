@@ -2,9 +2,8 @@ __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
 from lib.consoles.menu import Menu
-from lib.map_constants import MapConstants
+from lib.constants import Constants
 
-INVENTORY_WIDTH = 50
 
 
 class Inventory:
@@ -26,7 +25,7 @@ class Inventory:
         else:
             options = [item.name for item in self.inventory]
 
-        index = self.menu.display_menu(header, options, INVENTORY_WIDTH, util.con)
+        index = self.menu.display_menu(header, options, Constants.INVENTORY_WIDTH, util.con)
 
         if index is None or len(self.inventory) == 0: return None;
         return self.inventory[index].item

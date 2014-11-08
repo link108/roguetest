@@ -12,12 +12,13 @@ from lib.fighter import Fighter
 from lib.basic_monster import BasicMonster
 from lib.item import Item
 from lib.map_constants import MapConstants
+from lib.state import State
 
 class Map:
 
-    def __init__(self, status_panel, player):
-        self.status_panel = status_panel
-        self.player = player
+    def __init__(self, state):
+        self.status_panel = state.status_panel
+        self.player = state.player
         self.game_map = [[ Tile(True)
             for y in range(MapConstants.MAP_HEIGHT) ]
                 for x in range(MapConstants.MAP_WIDTH) ]
@@ -82,16 +83,16 @@ class Map:
             if not self.is_blocked(objects, x, y):
                 if libtcod.random_get_int(0, 0, 100) < 80: #80% chance of getting an orc
                     #create an orc
-                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function= Util.monster_death)
+                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function=Util.monster_death)
                     ai_component = BasicMonster()
-                    monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks = True,
-                            fighter = fighter_component, ai = ai_component)
+                    monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks=True,
+                                    fighter=fighter_component, ai=ai_component)
                 else:
                     #Create a troll
-                    fighter_component = Fighter(hp=16, defense=1, power=4, death_function = Util.monster_death)
+                    fighter_component = Fighter(hp=16, defense=1, power=4, death_function=Util.monster_death)
                     ai_component = BasicMonster()
-                    monster = Object(x, y, 'T', 'troll', libtcod.darker_green, blocks = True,
-                            fighter = fighter_component, ai= ai_component)
+                    monster = Object(x, y, 'T', 'troll', libtcod.darker_green, blocks=True,
+                                    fighter=fighter_component, ai=ai_component)
                 objects.append(monster)
 
         #choose random number of items
@@ -159,8 +160,8 @@ class Map:
 
                 #print the room number (debugging)
                 #prints characters rather than numbers, #rooms may be > 10
-                room_no = Object(new_x, new_y, chr(65+num_rooms), 'room number', libtcod.white)
-                objects.insert(0, room_no) #draw early so monsters are drawn on top
+                # room_no = Object(new_x, new_y, chr(65+num_rooms), 'room number', libtcod.white)
+                # objects.insert(0, room_no) #draw early so monsters are drawn on top
 
                 if num_rooms == 0:
                     #this is the first room, where the player starts at

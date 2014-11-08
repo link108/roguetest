@@ -1,10 +1,10 @@
 __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
+from lib.constants import Constants
 
 class Item:
 
-    CANCELLED = 'cancelled'
 
     def __init__(self, use_function = None):
         self.use_function = use_function
@@ -24,5 +24,5 @@ class Item:
         if self.use_function is None:
             util.status_panel.message('The ' + self.owner.name + ' cannot be used.')
         else:
-            if self.use_function(util) != Item.CANCELLED:
+            if self.use_function(util) != Constants.CANCELLED:
                 util.player_inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled

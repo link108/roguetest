@@ -27,3 +27,6 @@ class Constants:
     EXIT = 'exit'
     DEAD = 'dead'
     DID_NOT_TAKE_TURN = 'did-not-take-turn'
+
+    #Save file name
+    SAVE_FILE = 'savefile'

@@ -4,7 +4,7 @@ import shelve
 import jsonpickle
 
 from lib import libtcodpy as libtcod
-from lib.utility_functions.death_functions import DeathFunctions
+# from lib.utility_functions.death_functions import DeathFunctions
 from lib.object import Object
 from lib.fighter import Fighter
 from lib.map import Map
@@ -79,7 +79,7 @@ class MainMenu:
 
     def play_game(self):
         Util.set_game_state(Constants.PLAYING)
-        Util.set_player_action(Constants.PLAYING)
+        Util.set_player_action(None)
         self.state.fov_recompute = True
 
         ###########################################
@@ -107,7 +107,7 @@ class MainMenu:
                         object.ai.take_turn(self.state)
 
     def save_game(self):
-        file = shelve.open('savefile', 'n')
+        file = shelve.open(Constants.SAVE_FILE, 'n')
         # file = shelve.open('savefile', protocol=2)
         # file = open('savefile', 'w')
         file['game_map'] = self.state.game_map.game_map
@@ -118,7 +118,9 @@ class MainMenu:
         file.close()
 
     def load_game(self):
-        file = shelve.open('savefile', 'r')
+        self.state.game_map = Map(self.state)
+        self.state.player_inventory = Inventory(self.state)
+        file = shelve.open(Constants.SAVE_FILE, 'r')
         self.state.game_map.game_map = file['game_map']
         self.state.player_inventory.inventory = file['inventory']
         self.state.status_panel.game_messages = file['game_messages']

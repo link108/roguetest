@@ -2,9 +2,9 @@ __author__ = 'cmotevasselani'
 
 
 import shelve
-import cPickle as cPickle
 
 from lib import libtcodpy as libtcod
+from lib.utility_functions.death_functions import DeathFunctions
 from lib.object import Object
 from lib.fighter import Fighter
 from lib.map import Map
@@ -22,10 +22,10 @@ class MainMenu:
         self.menu = Menu()
 
     def main_menu(self):
-        img = libtcod.image_load('rl_image.png')
+        # img = libtcod.image_load('rl_image.png')
         #show the background image, at twice the regular console resolution
         while not libtcod.console_is_window_closed():
-            libtcod.image_blit_2x(img, 0, 0, 0)
+            # libtcod.image_blit_2x(img, 0, 0, 0)
 
             choice = self.menu.display_menu('', ['Play a new game', 'Continue last game', 'Quit'], 24, self.state.con)
             if choice == 0:
@@ -51,11 +51,11 @@ class MainMenu:
         #create the player object
 
         # fighter_component = Fighter(hp = 30, defense = 2, power = 5, death_function = Util.player_death)
-        fighter_component = Fighter(hp=300, defense=20, power=50, death_function=Util.player_death)
+        fighter_component = Fighter(hp=3, defense=2, power=50, death_function=DeathFunctions.player_death)
         self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
         #the list of all objects
         self.state.objects = [self.state.player]
-        self.state.player_inventory = Inventory(self.state.status_panel, self.state.objects, self.state.player)
+        self.state.player_inventory = Inventory(self.state)
         self.state.game_map = Map(self.state)
         self.state.game_map.make_map(self.state.objects, self.state.player)
         self.initialize_fov()
@@ -98,13 +98,13 @@ class MainMenu:
                         object.ai.take_turn(self.state)
 
     def save_game(self):
-        for object in self.state.objects:
-            object.clear()
+        # for object in self.state.objects:
+        #     object.clear(self.state.con)
         file = shelve.open('savefile', 'n')
+        file['game_map'] = self.state.game_map.game_map
         file['inventory'] = self.state.player_inventory.inventory
         file['game_messages'] = self.state.status_panel.game_messages
         file['objects'] = self.state.objects
-        file['game_map'] = self.state.game_map.game_map
         file['player_index'] = self.state.objects.index(self.state.player)
         file.close()
 

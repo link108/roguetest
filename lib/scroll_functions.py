@@ -16,15 +16,15 @@ class ScrollFunctions:
     FIREBALL_DAMAGE = 20
 
     @staticmethod
-    def cast_fireball(util):
+    def cast_fireball(state):
         # TODO: Add range check
-        x, y = Util.target_tile(util)
-        util.game_map.get_map()[x][y].set_targeted(False)
-        for object in util.objects:
+        x, y = Util.target_tile(state)
+        state.game_map.get_map()[x][y].set_targeted(False)
+        for object in state.objects:
             if object.distance(x,y) <= ScrollFunctions.FIREBALL_RADIUS and object.fighter:
-                util.status_panel.message('You sling a fireball at: ' + object.name + ' with a BAMboosh! The damage done is '
+                state.status_panel.message('You sling a fireball at: ' + object.name + ' with a BAMboosh! The damage done is '
                                     + str(ScrollFunctions.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
-                object.fighter.take_damage(ScrollFunctions.FIREBALL_DAMAGE, util.objects, util.status_panel)
+                object.fighter.take_damage(ScrollFunctions.FIREBALL_DAMAGE, state)
 
 
     @staticmethod
@@ -40,24 +40,24 @@ class ScrollFunctions:
         util.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
 
     @staticmethod
-    def cast_lightning(util):
-        monster = ScrollFunctions.closest_monster(util, ScrollFunctions.LIGHTNING_RANGE)
+    def cast_lightning(state):
+        monster = ScrollFunctions.closest_monster(state, ScrollFunctions.LIGHTNING_RANGE)
         if monster is None:
-            util.status_panel.message('No enemy is close enough to strike with lightning', libtcod.red)
+            state.status_panel.message('No enemy is close enough to strike with lightning', libtcod.red)
             return Item.CANCELLED
-        util.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
+        state.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
                             + str(ScrollFunctions.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
-        monster.fighter.take_damage(ScrollFunctions.LIGHTNING_DAMAGE, util.objects, util.status_panel)
+        monster.fighter.take_damage(ScrollFunctions.LIGHTNING_DAMAGE, state)
 
     @staticmethod
-    def closest_monster(util, max_range):
+    def closest_monster(state, max_range):
         # Find closest enemy, up to a max range and within the player's FOV
         closest_enemy = None
         closest_dist = max_range + 1
 
-        for object in util.objects:
-            if object.fighter and not object == util.player and libtcod.map_is_in_fov(util.fov_map, object.x, object.y):
-                dist = util.player.distance_to(object)
+        for object in state.objects:
+            if object.fighter and not object == state.player and libtcod.map_is_in_fov(state.fov_map, object.x, object.y):
+                dist = state.player.distance_to(object)
                 if dist < closest_dist:
                     closest_enemy = object
                     closest_dist = dist

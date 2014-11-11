@@ -15,5 +15,5 @@ class BasicMonster:
 
             #attack if close enough
             elif state.player.fighter.hp > 0:
-                monster.fighter.attack(state.player, state.objects, state.status_panel)
+                monster.fighter.attack(state.player, state)
 

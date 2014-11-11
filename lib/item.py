@@ -6,7 +6,7 @@ from lib.constants import Constants
 class Item:
 
 
-    def __init__(self, use_function = None):
+    def __init__(self, use_function=None):
         self.use_function = use_function
 
     # an item that can be picked up and used.

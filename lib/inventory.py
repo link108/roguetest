@@ -8,24 +8,24 @@ from lib.constants import Constants
 
 class Inventory:
 
-    def __init__(self, status_panel, objects, player):
-        self.status_panel = status_panel
+    def __init__(self, state):
+        self.status_panel = state.status_panel
         self.inventory = []
-        self.objects = objects
+        self.objects = state.objects
         self.menu = Menu()
-        self.player = player
+        self.player = state.player
 
-    def get_status_panel(self):
-        return self.status_panel
+    # def get_status_panel(self):
+    #     return self.status_panel
 
-    def inventory_menu(self, header, util):
+    def inventory_menu(self, header, state):
         #show a menu with each item of the inventory as an option
         if len(self.inventory) == 0:
             options = ['Inventory is empty.']
         else:
             options = [item.name for item in self.inventory]
 
-        index = self.menu.display_menu(header, options, Constants.INVENTORY_WIDTH, util.con)
+        index = self.menu.display_menu(header, options, Constants.INVENTORY_WIDTH, state.con)
 
         if index is None or len(self.inventory) == 0: return None;
         return self.inventory[index].item

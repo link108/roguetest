@@ -56,7 +56,7 @@ class Util:
 
         #attack if target found, move otherwise
         if target is not None:
-            state.player.fighter.attack(target, state.objects, state.status_panel)
+            state.player.fighter.attack(target, state)
         else:
             state.player.move(state.objects, state.game_map, dx, dy)
             state.fov_recompute = True
@@ -165,16 +165,16 @@ class Util:
                         break
             else:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
-
-    @staticmethod
-    def player_death(player, objects, status_panel):
-        #the game ended, yasd?
-        # global game_state
-        status_panel.message('You died!', libtcod.white)
-        Util.set_game_state(Constants.DEAD)
-        #player is a corpse
-        player.char = '%'
-        player.color = libtcod.dark_red
+    #
+    # @staticmethod
+    # def player_death(player, objects, status_panel):
+    #     #the game ended, yasd?
+    #     # global game_state
+    #     status_panel.message('You died!', libtcod.white)
+    #     Util.set_game_state(Constants.DEAD)
+    #     #player is a corpse
+    #     player.char = '%'
+    #     player.color = libtcod.dark_red
 
     @staticmethod
     def target_tile(state):
@@ -222,17 +222,17 @@ class Util:
         y = Util.get_target_y()
         return x, y
 
-    @staticmethod
-    def monster_death(monster, objects, status_panel):
-        #monster turns into a corpse, does not block, cant be attacked, does not move
-        status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
-        monster.char = '%'
-        monster.color = libtcod.dark_red
-        monster.blocks = False
-        monster.fighter = None
-        monster.ai = None
-        monster.name = 'remains of ' + monster.name
-        monster.send_to_back(objects)
+    # @staticmethod
+    # def monster_death(monster, objects, status_panel):
+    #     #monster turns into a corpse, does not block, cant be attacked, does not move
+    #     status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
+    #     monster.char = '%'
+    #     monster.color = libtcod.dark_red
+    #     monster.blocks = False
+    #     monster.fighter = None
+    #     monster.ai = None
+    #     monster.name = 'remains of ' + monster.name
+    #     monster.send_to_back(objects)
 
 
 

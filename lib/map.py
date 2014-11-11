@@ -4,6 +4,7 @@ __author__ = 'cmotevasselani'
 
 from lib.scroll_functions import ScrollFunctions
 from lib.potion_functions import PotionFunctions
+from lib.utility_functions.death_functions import DeathFunctions
 from lib.tile import Tile
 from lib.rectangle import Rect
 from lib.object import Object
@@ -83,13 +84,13 @@ class Map:
             if not self.is_blocked(objects, x, y):
                 if libtcod.random_get_int(0, 0, 100) < 80: #80% chance of getting an orc
                     #create an orc
-                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function=Util.monster_death)
+                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function=DeathFunctions.monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
                 else:
                     #Create a troll
-                    fighter_component = Fighter(hp=16, defense=1, power=4, death_function=Util.monster_death)
+                    fighter_component = Fighter(hp=16, defense=1, power=4, death_function=DeathFunctions.monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'T', 'troll', libtcod.darker_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)

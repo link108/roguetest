@@ -5,8 +5,9 @@ from lib import libtcodpy as libtcod
 
 class Fighter:
     #combat related properties and methods (npcs, monsters, player)
-    def __init__(self, hp, defense, power, death_function=None):
+    def __init__(self, hp, defense, power, xp, death_function=None):
         self.max_hp = hp
+        self.xp = xp
         self.hp = hp
         self.defense = defense
         self.power = power
@@ -20,6 +21,8 @@ class Fighter:
                 function = self.death_function
                 if function is not None:
                     function(self.owner, state)
+                if self.owner != state.player:
+                    state.player.fighter.xp += self.xp
 
 
     def attack(self, target, state):

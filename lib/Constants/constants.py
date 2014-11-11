@@ -31,3 +31,10 @@ class Constants:
 
     #Save file name
     SAVE_FILE = 'savefile'
+
+    #MainMenu
+    LEVEL_UP_BASE = 20
+    LEVEL_UP_FACTOR = 70
+    # LEVEL_UP_BASE = 200
+    # LEVEL_UP_FACTOR = 150
+

@@ -58,8 +58,9 @@ class MainMenu:
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         #create the player object
 
-        fighter_component = Fighter(hp=30, defense=20, power=50, death_function=player_death)
+        fighter_component = Fighter(hp=30, defense=20, power=50, xp=0, death_function=player_death)
         self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
+        self.state.player.level = 1
         #the list of all objects
         self.state.objects = [self.state.player]
         self.state.player_inventory = Inventory(self.state)
@@ -90,6 +91,7 @@ class MainMenu:
 
             Util.render_all(self.state)
             libtcod.console_flush()
+            Util.check_level_up(self.state)
 
             #erase all objects at their old locations, before they move
             for object in self.state.objects:

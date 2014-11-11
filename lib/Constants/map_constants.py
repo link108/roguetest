@@ -36,5 +36,6 @@ class MapConstants:
     STAIRS_NAME = 'stairs'
     STAIRS_OBJECT = '>'
 
+    LEVEL_SCREEN_WIDTH = 40
 
 

@@ -2,6 +2,7 @@ __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
 from lib.constants.map_constants import MapConstants
+from lib.consoles.menu import Menu
 from lib.constants.constants import Constants
 
 
@@ -208,6 +209,28 @@ class Util:
             for object in state.objects:
                 if object.x == x and object.y == y and object.fighter and object != state.player:
                     return object
+
+    @staticmethod
+    def check_level_up(state):
+        level_up_xp = Constants.LEVEL_UP_BASE + state.player.level + Constants.LEVEL_UP_FACTOR
+        if state.player.fighter.xp >= level_up_xp:
+            state.player.level += 1
+            state.player.fighter.xp -= level_up_xp
+            state.status_panel.message('You are now level ' + str(state.player.level) + '! You gain some skillz', libtcod.yellow)
+            choice = None
+            while choice == None:
+                choice = Menu().display_menu('Level up! Choose a stat to raise:\n',
+                    ['Constitution (+20 HP, from ' + str(state.player.fighter.max_hp) + ')',
+                    'Strength (+1 attack, from ' + str(state.player.fighter.power) + ')',
+                    'Agility (+1 defense, from ' + str(state.player.fighter.defense) + ')'], MapConstants.LEVEL_SCREEN_WIDTH, state.con)
+            if choice == 0:
+                state.player.fighter.max_hp += 20
+                state.player.fighter.hp += 20
+            elif choice == 1:
+                state.player.fighter.power += 1
+            elif choice == 2:
+                state.player.fighter.defense += 1
+
 
     @staticmethod
     def get_target_coords():

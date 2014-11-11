@@ -2,8 +2,6 @@ from lib import libtcodpy as libtcod
 
 __author__ = 'cmotevasselani'
 
-from lib.scroll_functions import ScrollFunctions
-from lib.potion_functions import PotionFunctions
 from lib.tile import Tile
 from lib.rectangle import Rect
 from lib.object import Object
@@ -14,6 +12,13 @@ from lib.util import Util
 from lib.constants.map_constants import MapConstants
 from lib.constants.constants import Constants
 from lib.ai.confused_monster import ConfusedMonster
+
+###### NOTE ######
+#### not a fan of this implementation, I couldn't find another way of saving/loading funtions
+#### unless they were not in a class. Suggestions are welcome
+#### -Cameron
+
+###### ScrollFunctions
 
 def cast_fireball(state):
     # TODO: Add range check
@@ -45,6 +50,9 @@ def cast_lightning(state):
                         + str(Constants.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
     monster.fighter.take_damage(Constants.LIGHTNING_DAMAGE, state)
 
+
+##### DeathFunctions
+
 def monster_death(monster, state):
     #monster turns into a corpse, does not block, cant be attacked, does not move
     state.status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
@@ -55,6 +63,9 @@ def monster_death(monster, state):
     monster.ai = None
     monster.name = 'remains of ' + monster.name
     monster.send_to_back(state.objects)
+
+
+###### PotionFunctions
 
 def cast_heal(state):
     if state.player.fighter.hp == state.player.fighter.max_hp:
@@ -68,9 +79,8 @@ class Map:
     def __init__(self, state):
         self.status_panel = state.status_panel
         self.player = state.player
-        self.game_map = [[ Tile(True)
-            for y in range(MapConstants.MAP_HEIGHT) ]
-                for x in range(MapConstants.MAP_WIDTH) ]
+        self.game_map = None
+
 
     def get_objects(self):
         return self.objects
@@ -158,28 +168,31 @@ class Map:
                 if dice < 1:
                     #create a healing potion
                     item_component = Item(use_function=cast_heal)
-                    item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component)
+                    item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component, always_visible=True)
                 elif dice < 99:
                     item_component = Item(use_function=cast_fireball)
-                    item = Object(x, y, '#', 'scroll of FIREBALL', libtcod.light_yellow, item=item_component)
+                    item = Object(x, y, '#', 'scroll of FIREBALL', libtcod.light_yellow, item=item_component, always_visible=True)
                 elif dice < 98:
                     item_component = Item(use_function=cast_confuse)
-                    item = Object(x, y, '#', 'scroll of CONFUSE', libtcod.light_yellow, item=item_component)
+                    item = Object(x, y, '#', 'scroll of CONFUSE', libtcod.light_yellow, item=item_component, always_visible=True)
                 else:
                     item_component = Item(use_function=cast_lightning)
-                    item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component)
+                    item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component, always_visible=True)
 
                 objects.append(item)
                 item.send_to_back(objects)  #items appear below other objects
 
 
-    def make_map(self, objects, player):
+    def make_map(self, state):
         # global map, player
         #fill map with "unblocked" tiles
         # self.map = [[ Tile(True)
         #     for y in range(MAP_HEIGHT) ]
         #         for x in range(MAP_WIDTH) ]
 
+        self.game_map = [[ Tile(True)
+            for y in range(MapConstants.MAP_HEIGHT) ]
+                for x in range(MapConstants.MAP_WIDTH) ]
         rooms = []
         num_rooms = 0
         for r in range(MapConstants.MAX_ROOMS):
@@ -202,7 +215,7 @@ class Map:
                 self.create_room(new_room)
 
                 #add some content to this room such as monsters
-                self.place_objects(new_room, objects)
+                self.place_objects(new_room, state.objects)
 
                 #get the center coordinates of the new room
                 (new_x, new_y) = new_room.center()
@@ -214,8 +227,8 @@ class Map:
 
                 if num_rooms == 0:
                     #this is the first room, where the player starts at
-                    player.x = new_x
-                    player.y = new_y
+                    state.player.x = new_x
+                    state.player.y = new_y
                 else:
                     #all rooms after the first
                     #connect it to the previous room with a tunnel
@@ -236,6 +249,10 @@ class Map:
                 #finally, append the new room to the list
                 rooms.append(new_room)
                 num_rooms += 1
+        stairs = Object(new_x, new_y, MapConstants.STAIRS_OBJECT, MapConstants.STAIRS_NAME, MapConstants.STAIRS_COLOR, always_visible=True)
+        state.objects.append(stairs)
+        stairs.send_to_back(state.objects)
+        state.stairs = stairs
 
     def get_map(self):
         return self.game_map

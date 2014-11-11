@@ -9,7 +9,8 @@ class Object:
     #generic object class: player, monsters, items, etc.
     #the object should always be represented by a char on the screen
 
-    def __init__(self, x, y, char, name, color, blocks=False, fighter=None, ai=None, item=None):
+    def __init__(self, x, y, char, name, color, always_visible=False, blocks=False, fighter=None, ai=None, item=None):
+        self.always_visible = always_visible
         self.name = name
         self.blocks = blocks
         self.x = x
@@ -53,12 +54,12 @@ class Object:
         dy = other.y - self.y
         return math.sqrt(dx ** 2 + dy ** 2)
 
-    def draw(self, fov_map, con):
+    def draw(self, state):
         #only show if visible to the player
-        if libtcod.map_is_in_fov(fov_map, self.x, self.y):
+        if libtcod.map_is_in_fov(state.fov_map, self.x, self.y) or self.always_visible and state.game_map.game_map[self.x][self.y].explored:
             #set the color and then draw the char that represents this object at its position
-            libtcod.console_set_default_foreground(con, self.color)
-            libtcod.console_put_char(con, self.x, self.y, self.char, libtcod.BKGND_NONE)
+            libtcod.console_set_default_foreground(state.con, self.color)
+            libtcod.console_put_char(state.con, self.x, self.y, self.char, libtcod.BKGND_NONE)
 
     def clear(self, con):
         #erase the character that represents this object

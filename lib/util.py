@@ -163,18 +163,11 @@ class Util:
                     if object.x == state.player.x and object.y == state.player.y and object.item:
                         object.item.pick_up(state)
                         break
+            elif key.c == ord('>'):
+                # if state.stairs.x == state.player.x and state.stairs.y == state.player.y:
+                Util.set_player_action(Constants.NEXT_LEVEL)
             else:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
-    #
-    # @staticmethod
-    # def player_death(player, objects, status_panel):
-    #     #the game ended, yasd?
-    #     # global game_state
-    #     status_panel.message('You died!', libtcod.white)
-    #     Util.set_game_state(constants.DEAD)
-    #     #player is a corpse
-    #     player.char = '%'
-    #     player.color = libtcod.dark_red
 
     @staticmethod
     def target_tile(state):
@@ -222,20 +215,6 @@ class Util:
         y = Util.get_target_y()
         return x, y
 
-    # @staticmethod
-    # def monster_death(monster, objects, status_panel):
-    #     #monster turns into a corpse, does not block, cant be attacked, does not move
-    #     status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
-    #     monster.char = '%'
-    #     monster.color = libtcod.dark_red
-    #     monster.blocks = False
-    #     monster.fighter = None
-    #     monster.ai = None
-    #     monster.name = 'remains of ' + monster.name
-    #     monster.send_to_back(objects)
-
-
-
     @staticmethod
     def render_all(state):
         if state.fov_recompute:
@@ -269,8 +248,8 @@ class Util:
         #draw all objects in the list
         for object in state.objects:
             if object != state.player:
-                object.draw(state.fov_map, state.con)
-        state.player.draw(state.fov_map, state.con)
+                object.draw(state)
+        state.player.draw(state)
 
         libtcod.console_blit(state.con, 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.SCREEN_HEIGHT, 0, 0, 0)
 
@@ -287,6 +266,7 @@ class Util:
         #show the player's stats
         state.status_panel.render_bar(1, 1, MapConstants.BAR_WIDTH, 'HP', state.player.fighter.hp, state.player.fighter.max_hp,
             libtcod.light_red, libtcod.darker_red)
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level ' + str(state.dungeon_level))
 
         #blit the contents of "panel" to the root console
         libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)

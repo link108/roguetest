@@ -19,4 +19,6 @@ class State:
         self.objects = None
         self.player = None
         self.player_inventory = None
+        self.stairs = None
+        self.dungeon_level = None
 

@@ -32,4 +32,9 @@ class MapConstants:
     COLOR_lIGHT_GROUND = libtcod.Color(200, 180, 50)
     COLOR_TARGETED = libtcod.green
 
+    STAIRS_COLOR = libtcod.white
+    STAIRS_NAME = 'stairs'
+    STAIRS_OBJECT = '>'
+
+
 

@@ -4,7 +4,6 @@ import shelve
 import jsonpickle
 
 from lib import libtcodpy as libtcod
-# from lib.utility_functions.death_functions import DeathFunctions
 from lib.object import Object
 from lib.fighter import Fighter
 from lib.map import Map
@@ -64,8 +63,10 @@ class MainMenu:
         #the list of all objects
         self.state.objects = [self.state.player]
         self.state.player_inventory = Inventory(self.state)
+        self.state.dungeon_level = 1
+
         self.state.game_map = Map(self.state)
-        self.state.game_map.make_map(self.state.objects, self.state.player)
+        self.state.game_map.make_map(self.state)
         self.initialize_fov()
         Util.set_player_action(None)
 
@@ -93,6 +94,8 @@ class MainMenu:
             #erase all objects at their old locations, before they move
             for object in self.state.objects:
                 object.clear(self.state.con)
+            if Util.get_player_action() == Constants.NEXT_LEVEL:
+                self.next_level()
 
             #handle keys and exit game
             Util.handle_keys(self.state)
@@ -106,15 +109,29 @@ class MainMenu:
                     if object.ai:
                         object.ai.take_turn(self.state)
 
+    def next_level(self):
+        self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
+        self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
+        self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
+        self.state.game_map.make_map(self.state)
+        self.initialize_fov()
+        self.state.dungeon_level += 1
+        Util.set_player_action(None)
+        self.state.fov_recompute = True
+
+
+
+
+
     def save_game(self):
         file = shelve.open(Constants.SAVE_FILE, 'n')
-        # file = shelve.open('savefile', protocol=2)
-        # file = open('savefile', 'w')
         file['game_map'] = self.state.game_map.game_map
         file['inventory'] = self.state.player_inventory.inventory
         file['game_messages'] = self.state.status_panel.game_messages
         file['objects'] = self.state.objects
         file['player_index'] = self.state.objects.index(self.state.player)
+        file['stairs'] = self.state.stairs
+        file['dungeon_level'] = self.state.dungeon_level
         file.close()
 
     def load_game(self):
@@ -126,5 +143,7 @@ class MainMenu:
         self.state.status_panel.game_messages = file['game_messages']
         self.state.objects = file['objects']
         self.state.player = self.state.objects[file['player_index']]
+        self.state.stairs = file['stairs']
+        self.state.dungeon_level = file['dungeon_level']
         file.close()
         self.initialize_fov()

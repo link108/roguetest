@@ -1,8 +1,8 @@
 __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
-from lib.map_constants import MapConstants
-from lib.constants import Constants
+from lib.constants.map_constants import MapConstants
+from lib.constants.constants import Constants
 
 
 class Util:
@@ -161,7 +161,7 @@ class Util:
                 #pick up an item
                 for object in state.objects:  #look for an item in the player's tile
                     if object.x == state.player.x and object.y == state.player.y and object.item:
-                        object.item.pick_up(state.player_inventory)
+                        object.item.pick_up(state)
                         break
             else:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
@@ -171,7 +171,7 @@ class Util:
     #     #the game ended, yasd?
     #     # global game_state
     #     status_panel.message('You died!', libtcod.white)
-    #     Util.set_game_state(Constants.DEAD)
+    #     Util.set_game_state(constants.DEAD)
     #     #player is a corpse
     #     player.char = '%'
     #     player.color = libtcod.dark_red

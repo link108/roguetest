@@ -4,16 +4,64 @@ __author__ = 'cmotevasselani'
 
 from lib.scroll_functions import ScrollFunctions
 from lib.potion_functions import PotionFunctions
-from lib.utility_functions.death_functions import DeathFunctions
 from lib.tile import Tile
 from lib.rectangle import Rect
 from lib.object import Object
-from lib.util import Util
 from lib.fighter import Fighter
 from lib.basic_monster import BasicMonster
 from lib.item import Item
-from lib.map_constants import MapConstants
-from lib.state import State
+from lib.util import Util
+from lib.constants.map_constants import MapConstants
+from lib.constants.constants import Constants
+from lib.ai.confused_monster import ConfusedMonster
+
+def cast_fireball(state):
+    # TODO: Add range check
+    x, y = Util.target_tile(state)
+    state.game_map.get_map()[x][y].set_targeted(False)
+    for object in state.objects:
+        if object.distance(x,y) <= Constants.FIREBALL_RADIUS and object.fighter:
+            state.status_panel.message('You sling a fireball at: ' + object.name + ' with a BAMboosh! The damage done is '
+                                + str(Constants.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
+            object.fighter.take_damage(Constants.FIREBALL_DAMAGE, state)
+
+def cast_confuse(util):
+    # monster = Constants.closest_monster(util, Constants.CONFUSE_RANGE)
+    monster = Util.target_monster(util, Constants.CONFUSE_RANGE)
+    if monster is None:
+        util.status_panel.message('No enemy is close enough to confuse', libtcod.red)
+        return Item.CANCELLED
+    old_ai = monster.ai
+    monster.ai = ConfusedMonster(old_ai, util)
+    monster.ai.owner = monster
+    util.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
+
+def cast_lightning(state):
+    monster = Constants.closest_monster(state, Constants.LIGHTNING_RANGE)
+    if monster is None:
+        state.status_panel.message('No enemy is close enough to strike with lightning', libtcod.red)
+        return Item.CANCELLED
+    state.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
+                        + str(Constants.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
+    monster.fighter.take_damage(Constants.LIGHTNING_DAMAGE, state)
+
+def monster_death(monster, state):
+    #monster turns into a corpse, does not block, cant be attacked, does not move
+    state.status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
+    monster.char = '%'
+    monster.color = libtcod.dark_red
+    monster.blocks = False
+    monster.fighter = None
+    monster.ai = None
+    monster.name = 'remains of ' + monster.name
+    monster.send_to_back(state.objects)
+
+def cast_heal(state):
+    if state.player.fighter.hp == state.player.fighter.max_hp:
+        state.status_panel.message('You are already at full health.', libtcod.red)
+        return Constants.CANCELLED
+    state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
+    state.player.fighter.heal(Constants.HEAL_AMOUNT)
 
 class Map:
 
@@ -84,13 +132,13 @@ class Map:
             if not self.is_blocked(objects, x, y):
                 if libtcod.random_get_int(0, 0, 100) < 80: #80% chance of getting an orc
                     #create an orc
-                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function=DeathFunctions.monster_death)
+                    fighter_component = Fighter(hp=10, defense=0, power=3, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
                 else:
                     #Create a troll
-                    fighter_component = Fighter(hp=16, defense=1, power=4, death_function=DeathFunctions.monster_death)
+                    fighter_component = Fighter(hp=16, defense=1, power=4, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'T', 'troll', libtcod.darker_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
@@ -109,16 +157,16 @@ class Map:
                 dice = libtcod.random_get_int(0, 0, 100)
                 if dice < 1:
                     #create a healing potion
-                    item_component = Item(use_function=PotionFunctions.cast_heal)
+                    item_component = Item(use_function=cast_heal)
                     item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component)
                 elif dice < 99:
-                    item_component = Item(use_function=ScrollFunctions.cast_fireball)
+                    item_component = Item(use_function=cast_fireball)
                     item = Object(x, y, '#', 'scroll of FIREBALL', libtcod.light_yellow, item=item_component)
                 elif dice < 98:
-                    item_component = Item(use_function=ScrollFunctions.cast_confuse)
+                    item_component = Item(use_function=cast_confuse)
                     item = Object(x, y, '#', 'scroll of CONFUSE', libtcod.light_yellow, item=item_component)
                 else:
-                    item_component = Item(use_function=ScrollFunctions.cast_lightning)
+                    item_component = Item(use_function=cast_lightning)
                     item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component)
 
                 objects.append(item)

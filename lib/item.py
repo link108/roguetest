@@ -1,7 +1,7 @@
 __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
-from lib.constants import Constants
+from lib.constants.constants import Constants
 
 class Item:
 
@@ -10,14 +10,14 @@ class Item:
         self.use_function = use_function
 
     # an item that can be picked up and used.
-    def pick_up(self, inventory):
+    def pick_up(self, state):
         #add to the player's inventory and remove from the map
-        if len(inventory.inventory) >= 26:
-            inventory.status_panel.message('Your inventory is full, cannot pick up ' + self.owner.name + '.', libtcod.red)
+        if len(state.player_inventory.inventory) >= 26:
+            state.inventory.status_panel.message('Your inventory is full, cannot pick up ' + self.owner.name + '.', libtcod.red)
         else:
-            inventory.inventory.append(self.owner)
-            inventory.objects.remove(self.owner)
-            inventory.status_panel.message('You picked up a ' + self.owner.name + '!', libtcod.green)
+            state.player_inventory.inventory.append(self.owner)
+            state.objects.remove(self.owner)
+            state.status_panel.message('You picked up a ' + self.owner.name + '!', libtcod.green)
 
     def use(self, util):
         #call use_function if defined

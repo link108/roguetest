@@ -3,7 +3,7 @@ __author__ = 'cmotevasselani'
 from lib import libtcodpy as libtcod
 
 from lib.consoles.status_panel import StatusPanel
-from lib.map_constants import MapConstants
+from lib.constants.map_constants import MapConstants
 
 class State:
 

@@ -1,7 +1,7 @@
 __author__ = 'cmotevasselani'
 
-
 import shelve
+import jsonpickle
 
 from lib import libtcodpy as libtcod
 from lib.utility_functions.death_functions import DeathFunctions
@@ -10,10 +10,19 @@ from lib.fighter import Fighter
 from lib.map import Map
 from lib.state import State
 from lib.inventory import Inventory
-from lib.map_constants import MapConstants
-from lib.constants import Constants
+from lib.constants.map_constants import MapConstants
+from lib.constants.constants import Constants
 from lib.util import Util
 from lib.consoles.menu import Menu
+
+def player_death(player, state):
+    #the game ended, yasd?
+    # global game_state
+    state.status_panel.message('You died!', libtcod.white)
+    Util.set_game_state(Constants.DEAD)
+    #player is a corpse
+    state.player.char = '%'
+    state.player.color = libtcod.dark_red
 
 class MainMenu:
 
@@ -50,8 +59,7 @@ class MainMenu:
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         #create the player object
 
-        # fighter_component = Fighter(hp = 30, defense = 2, power = 5, death_function = Util.player_death)
-        fighter_component = Fighter(hp=3, defense=2, power=50, death_function=DeathFunctions.player_death)
+        fighter_component = Fighter(hp=30, defense=20, power=50, death_function=player_death)
         self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
         #the list of all objects
         self.state.objects = [self.state.player]
@@ -71,6 +79,7 @@ class MainMenu:
 
     def play_game(self):
         Util.set_game_state(Constants.PLAYING)
+        Util.set_player_action(Constants.PLAYING)
         self.state.fov_recompute = True
 
         ###########################################
@@ -98,9 +107,9 @@ class MainMenu:
                         object.ai.take_turn(self.state)
 
     def save_game(self):
-        # for object in self.state.objects:
-        #     object.clear(self.state.con)
         file = shelve.open('savefile', 'n')
+        # file = shelve.open('savefile', protocol=2)
+        # file = open('savefile', 'w')
         file['game_map'] = self.state.game_map.game_map
         file['inventory'] = self.state.player_inventory.inventory
         file['game_messages'] = self.state.status_panel.game_messages
@@ -110,10 +119,10 @@ class MainMenu:
 
     def load_game(self):
         file = shelve.open('savefile', 'r')
-        self.state.player_inventory = file['inventory']
-        self.state.status_panel = file['status_panel']
+        self.state.game_map.game_map = file['game_map']
+        self.state.player_inventory.inventory = file['inventory']
+        self.state.status_panel.game_messages = file['game_messages']
         self.state.objects = file['objects']
-        self.state.game_map = file['game_map']
         self.state.player = self.state.objects[file['player_index']]
         file.close()
         self.initialize_fov()

@@ -1,8 +1,7 @@
 __author__ = 'cmotevasselani'
 
-from lib.consoles.console import Console
 from lib import libtcodpy as libtcod
-from lib.map_constants import MapConstants
+from lib.constants.map_constants import MapConstants
 
 
 class Menu:

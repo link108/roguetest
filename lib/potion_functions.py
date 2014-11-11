@@ -1,7 +1,7 @@
 __author__ = 'cmotevasselani'
 
 from lib import libtcodpy as libtcod
-from lib.constants import Constants
+from lib.constants.constants import Constants
 
 
 class PotionFunctions:

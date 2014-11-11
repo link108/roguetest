@@ -94,8 +94,6 @@ class MainMenu:
             #erase all objects at their old locations, before they move
             for object in self.state.objects:
                 object.clear(self.state.con)
-            if Util.get_player_action() == Constants.NEXT_LEVEL:
-                self.next_level()
 
             #handle keys and exit game
             Util.handle_keys(self.state)
@@ -108,6 +106,8 @@ class MainMenu:
                 for object in self.state.objects:
                     if object.ai:
                         object.ai.take_turn(self.state)
+            if Util.get_player_action() == Constants.NEXT_LEVEL:
+                self.next_level()
 
     def next_level(self):
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)

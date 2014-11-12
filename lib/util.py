@@ -179,9 +179,14 @@ class Util:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
 
     @staticmethod
+    def random_choice(chances_dict):
+        chances = chances_dict.values()
+        strings = chances_dict.keys()
+        return strings[Util.random_chance_index(chances)]
+
+    @staticmethod
     def random_chance_index(chances):
         dice = libtcod.random_get_int(0, 1, sum(chances))
-
         running_sum = 0
         choice = 0
         for w in chances:
@@ -267,6 +272,7 @@ class Util:
                 state.player.fighter.power += 1
             elif choice == 2:
                 state.player.fighter.defense += 1
+        Util.refresh(state)
 
 
     @staticmethod

@@ -30,16 +30,17 @@ def cast_fireball(state):
                                 + str(Constants.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
             object.fighter.take_damage(Constants.FIREBALL_DAMAGE, state)
 
-def cast_confuse(util):
+def cast_confuse(state):
     # monster = Constants.closest_monster(util, Constants.CONFUSE_RANGE)
-    monster = Util.target_monster(util, Constants.CONFUSE_RANGE)
+    monster = Util.target_monster(state, Constants.CONFUSE_RANGE)
     if monster is None:
-        util.status_panel.message('No enemy is close enough to confuse', libtcod.red)
+        state.status_panel.message('No enemy is close enough to confuse', libtcod.red)
         return Constants.CANCELLED
     old_ai = monster.ai
-    monster.ai = ConfusedMonster(old_ai, util)
+    monster.ai = ConfusedMonster(old_ai, state)
+    monster.clear(state.con)
     monster.ai.owner = monster
-    util.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
+    state.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
 
 def cast_lightning(state):
     monster = Util.closest_monster(state, Constants.LIGHTNING_RANGE)
@@ -132,8 +133,16 @@ class Map:
 
     def place_objects(self, room, objects):
         #choose random number of monsters
-        monster_chances = [80, 20]
-        item_chances = [7, 10, 100, 10]
+        monster_chances = {
+            MapConstants.ORC: 80,
+            MapConstants.TROLL: 20
+        }
+        item_chances = {
+            MapConstants.HEALTH_POTION: 7,
+            MapConstants.SCROLL_OF_LIGHTNING_BOLT: 10,
+            MapConstants.SCROLL_OF_FIREBALL: 10,
+            MapConstants.SCROLL_OF_CONFUSE: 100
+        }
         num_monsters = libtcod.random_get_int(0, 0, MapConstants.MAX_ROOM_MONSTERS)
 
         for i in range(num_monsters):
@@ -142,18 +151,18 @@ class Map:
             y = libtcod.random_get_int(0, room.y1 + 1, room.y2 - 1)
 
             if not self.is_blocked(objects, x, y):
-                choice = Util.random_chance_index(monster_chances)
-                if choice == 0:
+                choice = Util.random_choice(monster_chances)
+                if choice == MapConstants.ORC:
                     #create an orc
                     fighter_component = Fighter(hp=10, defense=0, power=3, xp=35, death_function=monster_death)
                     ai_component = BasicMonster()
-                    monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks=True,
+                    monster = Object(x, y, 'o', MapConstants.ORC,  libtcod.desaturated_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
-                elif choice == 1:
+                elif choice == MapConstants.TROLL:
                     #Create a troll
                     fighter_component = Fighter(hp=16, defense=1, power=4, xp=100, death_function=monster_death)
                     ai_component = BasicMonster()
-                    monster = Object(x, y, 'T', 'troll', libtcod.darker_green, blocks=True,
+                    monster = Object(x, y, 'T', MapConstants.TROLL, libtcod.darker_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
                 objects.append(monster)
 
@@ -167,20 +176,20 @@ class Map:
 
             #only place it if the tile is not blocked
             if not self.is_blocked(objects, x, y):
-                choice = Util.random_chance_index(item_chances)
-                if choice == 0:
+                choice = Util.random_choice(item_chances)
+                if choice == MapConstants.HEALTH_POTION:
                     #create a healing potion
                     item_component = Item(use_function=cast_heal)
-                    item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component, always_visible=True)
-                elif choice == 1:
+                    item = Object(x, y, '!', MapConstants.HEALTH_POTION, libtcod.violet, item=item_component, always_visible=True)
+                elif choice == MapConstants.SCROLL_OF_FIREBALL:
                     item_component = Item(use_function=cast_fireball)
-                    item = Object(x, y, '#', 'scroll of FIREBALL', libtcod.light_yellow, item=item_component, always_visible=True)
-                elif choice == 2:
+                    item = Object(x, y, '#', MapConstants.SCROLL_OF_FIREBALL, libtcod.light_yellow, item=item_component, always_visible=True)
+                elif choice == MapConstants.SCROLL_OF_CONFUSE:
                     item_component = Item(use_function=cast_confuse)
-                    item = Object(x, y, '#', 'scroll of CONFUSE', libtcod.light_yellow, item=item_component, always_visible=True)
-                elif choice == 3:
+                    item = Object(x, y, '#', MapConstants.SCROLL_OF_CONFUSE, libtcod.light_yellow, item=item_component, always_visible=True)
+                elif choice == MapConstants.SCROLL_OF_LIGHTNING_BOLT:
                     item_component = Item(use_function=cast_lightning)
-                    item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component, always_visible=True)
+                    item = Object(x, y, '#', MapConstants.SCROLL_OF_LIGHTNING_BOLT, libtcod.light_yellow, item=item_component, always_visible=True)
 
                 objects.append(item)
                 item.send_to_back(objects)  #items appear below other objects

@@ -58,7 +58,7 @@ class MainMenu:
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         #create the player object
 
-        fighter_component = Fighter(hp=30, defense=20, power=50, xp=0, death_function=player_death)
+        fighter_component = Fighter(hp=30, defense=2, power=5, xp=0, death_function=player_death)
         self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
         self.state.player.level = 1
         #the list of all objects

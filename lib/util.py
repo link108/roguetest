@@ -150,6 +150,8 @@ class Util:
                 Util.player_move_or_attack(state, -1, 1)
             elif key.c == ord('n'):
                 Util.player_move_or_attack(state, 1, 1)
+            elif key.c == ord('.'):
+                pass
             elif key.c == ord('i'):
                 chosen_item = state.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', state)
                 if chosen_item is not None:
@@ -165,10 +167,29 @@ class Util:
                         object.item.pick_up(state)
                         break
             elif key.c == ord('>'):
-                # if state.stairs.x == state.player.x and state.stairs.y == state.player.y:
-                Util.set_player_action(Constants.NEXT_LEVEL)
+                if state.stairs.x == state.player.x and state.stairs.y == state.player.y:
+                    Util.set_player_action(Constants.NEXT_LEVEL)
+            elif key.c == ord('c'):
+                #show character information
+                level_up_xp = Constants.LEVEL_UP_BASE + state.player.level * Constants.LEVEL_UP_FACTOR
+                Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
+                    '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp) +
+                    '\nAttack: ' + str(state.player.fighter.power) + '\nDefense: ' + str(state.player.fighter.defense), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
             else:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+
+    @staticmethod
+    def random_chance_index(chances):
+        dice = libtcod.random_get_int(0, 1, sum(chances))
+
+        running_sum = 0
+        choice = 0
+        for w in chances:
+            running_sum += w
+
+            if dice <= running_sum:
+                return choice
+            choice += 1
 
     @staticmethod
     def target_tile(state):
@@ -188,6 +209,7 @@ class Util:
         # while
         if Util.get_target_x() is None or Util.get_target_y() is None:
             return Constants.CANCELLED
+        state.game_map.get_map()[Util.get_target_x()][Util.get_target_y()].set_targeted(False)
         return Util.get_target_x(), Util.get_target_y()
 
     @staticmethod
@@ -200,11 +222,26 @@ class Util:
 
 
     @staticmethod
+    def closest_monster(state, max_range):
+        # Find closest enemy, up to a max range and within the player's FOV
+        closest_enemy = None
+        closest_dist = max_range + 1
+
+        for object in state.objects:
+            if object.fighter and not object == state.player and libtcod.map_is_in_fov(state.fov_map, object.x, object.y):
+                dist = state.player.distance_to(object)
+                if dist < closest_dist:
+                    closest_enemy = object
+                    closest_dist = dist
+        return closest_enemy
+
+    @staticmethod
     def target_monster(state, max_range=None):
-        while True:
+        Util.set_game_state(Constants.TARGETING)
+        while Util.get_game_state() == Constants.TARGETING:
             (x, y) = Util.target_tile(state)
-            if x is None:
-                return None
+            if x is None or y is None:
+                return Constants.CANCELLED
 
             for object in state.objects:
                 if object.x == x and object.y == y and object.fighter and object != state.player:

@@ -7,7 +7,7 @@ from lib.util import Util
 from lib.ai.confused_monster import ConfusedMonster
 
 
-class ScrollFunctions:
+# class ScrollFunctions:
     #
     # @staticmethod
     # def cast_fireball(state):
@@ -42,17 +42,17 @@ class ScrollFunctions:
     #     state.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
     #                         + str(Constants.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
     #     monster.fighter.take_damage(Constants.LIGHTNING_DAMAGE, state)
-
-    @staticmethod
-    def closest_monster(state, max_range):
-        # Find closest enemy, up to a max range and within the player's FOV
-        closest_enemy = None
-        closest_dist = max_range + 1
-
-        for object in state.objects:
-            if object.fighter and not object == state.player and libtcod.map_is_in_fov(state.fov_map, object.x, object.y):
-                dist = state.player.distance_to(object)
-                if dist < closest_dist:
-                    closest_enemy = object
-                    closest_dist = dist
-        return closest_enemy
+    #
+    # @staticmethod
+    # def closest_monster(state, max_range):
+    #     # Find closest enemy, up to a max range and within the player's FOV
+    #     closest_enemy = None
+    #     closest_dist = max_range + 1
+    #
+    #     for object in state.objects:
+    #         if object.fighter and not object == state.player and libtcod.map_is_in_fov(state.fov_map, object.x, object.y):
+    #             dist = state.player.distance_to(object)
+    #             if dist < closest_dist:
+    #                 closest_enemy = object
+    #                 closest_dist = dist
+    #     return closest_enemy

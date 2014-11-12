@@ -37,5 +37,6 @@ class MapConstants:
     STAIRS_OBJECT = '>'
 
     LEVEL_SCREEN_WIDTH = 40
+    CHARACTER_SCREEN_WIDTH = 30
 
 

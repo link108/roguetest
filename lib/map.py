@@ -35,17 +35,17 @@ def cast_confuse(util):
     monster = Util.target_monster(util, Constants.CONFUSE_RANGE)
     if monster is None:
         util.status_panel.message('No enemy is close enough to confuse', libtcod.red)
-        return Item.CANCELLED
+        return Constants.CANCELLED
     old_ai = monster.ai
     monster.ai = ConfusedMonster(old_ai, util)
     monster.ai.owner = monster
     util.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
 
 def cast_lightning(state):
-    monster = Constants.closest_monster(state, Constants.LIGHTNING_RANGE)
+    monster = Util.closest_monster(state, Constants.LIGHTNING_RANGE)
     if monster is None:
         state.status_panel.message('No enemy is close enough to strike with lightning', libtcod.red)
-        return Item.CANCELLED
+        return Constants.CANCELLED
     state.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
                         + str(Constants.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
     monster.fighter.take_damage(Constants.LIGHTNING_DAMAGE, state)
@@ -55,7 +55,7 @@ def cast_lightning(state):
 
 def monster_death(monster, state):
     #monster turns into a corpse, does not block, cant be attacked, does not move
-    state.status_panel.message(monster.name.capitalize() + ' is dead!', libtcod.white)
+    state.status_panel.message(monster.name.capitalize() + ' is dead! You gain ' + str(monster.fighter.xp) + ' xp!', libtcod.white)
     monster.char = '%'
     monster.color = libtcod.dark_red
     monster.blocks = False
@@ -132,6 +132,8 @@ class Map:
 
     def place_objects(self, room, objects):
         #choose random number of monsters
+        monster_chances = [80, 20]
+        item_chances = [7, 10, 100, 10]
         num_monsters = libtcod.random_get_int(0, 0, MapConstants.MAX_ROOM_MONSTERS)
 
         for i in range(num_monsters):
@@ -140,13 +142,14 @@ class Map:
             y = libtcod.random_get_int(0, room.y1 + 1, room.y2 - 1)
 
             if not self.is_blocked(objects, x, y):
-                if libtcod.random_get_int(0, 0, 100) < 80: #80% chance of getting an orc
+                choice = Util.random_chance_index(monster_chances)
+                if choice == 0:
                     #create an orc
                     fighter_component = Fighter(hp=10, defense=0, power=3, xp=35, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', 'orc',  libtcod.desaturated_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
-                else:
+                elif choice == 1:
                     #Create a troll
                     fighter_component = Fighter(hp=16, defense=1, power=4, xp=100, death_function=monster_death)
                     ai_component = BasicMonster()
@@ -164,18 +167,18 @@ class Map:
 
             #only place it if the tile is not blocked
             if not self.is_blocked(objects, x, y):
-                dice = libtcod.random_get_int(0, 0, 100)
-                if dice < 1:
+                choice = Util.random_chance_index(item_chances)
+                if choice == 0:
                     #create a healing potion
                     item_component = Item(use_function=cast_heal)
                     item = Object(x, y, '!', 'healing potion', libtcod.violet, item=item_component, always_visible=True)
-                elif dice < 99:
+                elif choice == 1:
                     item_component = Item(use_function=cast_fireball)
                     item = Object(x, y, '#', 'scroll of FIREBALL', libtcod.light_yellow, item=item_component, always_visible=True)
-                elif dice < 98:
+                elif choice == 2:
                     item_component = Item(use_function=cast_confuse)
                     item = Object(x, y, '#', 'scroll of CONFUSE', libtcod.light_yellow, item=item_component, always_visible=True)
-                else:
+                elif choice == 3:
                     item_component = Item(use_function=cast_lightning)
                     item = Object(x, y, '#', 'scroll of LIGHTNING BOLT', libtcod.light_yellow, item=item_component, always_visible=True)
 

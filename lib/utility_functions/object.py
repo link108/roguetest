@@ -2,7 +2,7 @@ __author__ = 'cmotevasselani'
 
 import math
 
-from util import *
+from lib.utility_functions.util import *
 
 
 class Object:

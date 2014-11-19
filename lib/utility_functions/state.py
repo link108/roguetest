@@ -1,6 +1,6 @@
-__author__ = 'cmotevasselani'
+from lib.random_libs import libtcodpy as libtcod
 
-from lib import libtcodpy as libtcod
+__author__ = 'cmotevasselani'
 
 from lib.consoles.status_panel import StatusPanel
 from lib.constants.map_constants import MapConstants

@@ -1,11 +1,12 @@
-__author__ = 'cmotevasselani'
+from lib.random_libs import libtcodpy as libtcod
 
-from lib import libtcodpy as libtcod
+__author__ = 'cmotevasselani'
 
 
 class Fighter:
     #combat related properties and methods (npcs, monsters, player)
     def __init__(self, hp, defense, power, xp, death_function=None):
+        self.level = 1
         self.max_hp = hp
         self.xp = xp
         self.hp = hp

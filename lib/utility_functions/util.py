@@ -1,6 +1,7 @@
+from lib.random_libs import libtcodpy as libtcod
+
 __author__ = 'cmotevasselani'
 
-from lib import libtcodpy as libtcod
 from lib.constants.map_constants import MapConstants
 from lib.consoles.menu import Menu
 from lib.constants.constants import Constants
@@ -339,7 +340,9 @@ class Util:
         #show the player's stats
         state.status_panel.render_bar(1, 1, MapConstants.BAR_WIDTH, 'HP', state.player.fighter.hp, state.player.fighter.max_hp,
             libtcod.light_red, libtcod.darker_red)
-        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level ' + str(state.dungeon_level))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Player level: ' + str(state.player.level))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 4, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: ' + str(state.dungeon_level))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
 
         #blit the contents of "panel" to the root console
         libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)

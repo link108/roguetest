@@ -1,6 +1,6 @@
 from ctypes import *
 
-from lib.libtcodpy import Color
+from lib.random_libs.libtcodpy import Color
 
 
 # HACK for return types

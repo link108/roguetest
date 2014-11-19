@@ -276,6 +276,13 @@ class Util:
 
 
     @staticmethod
+    def from_dungeon_level(state, table):
+        for (value, level) in reversed(table):
+            if state.dungeon_level >= level:
+                return value
+        return 0
+
+    @staticmethod
     def get_target_coords():
         x = Util.get_target_y()
         y = Util.get_target_y()

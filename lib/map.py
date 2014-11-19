@@ -6,7 +6,7 @@ from lib.tile import Tile
 from lib.rectangle import Rect
 from lib.object import Object
 from lib.fighter import Fighter
-from lib.basic_monster import BasicMonster
+from lib.ai.basic_monster import BasicMonster
 from lib.item import Item
 from lib.util import Util
 from lib.constants.map_constants import MapConstants
@@ -78,6 +78,7 @@ def cast_heal(state):
 class Map:
 
     def __init__(self, state):
+        self.state = state
         self.status_panel = state.status_panel
         self.player = state.player
         self.game_map = None
@@ -132,18 +133,18 @@ class Map:
             self.game_map[x][y].set_block_sight(False)
 
     def place_objects(self, room, objects):
+
+        max_monsters_table = [[2, 1], [3, 4], [5, 6]]
+        max_monsters = Util.from_dungeon_level(self.state, max_monsters_table)
+
         #choose random number of monsters
         monster_chances = {
             MapConstants.ORC: 80,
-            MapConstants.TROLL: 20
+            MapConstants.TROLL: Util.from_dungeon_level(self.state, [[15, 3], [30, 5], [60, 7]])
         }
-        item_chances = {
-            MapConstants.HEALTH_POTION: 7,
-            MapConstants.SCROLL_OF_LIGHTNING_BOLT: 10,
-            MapConstants.SCROLL_OF_FIREBALL: 10,
-            MapConstants.SCROLL_OF_CONFUSE: 100
-        }
-        num_monsters = libtcod.random_get_int(0, 0, MapConstants.MAX_ROOM_MONSTERS)
+
+
+        num_monsters = libtcod.random_get_int(0, 0, max_monsters)
 
         for i in range(num_monsters):
             #choose random spot for this monster
@@ -154,20 +155,28 @@ class Map:
                 choice = Util.random_choice(monster_chances)
                 if choice == MapConstants.ORC:
                     #create an orc
-                    fighter_component = Fighter(hp=10, defense=0, power=3, xp=35, death_function=monster_death)
+                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', MapConstants.ORC,  libtcod.desaturated_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
                 elif choice == MapConstants.TROLL:
                     #Create a troll
-                    fighter_component = Fighter(hp=16, defense=1, power=4, xp=100, death_function=monster_death)
+                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'T', MapConstants.TROLL, libtcod.darker_green, blocks=True,
                                     fighter=fighter_component, ai=ai_component)
                 objects.append(monster)
 
+        max_items_table = [[1, 1], [2, 4]]
+        max_items = Util.from_dungeon_level(self.state, max_items_table)
+        item_chances = {
+            MapConstants.HEALTH_POTION: 35,
+            MapConstants.SCROLL_OF_LIGHTNING_BOLT: Util.from_dungeon_level(self.state, [[25, 4]]),
+            MapConstants.SCROLL_OF_FIREBALL: Util.from_dungeon_level(self.state, [[25, 6]]),
+            MapConstants.SCROLL_OF_CONFUSE: Util.from_dungeon_level(self.state, [[10, 2]])
+        }
         #choose random number of items
-        num_items = libtcod.random_get_int(0, 0, MapConstants.MAX_ROOM_ITEMS)
+        num_items = libtcod.random_get_int(0, 0, max_items)
 
         for i in range(num_items):
             #choose random spot for this item

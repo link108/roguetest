@@ -12,13 +12,13 @@ class Constants:
     #Scroll functions
     CONFUSE_RANGE = 8
     LIGHTNING_RANGE = 5
-    LIGHTNING_DAMAGE = 20
+    LIGHTNING_DAMAGE = 40
     FIREBALL_RANGE = 6
     FIREBALL_RADIUS = 3
-    FIREBALL_DAMAGE = 20
+    FIREBALL_DAMAGE = 25
 
     #Potion functions
-    HEAL_AMOUNT = 4
+    HEAL_AMOUNT = 40
 
     #Util
     TARGETING = 'targeting'

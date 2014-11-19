@@ -24,18 +24,25 @@ class Inventory:
         if len(self.inventory) == 0:
             options = ['Inventory is empty.']
         else:
-            options = [item.name for item in self.inventory]
+            options = []
+            for item in state.player_inventory.inventory:
+                text = item.name
+                if item.equipment and item.equipment.is_equipped:
+                    text = text + ' (on ' + item.equipment.slot + ')'
+                options.append(text)
+
+
 
         index = self.menu.display_menu(header, options, Constants.INVENTORY_WIDTH, state.con)
 
         if index is None or len(self.inventory) == 0: return None;
         return self.inventory[index].item
 
-    def drop(self, object):
-        self.objects.append(object.owner)
-        self.inventory.remove(object.owner)
-        object.owner.x = self.player.x
-        object.owner.y = self.player.y
-        self.status_panel.message('You drop a ' + object.owner.name + '.', libtcod.turquoise)
+    # def drop(self, object):
+    #     self.objects.append(object.owner)
+    #     self.inventory.remove(object.owner)
+    #     object.owner.x = self.player.x
+    #     object.owner.y = self.player.y
+    #     self.status_panel.message('You drop a ' + object.owner.name + '.', libtcod.turquoise)
 
 

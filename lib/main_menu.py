@@ -1,17 +1,17 @@
+
 __author__ = 'cmotevasselani'
 
+from lib.random_libs import libtcodpy as libtcod
 import shelve
-import jsonpickle
 
-from lib import libtcodpy as libtcod
-from lib.object import Object
-from lib.fighter import Fighter
-from lib.map import Map
-from lib.state import State
-from lib.inventory import Inventory
+from lib.utility_functions.object import Object
+from lib.characters.fighter import Fighter
+from lib.map_components.map import Map
+from lib.utility_functions.state import State
+from lib.items.inventory import Inventory
 from lib.constants.map_constants import MapConstants
 from lib.constants.constants import Constants
-from lib.util import Util
+from lib.utility_functions.util import Util
 from lib.consoles.menu import Menu
 
 def player_death(player, state):
@@ -112,6 +112,7 @@ class MainMenu:
                 self.next_level()
 
     def next_level(self):
+        self.state.objects = [self.state.player]
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
         self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
@@ -120,10 +121,6 @@ class MainMenu:
         self.state.dungeon_level += 1
         Util.set_player_action(None)
         self.state.fov_recompute = True
-
-
-
-
 
     def save_game(self):
         file = shelve.open(Constants.SAVE_FILE, 'n')

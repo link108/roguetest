@@ -1,6 +1,7 @@
+from lib.random_libs import libtcodpy as libtcod
+
 __author__ = 'cmotevasselani'
 
-from lib import libtcodpy as libtcod
 
 class MapConstants:
 
@@ -45,11 +46,12 @@ class MapConstants:
     ORC = 'orc'
 
 
-    #Items
+    #items
     HEALTH_POTION = 'health potion'
     SCROLL_OF_FIREBALL = 'scroll of fireball'
     SCROLL_OF_CONFUSE = 'scroll of confuse'
     SCROLL_OF_LIGHTNING_BOLT = 'scroll of lightning-bolt'
+    SWORD = 'sword'
 
 
 

@@ -3,13 +3,13 @@ __author__ = 'cmotevasselani'
 
 class Constants:
 
-    #Inventory
+    # Inventory
     INVENTORY_WIDTH = 50
 
-    # Item
+    #  Item
     CANCELLED = 'cancelled'
 
-    #Scroll functions
+    # Scroll functions
     CONFUSE_RANGE = 8
     LIGHTNING_RANGE = 5
     LIGHTNING_DAMAGE = 40
@@ -17,10 +17,10 @@ class Constants:
     FIREBALL_RADIUS = 3
     FIREBALL_DAMAGE = 25
 
-    #Potion functions
+    # Potion functions
     HEAL_AMOUNT = 40
 
-    #Util
+    # Util
     TARGETING = 'targeting'
     FOUND_TARGET = 'found-target'
     PLAYING = 'playing'
@@ -29,12 +29,14 @@ class Constants:
     DID_NOT_TAKE_TURN = 'did-not-take-turn'
     NEXT_LEVEL = 'next-level'
 
-    #Save file name
+    # Save file name
     SAVE_FILE = 'savefile'
 
-    #MainMenu
+    # MainMenu
     LEVEL_UP_BASE = 20
     LEVEL_UP_FACTOR = 70
-    # LEVEL_UP_BASE = 200
-    # LEVEL_UP_FACTOR = 150
+    #  LEVEL_UP_BASE = 200
+    #  LEVEL_UP_FACTOR = 150
 
+    # Equipment
+    RIGHT_HAND = 'right-hand'

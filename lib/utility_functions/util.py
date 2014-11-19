@@ -160,7 +160,7 @@ class Util:
             elif key.c == ord('d'):
                 chosen_item = state.player_inventory.inventory_menu('Press the key next to an item to drop it, or any other to cancel.\n', state)
                 if chosen_item is not None:
-                    state.player_inventory.drop(chosen_item)
+                    chosen_item.drop(state)
             elif key.c == ord('g'):
                 #pick up an item
                 for object in state.objects:  #look for an item in the player's tile
@@ -290,6 +290,13 @@ class Util:
         return x, y
 
     @staticmethod
+    def get_equipped_in_slot(state, slot):
+        for object in state.player_inventory.inventory:
+            if object.equipment and object.equipment.slot == slot and object.equipment.is_equipped:
+                return object
+        return None
+
+    @staticmethod
     def render_all(state):
         if state.fov_recompute:
             #recompute FOV if needed
@@ -318,19 +325,15 @@ class Util:
                         else:
                             libtcod.console_set_char_background(state.con, x, y, MapConstants.COLOR_lIGHT_GROUND, libtcod.BKGND_SET)
                         state.game_map.get_map()[x][y].explored = True
-
         #draw all objects in the list
         for object in state.objects:
             if object != state.player:
                 object.draw(state)
         state.player.draw(state)
-
         libtcod.console_blit(state.con, 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.SCREEN_HEIGHT, 0, 0, 0)
-
         #prepare to render the GUI panel
         libtcod.console_set_default_background(state.status_panel.get_panel(), libtcod.black)
         libtcod.console_clear(state.status_panel.get_panel())
-
         #print the game messages, one line at a time
         y = 1
         for (line, color) in state.status_panel.game_messages:
@@ -343,10 +346,8 @@ class Util:
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Player level: ' + str(state.player.level))
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 4, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: ' + str(state.dungeon_level))
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
-
         #blit the contents of "panel" to the root console
         libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)
-
         #show the player's stats
         # libtcod.console_set_default_foreground(con, libtcod.white)
         # libtcod.console_print_ex(0, 1, SCREEN_HEIGHT - 2, libtcod.BKGND_NONE, libtcod.LEFT,

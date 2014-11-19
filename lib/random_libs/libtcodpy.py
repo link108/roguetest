@@ -126,7 +126,7 @@ class Color(Structure):
 
 # Should be valid on any platform, check it!  Has to be done after Color is defined.
 if MAC:
-    from lib.cprotos import setup_protos
+    from lib.random_libs.cprotos import setup_protos
     setup_protos(_lib)
 
 _lib.TCOD_color_equals.restype = c_bool

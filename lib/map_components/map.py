@@ -2,12 +2,13 @@ from lib.random_libs import libtcodpy as libtcod
 
 __author__ = 'cmotevasselani'
 
-from lib.tile import Tile
-from lib.rectangle import Rect
-from lib.object import Object
-from lib.fighter import Fighter
+from lib.map_components.tile import Tile
+from lib.map_components.rectangle import Rect
+from lib.utility_functions.object import Object
+from lib.characters.fighter import Fighter
 from lib.ai.basic_monster import BasicMonster
-from lib.item import Item
+from lib.items.item import Item
+from lib.items.equipment import Equipment
 from lib.utility_functions.util import Util
 from lib.constants.map_constants import MapConstants
 from lib.constants.constants import Constants
@@ -167,13 +168,14 @@ class Map:
                                     fighter=fighter_component, ai=ai_component)
                 objects.append(monster)
 
-        max_items_table = [[1, 1], [2, 4]]
+        max_items_table = [[3, 1], [5, 4]]
         max_items = Util.from_dungeon_level(self.state, max_items_table)
         item_chances = {
             MapConstants.HEALTH_POTION: 35,
             MapConstants.SCROLL_OF_LIGHTNING_BOLT: Util.from_dungeon_level(self.state, [[25, 1]]),
             MapConstants.SCROLL_OF_FIREBALL: Util.from_dungeon_level(self.state, [[25, 1]]),
-            MapConstants.SCROLL_OF_CONFUSE: Util.from_dungeon_level(self.state, [[10, 1]])
+            MapConstants.SCROLL_OF_CONFUSE: Util.from_dungeon_level(self.state, [[10, 1]]),
+            MapConstants.SWORD: 50
         }
         #choose random number of items
         num_items = libtcod.random_get_int(0, 0, max_items)
@@ -199,6 +201,9 @@ class Map:
                 elif choice == MapConstants.SCROLL_OF_LIGHTNING_BOLT:
                     item_component = Item(use_function=cast_lightning)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_LIGHTNING_BOLT, libtcod.light_yellow, item=item_component, always_visible=True)
+                elif choice == MapConstants.SWORD:
+                    equipment_component = Equipment(self.state, Constants.RIGHT_HAND)
+                    item = Object(x, y, '/', MapConstants.SWORD, libtcod.red, equipment=equipment_component, always_visible=True)
 
                 objects.append(item)
                 item.send_to_back(objects)  #items appear below other objects

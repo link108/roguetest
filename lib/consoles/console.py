@@ -1,6 +1,7 @@
+from lib.random_libs import libtcodpy as libtcod
+
 __author__ = 'cmotevasselani'
 
-from lib import libtcodpy as libtcod
 
 class Console:
 

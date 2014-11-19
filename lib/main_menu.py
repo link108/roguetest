@@ -9,12 +9,13 @@ from lib.characters.fighter import Fighter
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
 from lib.items.inventory import Inventory
+from lib.items.equipment import Equipment
 from lib.constants.map_constants import MapConstants
 from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
 from lib.consoles.menu import Menu
 
-def player_death(player, state):
+def player_death(state):
     #the game ended, yasd?
     # global game_state
     state.status_panel.message('You died!', libtcod.white)
@@ -58,13 +59,18 @@ class MainMenu:
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         #create the player object
 
-        fighter_component = Fighter(hp=100, defense=1, power=4, xp=0, death_function=player_death)
+        fighter_component = Fighter(self.state, hp=100, defense=1, power=4, xp=0, death_function=player_death)
         self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
         self.state.player.level = 1
         #the list of all objects
         self.state.objects = [self.state.player]
         self.state.player_inventory = Inventory(self.state)
         self.state.dungeon_level = 1
+
+        equipment_component = Equipment(self.state, slot=Constants.RIGHT_HAND, power_bonus=2)
+        obj = Object(0, 0, '-', MapConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
+        self.state.player_inventory.inventory.append(obj)
+        equipment_component.equip()
 
         self.state.game_map = Map(self.state)
         self.state.game_map.make_map(self.state)

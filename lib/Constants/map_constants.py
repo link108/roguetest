@@ -52,6 +52,8 @@ class MapConstants:
     SCROLL_OF_CONFUSE = 'scroll of confuse'
     SCROLL_OF_LIGHTNING_BOLT = 'scroll of lightning-bolt'
     SWORD = 'sword'
+    SHIELD = 'shield'
+    DAGGER = 'dagger'
 
 
 

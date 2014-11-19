@@ -40,3 +40,4 @@ class Constants:
 
     # Equipment
     RIGHT_HAND = 'right-hand'
+    LEFT_HAND = 'left-hand'

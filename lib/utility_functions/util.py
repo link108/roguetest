@@ -297,6 +297,20 @@ class Util:
         return None
 
     @staticmethod
+    def get_all_equiped(state, obj):
+        if obj == state.player:
+            equipped_list = []
+            for item in state.player_inventory.inventory:
+                if item.equipment and item.equipment.is_equipped:
+                    equipped_list.append(item.equipment)
+            return equipped_list
+        else:
+            return []  # other objects dont have an inventory, TODO Add monster inventory
+
+
+
+
+    @staticmethod
     def render_all(state):
         if state.fov_recompute:
             #recompute FOV if needed

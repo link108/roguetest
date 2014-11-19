@@ -6,7 +6,10 @@ from lib.utility_functions.util import Util
 
 class Equipment:
 
-    def __init__(self, state, slot):
+    def __init__(self, state, slot, power_bonus=0, defense_bonus=0, hp_bonus=0):
+        self.power_bonus = power_bonus
+        self.defense_bonus = defense_bonus
+        self.hp_bonus = hp_bonus
         self.state = state
         self.slot = slot
         self.is_equipped = False

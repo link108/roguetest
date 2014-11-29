@@ -17,7 +17,6 @@ from lib.ai.confused_monster import ConfusedMonster
 ###### NOTE ######
 #### not a fan of this implementation, I couldn't find another way of saving/loading funtions
 #### unless they were not in a class. Suggestions are welcome
-#### -Cameron
 
 ###### ScrollFunctions
 
@@ -76,6 +75,12 @@ def cast_heal(state):
     state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
     state.player.fighter.heal(Constants.HEAL_AMOUNT)
 
+
+####################################################
+#################### Map Class #####################
+####################################################
+
+
 class Map:
 
     def __init__(self, state):
@@ -83,7 +88,7 @@ class Map:
         self.status_panel = state.status_panel
         self.player = state.player
         self.game_map = None
-
+        self.other_game_map = {}
 
     def get_objects(self):
         return self.objects
@@ -133,8 +138,7 @@ class Map:
             self.game_map[x][y].set_blocked(False)
             self.game_map[x][y].set_block_sight(False)
 
-    def place_objects(self, room, objects):
-
+    def place_monsters(self, room, objects):
         max_monsters_table = [[2, 1], [3, 4], [5, 6]]
         max_monsters = Util.from_dungeon_level(self.state, max_monsters_table)
 
@@ -143,10 +147,7 @@ class Map:
             MapConstants.ORC: 80,
             MapConstants.TROLL: Util.from_dungeon_level(self.state, [[15, 3], [30, 5], [60, 7]])
         }
-
-
         num_monsters = libtcod.random_get_int(0, 0, max_monsters)
-
         for i in range(num_monsters):
             #choose random spot for this monster
             x = libtcod.random_get_int(0, room.x1 + 1, room.x2 - 1)
@@ -159,15 +160,16 @@ class Map:
                     fighter_component = Fighter(self.state, hp=20, defense=0, power=4, xp=35, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', MapConstants.ORC,  libtcod.desaturated_green, blocks=True,
-                                    fighter=fighter_component, ai=ai_component)
+                                     fighter=fighter_component, ai=ai_component)
                 elif choice == MapConstants.TROLL:
                     #Create a troll
                     fighter_component = Fighter(self.state, hp=30, defense=2, power=8, xp=100, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'T', MapConstants.TROLL, libtcod.darker_green, blocks=True,
-                                    fighter=fighter_component, ai=ai_component)
+                                     fighter=fighter_component, ai=ai_component)
                 objects.append(monster)
 
+    def place_items(self, room, objects):
         max_items_table = [[3, 1], [5, 4]]
         max_items = Util.from_dungeon_level(self.state, max_items_table)
         item_chances = {
@@ -180,12 +182,10 @@ class Map:
         }
         #choose random number of items
         num_items = libtcod.random_get_int(0, 0, max_items)
-
         for i in range(num_items):
             #choose random spot for this item
             x = libtcod.random_get_int(0, room.x1+1, room.x2-1)
             y = libtcod.random_get_int(0, room.y1+1, room.y2-1)
-
             #only place it if the tile is not blocked
             if not self.is_blocked(objects, x, y):
                 choice = Util.random_choice(item_chances)
@@ -212,6 +212,9 @@ class Map:
                 objects.append(item)
                 item.send_to_back(objects)  #items appear below other objects
 
+    def place_objects(self, room, objects):
+        self.place_monsters(room, objects)
+        self.place_items(room, objects)
 
     def make_map(self, state):
         # global map, player
@@ -219,6 +222,11 @@ class Map:
         # self.map = [[ Tile(True)
         #     for y in range(MAP_HEIGHT) ]
         #         for x in range(MAP_WIDTH) ]
+
+        temp_game_map = [[ Tile(True)
+                           for y in range(MapConstants.MAP_HEIGHT) ]
+                         for x in range(MapConstants.MAP_WIDTH) ]
+        self.other_game_map = {state.dungeon_level: temp_game_map}
 
         self.game_map = [[ Tile(True)
             for y in range(MapConstants.MAP_HEIGHT) ]
@@ -286,5 +294,4 @@ class Map:
 
     def get_map(self):
         return self.game_map
-
 

@@ -118,13 +118,13 @@ class MainMenu:
                 self.next_level()
 
     def next_level(self):
+        self.state.dungeon_level += 1
         self.state.objects = [self.state.player]
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
         self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
         self.state.game_map.make_map(self.state)
         self.initialize_fov()
-        self.state.dungeon_level += 1
         Util.set_player_action(None)
         self.state.fov_recompute = True
 

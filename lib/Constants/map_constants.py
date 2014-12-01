@@ -35,7 +35,8 @@ class MapConstants:
 
     STAIRS_COLOR = libtcod.white
     STAIRS_NAME = 'stairs'
-    STAIRS_OBJECT = '>'
+    DOWN_STAIRS_OBJECT = '>'
+    UP_STAIRS_OBJECT = '<'
 
     LEVEL_SCREEN_WIDTH = 40
     CHARACTER_SCREEN_WIDTH = 30
@@ -45,6 +46,9 @@ class MapConstants:
     TROLL = 'troll'
     ORC = 'orc'
 
+    #Stairs
+    UP_STAIRS = 'up-stairs'
+    DOWN_STAIRS = 'down-stairs'
 
     #items
     HEALTH_POTION = 'health potion'

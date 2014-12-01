@@ -168,8 +168,13 @@ class Util:
                         object.item.pick_up(state)
                         break
             elif key.c == ord('>'):
-                if state.stairs.x == state.player.x and state.stairs.y == state.player.y:
+                padded_player_coords = Util.get_padded_coords(state.player.x, state.player.y)
+                if padded_player_coords in state.stairs[state.dungeon_level][MapConstants.DOWN_STAIRS_OBJECT].keys():
                     Util.set_player_action(Constants.NEXT_LEVEL)
+            elif key.c == ord('<'):
+                padded_player_coords = Util.get_padded_coords(state.player.x, state.player.y)
+                if padded_player_coords in state.stairs[state.dungeon_level][MapConstants.UP_STAIRS_OBJECT].keys():
+                    Util.set_player_action(Constants.PREVIOUS_LEVEL)
             elif key.c == ord('c'):
                 #show character information
                 level_up_xp = Constants.LEVEL_UP_BASE + state.player.level * Constants.LEVEL_UP_FACTOR
@@ -248,7 +253,6 @@ class Util:
             (x, y) = Util.target_tile(state)
             if x is None or y is None:
                 return Constants.CANCELLED
-
             for object in state.objects:
                 if object.x == x and object.y == y and object.fighter and object != state.player:
                     return object
@@ -307,8 +311,17 @@ class Util:
         else:
             return []  # other objects dont have an inventory, TODO Add monster inventory
 
+    # Need a better name
+    # Returns a string in the form xy with a single 0 padding
+    @staticmethod
+    def get_padded_coords(x, y):
+        return "{0}{1}".format(str(x).zfill(3), str(y).zfill(3))
 
-
+    @staticmethod
+    def get_coords_from_padded_coords(padded_coords):
+        x = padded_coords[:len(padded_coords)/2]
+        y = padded_coords[len(padded_coords)/2:]
+        return int(x), int(y)
 
     @staticmethod
     def render_all(state):

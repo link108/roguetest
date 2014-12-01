@@ -88,7 +88,9 @@ class Map:
         self.status_panel = state.status_panel
         self.player = state.player
         self.game_map = None
-        self.other_game_map = {}
+        self.complete_game_map = {}
+        self.stairs_map = {}
+
 
     def get_objects(self):
         return self.objects
@@ -223,16 +225,19 @@ class Map:
         #     for y in range(MAP_HEIGHT) ]
         #         for x in range(MAP_WIDTH) ]
 
-        temp_game_map = [[ Tile(True)
-                           for y in range(MapConstants.MAP_HEIGHT) ]
-                         for x in range(MapConstants.MAP_WIDTH) ]
-        self.other_game_map = {state.dungeon_level: temp_game_map}
-
+        # temp_game_map = [[ Tile(True)
+        #                    for y in range(MapConstants.MAP_HEIGHT) ]
+        #                  for x in range(MapConstants.MAP_WIDTH) ]
+        # self.other_game_map = {state.dungeon_level: temp_game_map}
+        #
+        # self.game_map = self.other_game_map
+        #
         self.game_map = [[ Tile(True)
             for y in range(MapConstants.MAP_HEIGHT) ]
                 for x in range(MapConstants.MAP_WIDTH) ]
         rooms = []
         num_rooms = 0
+        old_player_coords = (self.state.player.x, self.state.player.y)
         for r in range(MapConstants.MAX_ROOMS):
             #random width and height
             w = libtcod.random_get_int(0, MapConstants.ROOM_MIN_SIZE, MapConstants.ROOM_MAX_SIZE)
@@ -287,11 +292,68 @@ class Map:
                 #finally, append the new room to the list
                 rooms.append(new_room)
                 num_rooms += 1
-        stairs = Object(new_x, new_y, MapConstants.STAIRS_OBJECT, MapConstants.STAIRS_NAME, MapConstants.STAIRS_COLOR, always_visible=True)
-        state.objects.append(stairs)
-        stairs.send_to_back(state.objects)
-        state.stairs = stairs
+        up_stairs_1 = rooms[1].center()
+        up_stairs_2 = rooms[2].center()
+        player_coords = (self.state.player.x, self.state.player.y)
+        down_stairs_1 = rooms[3].center()
+        down_stairs_2 = rooms[4].center()
+        offset_player_coords = (self.state.player.x - 1, self.state.player.y - 1)
+        down_stairs = [down_stairs_1, down_stairs_2, offset_player_coords]
+        up_stairs = [up_stairs_1, up_stairs_2, player_coords]
+        self.create_stairs(down_stairs, up_stairs, old_player_coords)
+        self.complete_game_map[state.dungeon_level] = self.game_map
+
+
+    def create_stairs(self, down_stairs_coords, up_stairs_coords, previous_player_coords):
+        self.state.stairs[self.state.dungeon_level] = {MapConstants.UP_STAIRS_OBJECT: {}, MapConstants.DOWN_STAIRS_OBJECT: {}}
+        self.create_stairs_of_type(down_stairs_coords, MapConstants.DOWN_STAIRS_OBJECT)
+        self.create_stairs_of_type(up_stairs_coords, MapConstants.UP_STAIRS_OBJECT)
+        if self.state.dungeon_level != 0:
+            self.connect_stairs(previous_player_coords)
+
+    def create_stairs_of_type(self, stairs_coords, type):
+        for stair_coords in stairs_coords:
+            stairs = Object(stair_coords[0], stair_coords[1], type, MapConstants.STAIRS_NAME, MapConstants.STAIRS_COLOR, always_visible=True)
+            self.state.objects.append(stairs)
+            stairs.send_to_back(self.state.objects)
+            stairs_id = Util.get_padded_coords(stairs.x, stairs.y)
+            self.state.stairs[self.state.dungeon_level][type][stairs_id] = None
+            # self.connect_stairs(stairs_id)
+
+
+    def connect_stairs(self, previous_player_coords):
+        # down_stairs_ids are from the previous level
+        down_stairs_ids = self.state.stairs[self.state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT].keys()
+        up_stairs_ids = self.state.stairs[self.state.dungeon_level][MapConstants.UP_STAIRS_OBJECT].keys()
+        old_down_stair_id = Util.get_padded_coords(previous_player_coords[0], previous_player_coords[1])
+        new_up_stair_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
+        self.connect_two_stairs(new_up_stair_id, old_down_stair_id)
+        # self.state.stairs[self.state.dungeon_level][MapConstants.UP_STAIRS_OBJECT][new_up_stair_id] = old_down_stair_id
+        # self.state.stairs[self.state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT][old_down_stair_id] = new_up_stair_id
+
+        down_stairs_ids.remove(old_down_stair_id)
+        up_stairs_ids.remove(new_up_stair_id)
+        self.state.player
+        for down_stair_id in down_stairs_ids:
+            up_stairs_id = up_stairs_ids.pop()
+            self.connect_two_stairs(up_stairs_id, down_stair_id)
+
+    def connect_two_stairs(self, new_level_up_stairs_id, prev_level_down_stairs_id):
+        self.state.stairs[self.state.dungeon_level][MapConstants.UP_STAIRS_OBJECT][new_level_up_stairs_id] = prev_level_down_stairs_id
+        self.state.stairs[self.state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT][prev_level_down_stairs_id] = new_level_up_stairs_id
+
+
+
+
+
+    def set_game_map(self, dungeon_level):
+        self.game_map = self.complete_game_map[dungeon_level]
+
 
     def get_map(self):
         return self.game_map
+
+
+
+
 

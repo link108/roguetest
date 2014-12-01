@@ -65,7 +65,7 @@ class MainMenu:
         #the list of all objects
         self.state.objects = [self.state.player]
         self.state.player_inventory = Inventory(self.state)
-        self.state.dungeon_level = 1
+        self.state.dungeon_level = 0
 
         equipment_component = Equipment(self.state, slot=Constants.RIGHT_HAND, power_bonus=2)
         obj = Object(0, 0, '-', MapConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
@@ -74,16 +74,18 @@ class MainMenu:
 
         self.state.game_map = Map(self.state)
         self.state.game_map.make_map(self.state)
-        self.initialize_fov()
+        self.state.game_map.set_game_map(self.state.dungeon_level)
+        self.initialize_fov(self.state.dungeon_level)
         Util.set_player_action(None)
 
-    def initialize_fov(self):
-        self.state.fov_map = libtcod.map_new(MapConstants.MAP_WIDTH, MapConstants.MAP_HEIGHT)
+    def initialize_fov(self, dungeon_level):
+        self.state.fov_map_map[dungeon_level] = libtcod.map_new(MapConstants.MAP_WIDTH, MapConstants.MAP_HEIGHT)
         libtcod.console_clear(self.state.con)
         for y in range(MapConstants.MAP_HEIGHT):
             for x in range(MapConstants.MAP_WIDTH):
-                libtcod.map_set_properties(self.state.fov_map, x, y, not self.state.game_map.is_blocked_sight(self.state.objects, x, y),
+                libtcod.map_set_properties(self.state.fov_map_map[dungeon_level], x, y, not self.state.game_map.is_blocked_sight(self.state.objects, x, y),
                                            not self.state.game_map.is_blocked_sight(self.state.objects, x, y))
+        self.state.fov_map = self.state.fov_map_map[dungeon_level]
 
     def play_game(self):
         Util.set_game_state(Constants.PLAYING)
@@ -116,6 +118,27 @@ class MainMenu:
                         object.ai.take_turn(self.state)
             if Util.get_player_action() == Constants.NEXT_LEVEL:
                 self.next_level()
+            if Util.get_player_action() == Constants.PREVIOUS_LEVEL:
+                self.previous_level()
+
+    def previous_level(self, previous_dungeon_level=None):
+        up_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
+        down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id)
+        self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
+        if previous_dungeon_level == None:
+            previous_dungeon_level = self.state.dungeon_level - 1
+        self.state.dungeon_level = previous_dungeon_level
+        self.state.game_map.set_game_map(previous_dungeon_level)
+        self.state.fov_map = self.state.fov_map_map[previous_dungeon_level]
+        self.initialize_fov(previous_dungeon_level)
+        Util.set_player_action(None)
+        self.state.fov_recompute = True
+
+    def follow_stairs(self, type_entered, stairs_id_entered):
+        other_stairs_id = self.state.stairs[self.state.dungeon_level][type_entered][stairs_id_entered]
+        return other_stairs_id
+
+
 
     def next_level(self):
         self.state.dungeon_level += 1
@@ -124,7 +147,7 @@ class MainMenu:
         self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
         self.state.game_map.make_map(self.state)
-        self.initialize_fov()
+        self.initialize_fov(self.state.dungeon_level)
         Util.set_player_action(None)
         self.state.fov_recompute = True
 
@@ -151,4 +174,4 @@ class MainMenu:
         self.state.stairs = file['stairs']
         self.state.dungeon_level = file['dungeon_level']
         file.close()
-        self.initialize_fov()
+        self.initialize_fov(self.state.dungeon_level)

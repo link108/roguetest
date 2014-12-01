@@ -28,6 +28,7 @@ class Constants:
     DEAD = 'dead'
     DID_NOT_TAKE_TURN = 'did-not-take-turn'
     NEXT_LEVEL = 'next-level'
+    PREVIOUS_LEVEL = 'previous-level'
 
     # Save file name
     SAVE_FILE = 'savefile'

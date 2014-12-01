@@ -19,6 +19,7 @@ class State:
         self.fov_recompute = True
         self.game_map = None
         self.objects = None
+        self.objects_map = {}
         self.player = None
         self.player_inventory = None
         # self.stairs = None

@@ -342,10 +342,6 @@ class Map:
         self.state.stairs[self.state.dungeon_level][MapConstants.UP_STAIRS_OBJECT][new_level_up_stairs_id] = prev_level_down_stairs_id
         self.state.stairs[self.state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT][prev_level_down_stairs_id] = new_level_up_stairs_id
 
-
-
-
-
     def set_game_map(self, dungeon_level):
         self.game_map = self.complete_game_map[dungeon_level]
 

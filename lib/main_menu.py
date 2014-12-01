@@ -15,7 +15,7 @@ from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
 from lib.consoles.menu import Menu
 
-def player_death(state):
+def player_death(player, state):
     #the game ended, yasd?
     # global game_state
     state.status_panel.message('You died!', libtcod.white)
@@ -57,15 +57,19 @@ class MainMenu:
         #a warm welcoming message!
         self.state.status_panel.game_messages = []
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
+        self.state.dungeon_level = 0
+
         #create the player object
 
         fighter_component = Fighter(self.state, hp=100, defense=1, power=4, xp=0, death_function=player_death)
         self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
         self.state.player.level = 1
         #the list of all objects
-        self.state.objects = [self.state.player]
+        #TODO Make objects container class
+        self.state.objects_map[self.state.dungeon_level] = [self.state.player]
+        self.state.objects = self.state.objects_map[self.state.dungeon_level]
+
         self.state.player_inventory = Inventory(self.state)
-        self.state.dungeon_level = 0
 
         equipment_component = Equipment(self.state, slot=Constants.RIGHT_HAND, power_bonus=2)
         obj = Object(0, 0, '-', MapConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
@@ -120,15 +124,23 @@ class MainMenu:
                 self.next_level()
             if Util.get_player_action() == Constants.PREVIOUS_LEVEL:
                 self.previous_level()
+            if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
+                self.save_game()
+                break
 
     def previous_level(self, previous_dungeon_level=None):
+        if self.state.dungeon_level == 0:
+            Util.set_player_action(Constants.EXIT)
+            return
+        elif previous_dungeon_level == None:
+            previous_dungeon_level = self.state.dungeon_level - 1
         up_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
         down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id)
         self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
-        if previous_dungeon_level == None:
-            previous_dungeon_level = self.state.dungeon_level - 1
         self.state.dungeon_level = previous_dungeon_level
+        self.state.objects = self.state.objects_map[self.state.dungeon_level]
         self.state.game_map.set_game_map(previous_dungeon_level)
+        #TODO Make fov_map container class
         self.state.fov_map = self.state.fov_map_map[previous_dungeon_level]
         self.initialize_fov(previous_dungeon_level)
         Util.set_player_action(None)
@@ -142,7 +154,8 @@ class MainMenu:
 
     def next_level(self):
         self.state.dungeon_level += 1
-        self.state.objects = [self.state.player]
+        self.state.objects_map[self.state.dungeon_level] = [self.state.player]
+        self.state.objects = self.state.objects_map[self.state.dungeon_level]
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
         self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)

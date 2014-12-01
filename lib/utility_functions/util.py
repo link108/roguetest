@@ -178,11 +178,19 @@ class Util:
             elif key.c == ord('c'):
                 #show character information
                 level_up_xp = Constants.LEVEL_UP_BASE + state.player.level * Constants.LEVEL_UP_FACTOR
-                Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
-                    '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp) +
-                    '\nAttack: ' + str(state.player.fighter.power) + '\nDefense: ' + str(state.player.fighter.defense), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
+                Util.show_character_screen(state, level_up_xp)
+                # Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
+                #     '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp) +
+                #     '\nAttack: ' + str(state.player.fighter.power) + '\nDefense: ' + str(state.player.fighter.defense), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
             else:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+
+    @staticmethod
+    def show_character_screen(state, level_up_xp):
+        Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
+                    '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp) +
+                    '\nAttack: ' + str(state.player.fighter.power) + '\nDefense: ' + str(state.player.fighter.defense), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
+        Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
 
     @staticmethod
     def random_choice(chances_dict):

@@ -119,6 +119,7 @@ class MainMenu:
             if Util.get_game_state() == Constants.PLAYING and Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
                 for object in self.state.objects:
                     if object.ai:
+                        self.state.status_panel.message(object.ai.owner.name + ' took a turn')
                         object.ai.take_turn(self.state)
             if Util.get_player_action() == Constants.NEXT_LEVEL:
                 self.next_level()
@@ -127,6 +128,12 @@ class MainMenu:
             if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
                 self.save_game()
                 break
+            if Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
+                self.state.status_panel.message('##############')
+                self.state.status_panel.message('TURN HAS ENDED')
+                self.state.status_panel.message('##############')
+            else:
+                self.state.status_panel.message('player actions is: ' + Util.get_player_action())
 
     def previous_level(self, previous_dungeon_level=None):
         if self.state.dungeon_level == 0:

@@ -219,19 +219,6 @@ class Map:
         self.place_items(room, objects)
 
     def make_map(self, state):
-        # global map, player
-        #fill map with "unblocked" tiles
-        # self.map = [[ Tile(True)
-        #     for y in range(MAP_HEIGHT) ]
-        #         for x in range(MAP_WIDTH) ]
-
-        # temp_game_map = [[ Tile(True)
-        #                    for y in range(MapConstants.MAP_HEIGHT) ]
-        #                  for x in range(MapConstants.MAP_WIDTH) ]
-        # self.other_game_map = {state.dungeon_level: temp_game_map}
-        #
-        # self.game_map = self.other_game_map
-        #
         self.game_map = [[ Tile(True)
             for y in range(MapConstants.MAP_HEIGHT) ]
                 for x in range(MapConstants.MAP_WIDTH) ]
@@ -314,11 +301,10 @@ class Map:
     def create_stairs_of_type(self, stairs_coords, type):
         for stair_coords in stairs_coords:
             stairs = Object(stair_coords[0], stair_coords[1], type, MapConstants.STAIRS_NAME, MapConstants.STAIRS_COLOR, always_visible=True)
-            self.state.objects.append(stairs)
-            stairs.send_to_back(self.state.objects)
+            self.state.objects_map[self.state.dungeon_level].append(stairs)
+            stairs.send_to_back(self.state.objects_map[self.state.dungeon_level])
             stairs_id = Util.get_padded_coords(stairs.x, stairs.y)
             self.state.stairs[self.state.dungeon_level][type][stairs_id] = None
-            # self.connect_stairs(stairs_id)
 
 
     def connect_stairs(self, previous_player_coords):
@@ -328,8 +314,6 @@ class Map:
         old_down_stair_id = Util.get_padded_coords(previous_player_coords[0], previous_player_coords[1])
         new_up_stair_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
         self.connect_two_stairs(new_up_stair_id, old_down_stair_id)
-        # self.state.stairs[self.state.dungeon_level][MapConstants.UP_STAIRS_OBJECT][new_up_stair_id] = old_down_stair_id
-        # self.state.stairs[self.state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT][old_down_stair_id] = new_up_stair_id
 
         down_stairs_ids.remove(old_down_stair_id)
         up_stairs_ids.remove(new_up_stair_id)

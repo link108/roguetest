@@ -58,6 +58,7 @@ class MainMenu:
         self.state.status_panel.game_messages = []
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         self.state.dungeon_level = 0
+        self.state.turn = 0
 
         #create the player object
 
@@ -101,6 +102,8 @@ class MainMenu:
         ###########################################
         while not libtcod.console_is_window_closed():
 
+
+            self.state.turn += 1
             Util.render_all(self.state)
             libtcod.console_flush()
             Util.check_level_up(self.state)
@@ -129,9 +132,7 @@ class MainMenu:
                 self.save_game()
                 break
             if Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
-                self.state.status_panel.message('##############')
-                self.state.status_panel.message('TURN HAS ENDED')
-                self.state.status_panel.message('##############')
+                self.state.status_panel.message('###### Turn ' + str(self.state.turn) + ' has ended')
             else:
                 self.state.status_panel.message('player actions is: ' + Util.get_player_action())
 
@@ -142,7 +143,7 @@ class MainMenu:
         elif previous_dungeon_level == None:
             previous_dungeon_level = self.state.dungeon_level - 1
         up_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
-        down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id)
+        down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id, self.state.dungeon_level)
         self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
         self.state.dungeon_level = previous_dungeon_level
         self.state.objects = self.state.objects_map[self.state.dungeon_level]
@@ -153,23 +154,28 @@ class MainMenu:
         Util.set_player_action(None)
         self.state.fov_recompute = True
 
-    def follow_stairs(self, type_entered, stairs_id_entered):
-        other_stairs_id = self.state.stairs[self.state.dungeon_level][type_entered][stairs_id_entered]
+    def follow_stairs(self, type_entered, stairs_id_entered, stairs_entered_dungeon_level):
+        other_stairs_id = self.state.stairs[stairs_entered_dungeon_level][type_entered][stairs_id_entered]
         return other_stairs_id
-
-
 
     def next_level(self):
         self.state.dungeon_level += 1
-        self.state.objects_map[self.state.dungeon_level] = [self.state.player]
-        self.state.objects = self.state.objects_map[self.state.dungeon_level]
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
         self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
-        self.state.game_map.make_map(self.state)
+        if self.state.dungeon_level in self.state.game_map.complete_game_map:
+            self.state.game_map.set_game_map(self.state.dungeon_level)
+            down_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
+            up_stairs_id = self.follow_stairs(MapConstants.DOWN_STAIRS_OBJECT, down_stairs_id, self.state.dungeon_level - 1)
+            self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(up_stairs_id)
+        else:
+            self.state.objects_map[self.state.dungeon_level] = [self.state.player]
+            self.state.game_map.make_map(self.state)
+        self.state.objects = self.state.objects_map[self.state.dungeon_level]
         self.initialize_fov(self.state.dungeon_level)
         Util.set_player_action(None)
         self.state.fov_recompute = True
+        Util.render_all(self.state)
 
     def save_game(self):
         file = shelve.open(Constants.SAVE_FILE, 'n')

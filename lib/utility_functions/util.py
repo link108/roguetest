@@ -179,9 +179,6 @@ class Util:
                 #show character information
                 level_up_xp = Constants.LEVEL_UP_BASE + state.player.level * Constants.LEVEL_UP_FACTOR
                 Util.show_character_screen(state, level_up_xp)
-                # Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
-                #     '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp) +
-                #     '\nAttack: ' + str(state.player.fighter.power) + '\nDefense: ' + str(state.player.fighter.defense), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
             else:
                 Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
 
@@ -380,7 +377,8 @@ class Util:
             libtcod.light_red, libtcod.darker_red)
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Player level: ' + str(state.player.level))
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 4, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: ' + str(state.dungeon_level))
-        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 5, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Player Action: ' + str(Util.get_player_action()))
         #blit the contents of "panel" to the root console
         libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)
         #show the player's stats

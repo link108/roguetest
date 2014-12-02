@@ -25,4 +25,5 @@ class State:
         # self.stairs = None
         self.stairs = {}
         self.dungeon_level = None
+        self.turn = None
 

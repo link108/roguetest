@@ -141,7 +141,7 @@ class Map:
             self.game_map[x][y].set_block_sight(False)
 
     def place_monsters(self, room, objects):
-        max_monsters_table = [[2, 1], [3, 4], [5, 6]]
+        max_monsters_table = [[2, 0], [3, 3], [5, 5]]
         max_monsters = Util.from_dungeon_level(self.state, max_monsters_table)
 
         #choose random number of monsters
@@ -172,7 +172,7 @@ class Map:
                 objects.append(monster)
 
     def place_items(self, room, objects):
-        max_items_table = [[3, 1], [5, 4]]
+        max_items_table = [[3, 0], [5, 3]]
         max_items = Util.from_dungeon_level(self.state, max_items_table)
         item_chances = {
             MapConstants.HEALTH_POTION: 35,
@@ -245,7 +245,7 @@ class Map:
                 self.create_room(new_room)
 
                 #add some content to this room such as monsters
-                self.place_objects(new_room, state.objects)
+                self.place_objects(new_room, state.objects_map[state.dungeon_level])
 
                 #get the center coordinates of the new room
                 (new_x, new_y) = new_room.center()

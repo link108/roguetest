@@ -102,6 +102,11 @@ class Util:
         elif game_state == Constants.FOUND_TARGET:
             Util.set_game_state(Constants.FOUND_TARGET)
 
+        if Util.get_player_action() == Constants.DID_NOT_TAKE_TURN:
+            Util.set_player_action(None)
+        elif Util.get_player_action() == Constants.NOT_VALID_KEY:
+            Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+
     @staticmethod
     def handle_targeting_keys(key, state):
         #movement keys
@@ -123,13 +128,13 @@ class Util:
             elif key.c == ord('n'):
                 return Util.player_target(state, 1, 1)
             else:
-                Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+                Util.set_player_action(Constants.NOT_VALID_KEY)
         elif key.vk == libtcod.KEY_ESCAPE:
             Util.set_game_state(Constants.PLAYING)
         elif key.vk == libtcod.KEY_ENTER:
             Util.set_game_state(Constants.FOUND_TARGET)
         else:
-            Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+            Util.set_player_action(Constants.NOT_VALID_KEY)
 
     @staticmethod
     def handle_playing_keys(key, state):
@@ -180,7 +185,7 @@ class Util:
                 level_up_xp = Constants.LEVEL_UP_BASE + state.player.level * Constants.LEVEL_UP_FACTOR
                 Util.show_character_screen(state, level_up_xp)
             else:
-                Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+                Util.set_player_action(Constants.NOT_VALID_KEY)
 
     @staticmethod
     def show_character_screen(state, level_up_xp):

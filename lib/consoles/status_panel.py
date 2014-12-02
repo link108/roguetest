@@ -3,6 +3,7 @@ from lib.random_libs import libtcodpy as libtcod
 __author__ = 'cmotevasselani'
 
 from lib.consoles.console import Console
+from lib.utility_functions.util import Util
 import textwrap
 
 class StatusPanel():

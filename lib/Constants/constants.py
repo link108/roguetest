@@ -27,6 +27,7 @@ class Constants:
     EXIT = 'exit'
     DEAD = 'dead'
     DID_NOT_TAKE_TURN = 'did-not-take-turn'
+    NOT_VALID_KEY = 'not-valid-key'
     NEXT_LEVEL = 'next-level'
     PREVIOUS_LEVEL = 'previous-level'
 

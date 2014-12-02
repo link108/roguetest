@@ -112,8 +112,10 @@ class MainMenu:
             for object in self.state.objects:
                 object.clear(self.state.con)
 
-            #handle keys and exit game
-            Util.handle_keys(self.state)
+            Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+            while Util.get_player_action() == Constants.DID_NOT_TAKE_TURN:
+                #handle keys and exit game
+                Util.handle_keys(self.state)
             if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
                 self.save_game()
                 break
@@ -131,26 +133,23 @@ class MainMenu:
             if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
                 self.save_game()
                 break
-            if Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
-                self.state.status_panel.message('###### Turn ' + str(self.state.turn) + ' has ended')
-            else:
-                self.state.status_panel.message('player actions is: ' + Util.get_player_action())
+            self.state.status_panel.message('###### Turn ' + str(self.state.turn) + ' has ended')
 
-    def previous_level(self, previous_dungeon_level=None):
-        if self.state.dungeon_level == 0:
-            Util.set_player_action(Constants.EXIT)
-            return
-        elif previous_dungeon_level == None:
-            previous_dungeon_level = self.state.dungeon_level - 1
+    def previous_level(self):
+        # self.state.objects_map[self.state.dungeon_level] = self.state.objects
         up_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
         down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id, self.state.dungeon_level)
         self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
-        self.state.dungeon_level = previous_dungeon_level
+        if self.state.dungeon_level == 0:
+            Util.set_player_action(Constants.EXIT)
+            return
+        else:
+            self.state.dungeon_level -= 1
         self.state.objects = self.state.objects_map[self.state.dungeon_level]
-        self.state.game_map.set_game_map(previous_dungeon_level)
+        self.state.game_map.set_game_map(self.state.dungeon_level)
         #TODO Make fov_map container class
-        self.state.fov_map = self.state.fov_map_map[previous_dungeon_level]
-        self.initialize_fov(previous_dungeon_level)
+        self.state.fov_map = self.state.fov_map_map[self.state.dungeon_level]
+        self.initialize_fov(self.state.dungeon_level)
         Util.set_player_action(None)
         self.state.fov_recompute = True
 
@@ -159,6 +158,7 @@ class MainMenu:
         return other_stairs_id
 
     def next_level(self):
+        # self.state.objects_map[self.state.dungeon_level] = self.state.objects
         self.state.dungeon_level += 1
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
         self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)

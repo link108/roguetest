@@ -213,4 +213,5 @@ class MainMenu:
         self.state.dungeon_level = file['dungeon_level']
         self.state.turn = file['turn']
         file.close()
+        self.state.player_spell_inventory = SpellInventory(self.state)
         self.initialize_fov(self.state.dungeon_level)

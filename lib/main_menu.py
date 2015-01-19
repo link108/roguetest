@@ -177,6 +177,7 @@ class MainMenu:
         self.state.fov_recompute = True
         Util.render_all(self.state)
 
+    # TODO Fix saving
     def save_game(self):
         file = shelve.open(Constants.SAVE_FILE, 'n')
         file['game_map'] = self.state.game_map.game_map
@@ -186,8 +187,10 @@ class MainMenu:
         file['player_index'] = self.state.objects.index(self.state.player)
         file['stairs'] = self.state.stairs
         file['dungeon_level'] = self.state.dungeon_level
+        file['turn'] = self.state.turn
         file.close()
 
+    # TODO Fix loading
     def load_game(self):
         self.state.game_map = Map(self.state)
         self.state.player_inventory = Inventory(self.state)
@@ -199,5 +202,6 @@ class MainMenu:
         self.state.player = self.state.objects[file['player_index']]
         self.state.stairs = file['stairs']
         self.state.dungeon_level = file['dungeon_level']
+        self.state.turn = file['turn']
         file.close()
         self.initialize_fov(self.state.dungeon_level)

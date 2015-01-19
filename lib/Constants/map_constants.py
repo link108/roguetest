@@ -6,8 +6,8 @@ __author__ = 'cmotevasselani'
 class MapConstants:
 
     SCREEN_WIDTH = 80
-    SCREEN_HEIGHT = 50
-    PANEL_HEIGHT = 7
+    SCREEN_HEIGHT = 60
+    PANEL_HEIGHT = 15
     PANEL_Y = SCREEN_HEIGHT - PANEL_HEIGHT
     BAR_WIDTH = 20
     MSG_X = BAR_WIDTH + 2

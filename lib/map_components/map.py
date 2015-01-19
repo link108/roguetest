@@ -73,7 +73,7 @@ def cast_heal(state):
         state.status_panel.message('You are already at full health.', libtcod.red)
         return Constants.CANCELLED
     state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
-    state.player.fighter.heal(Constants.HEAL_AMOUNT)
+    state.player.fighter.heal(Constants.HEAL_AMOUNT, state)
 
 
 ####################################################
@@ -159,13 +159,13 @@ class Map:
                 choice = Util.random_choice(monster_chances)
                 if choice == MapConstants.ORC:
                     #create an orc
-                    fighter_component = Fighter(self.state, hp=20, defense=0, power=4, xp=35, death_function=monster_death)
+                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', MapConstants.ORC,  libtcod.desaturated_green, blocks=True,
                                      fighter=fighter_component, ai=ai_component)
                 elif choice == MapConstants.TROLL:
                     #Create a troll
-                    fighter_component = Fighter(self.state, hp=30, defense=2, power=8, xp=100, death_function=monster_death)
+                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100, death_function=monster_death)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'T', MapConstants.TROLL, libtcod.darker_green, blocks=True,
                                      fighter=fighter_component, ai=ai_component)
@@ -205,10 +205,10 @@ class Map:
                     item_component = Item(use_function=cast_lightning)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_LIGHTNING_BOLT, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SWORD:
-                    equipment_component = Equipment(self.state, Constants.RIGHT_HAND, power_bonus=3)
+                    equipment_component = Equipment(Constants.RIGHT_HAND, power_bonus=3)
                     item = Object(x, y, '/', MapConstants.SWORD, libtcod.red, equipment=equipment_component, always_visible=True)
                 elif choice == MapConstants.SHIELD:
-                    equipment_component = Equipment(self.state, Constants.LEFT_HAND, defense_bonus=1)
+                    equipment_component = Equipment(Constants.LEFT_HAND, defense_bonus=1)
                     item = Object(x, y, '[', MapConstants.SHIELD, libtcod.darker_orange, equipment=equipment_component, always_visible=True)
 
                 objects.append(item)

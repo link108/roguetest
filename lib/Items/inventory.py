@@ -4,6 +4,7 @@ __author__ = 'cmotevasselani'
 
 from lib.consoles.menu import Menu
 from lib.constants.constants import Constants
+from lib.utility_functions.util import Util
 
 
 
@@ -35,7 +36,9 @@ class Inventory:
 
         index = self.menu.display_menu(header, options, Constants.INVENTORY_WIDTH, state.con)
 
-        if index is None or len(self.inventory) == 0: return None;
+        if index is None or len(self.inventory) == 0:
+            Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+            return None;
         return self.inventory[index].item
 
     # def drop(self, object):

@@ -10,7 +10,7 @@ class Object:
     #generic object class: player, monsters, items, etc.
     #the object should always be represented by a char on the screen
 
-    def __init__(self, x, y, char, name, color, always_visible=False, blocks=False, fighter=None, ai=None, item=None, equipment=None):
+    def __init__(self, x, y, char, name, color, always_visible=False, blocks=False, fighter=None, ai=None, item=None, equipment=None, caster=None):
         self.always_visible = always_visible
         self.name = name
         self.blocks = blocks
@@ -32,6 +32,9 @@ class Object:
             self.equipment.owner = self
             self.item = Item()
             self.item.owner = self
+        self.caster = caster        # let the ai component know who owns it
+        if self.caster:
+            self.caster.owner = self
 
     def move(self, objects, game_map, dx, dy):
         #move by the given amount

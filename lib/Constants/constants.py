@@ -31,8 +31,9 @@ class Constants:
     NEXT_LEVEL = 'next-level'
     PREVIOUS_LEVEL = 'previous-level'
 
-    # Save file name
+    # File names
     SAVE_FILE = 'savefile'
+    SPELL_FILE = 'spellfile'
 
     # MainMenu
     LEVEL_UP_BASE = 20
@@ -43,3 +44,10 @@ class Constants:
     # Equipment
     RIGHT_HAND = 'right-hand'
     LEFT_HAND = 'left-hand'
+
+
+    # Spells
+    MAGIC_MISSILE = 'magic-missile'
+    FROST_SHOCK = 'frost_shock'
+    FROST_SHOCK_RANGE = 4
+    FROST_SHOCK_DAMAGE = 20

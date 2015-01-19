@@ -5,8 +5,8 @@ __author__ = 'cmotevasselani'
 from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
 
-class Item:
 
+class Item:
 
     def __init__(self, use_function=None):
         self.use_function = use_function
@@ -24,16 +24,16 @@ class Item:
             if equipment and Util.get_equipped_in_slot(state, equipment.slot) is None:
                 equipment.equip()
 
-    def use(self, util):
+    def use(self, state):
         #call use_function if defined
         if self.owner.equipment:
             self.owner.equipment.toggle_equipment()
             return
         if self.use_function is None:
-            util.status_panel.message('The ' + self.owner.name + ' cannot be used.')
+            state.status_panel.message('The ' + self.owner.name + ' cannot be used.')
         else:
-            if self.use_function(util) != Constants.CANCELLED:
-                util.player_inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled
+            if self.use_function(state) != Constants.CANCELLED:
+                state.player_inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled
 
     def drop(self, state):
         state.objects.append(self.owner)

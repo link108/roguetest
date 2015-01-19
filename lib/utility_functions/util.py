@@ -162,6 +162,10 @@ class Util:
                 chosen_item = state.player_inventory.inventory_menu('Press the key next to an item to use it, or any other to cancel.\n', state)
                 if chosen_item is not None:
                     chosen_item.use(state)
+            elif key.c == ord('I'):
+                chosen_spell = state.player_spell_inventory.spell_menu('Press the key next to a spell to use it, or any other to cancel.\n', state)
+                if chosen_spell is not None:
+                    chosen_spell.cast(state, state.player)
             elif key.c == ord('d'):
                 chosen_item = state.player_inventory.inventory_menu('Press the key next to an item to drop it, or any other to cancel.\n', state)
                 if chosen_item is not None:
@@ -190,8 +194,8 @@ class Util:
     @staticmethod
     def show_character_screen(state, level_up_xp):
         Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
-                    '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp) +
-                    '\nAttack: ' + str(state.player.fighter.power) + '\nDefense: ' + str(state.player.fighter.defense), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
+                    '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp(state)) +
+                    '\nAttack: ' + str(state.player.fighter.power(state)) + '\nDefense: ' + str(state.player.fighter.defense(state)), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
         Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
 
     @staticmethod
@@ -378,12 +382,14 @@ class Util:
             libtcod.console_print_ex(state.status_panel.get_panel(), MapConstants.MSG_X, y, libtcod.BKGND_NONE, libtcod.LEFT, line)
             y += 1
         #show the player's stats
-        state.status_panel.render_bar(1, 1, MapConstants.BAR_WIDTH, 'HP', state.player.fighter.hp, state.player.fighter.max_hp,
+        state.status_panel.render_bar(1, 1, MapConstants.BAR_WIDTH, 'HP', state.player.fighter.hp, state.player.fighter.max_hp(state),
             libtcod.light_red, libtcod.darker_red)
-        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 3, libtcod.BKGND_NONE, libtcod.LEFT, 'Player level: ' + str(state.player.level))
-        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 4, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: ' + str(state.dungeon_level))
-        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 5, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
-        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Player Action: ' + str(Util.get_player_action()))
+        state.status_panel.render_bar(1, 2, MapConstants.BAR_WIDTH, 'MP', state.player.caster.mp, state.player.caster.max_mp(state),
+                                      libtcod.light_blue, libtcod.darker_blue)
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 5, libtcod.BKGND_NONE, libtcod.LEFT, 'Player level: ' + str(state.player.level))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: ' + str(state.dungeon_level))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 7, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, 'Player Action: ' + str(Util.get_player_action()))
         #blit the contents of "panel" to the root console
         libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)
         #show the player's stats

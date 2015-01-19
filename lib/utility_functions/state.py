@@ -22,8 +22,10 @@ class State:
         self.objects_map = {}
         self.player = None
         self.player_inventory = None
+        self.player_spell_inventory = None
         # self.stairs = None
         self.stairs = {}
         self.dungeon_level = None
         self.turn = None
+        self.magic = None
 

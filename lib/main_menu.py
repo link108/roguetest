@@ -6,6 +6,7 @@ import shelve
 
 from lib.utility_functions.object import Object
 from lib.characters.fighter import Fighter
+from lib.characters.caster import Caster
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
 from lib.items.inventory import Inventory
@@ -14,6 +15,8 @@ from lib.constants.map_constants import MapConstants
 from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
 from lib.consoles.menu import Menu
+from lib.magic.magic import Magic
+from lib.magic.spell_inventory import SpellInventory
 
 def player_death(player, state):
     #the game ended, yasd?
@@ -60,10 +63,16 @@ class MainMenu:
         self.state.dungeon_level = 0
         self.state.turn = 0
 
-        #create the player object
+        #init magic system (maybe do this at startup?)
+        self.state.magic = Magic()
+        self.state.magic.init_spells()
 
-        fighter_component = Fighter(self.state, hp=100, defense=1, power=4, xp=0, death_function=player_death)
-        self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component)
+        #create the player object
+        fighter_component = Fighter(hp=100, defense=1, power=4, xp=0, death_function=player_death)
+        # starting_spells = {Constants.FROST_SHOCK: self.state.magic.spells[Constants.FROST_SHOCK]}
+        # caster_component = Caster(mp=10, spell_power=4, spells=starting_spells)
+        caster_component = Caster(mp=10, spell_power=4, spells=[Constants.FROST_SHOCK])
+        self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component, caster=caster_component)
         self.state.player.level = 1
         #the list of all objects
         #TODO Make objects container class
@@ -71,11 +80,12 @@ class MainMenu:
         self.state.objects = self.state.objects_map[self.state.dungeon_level]
 
         self.state.player_inventory = Inventory(self.state)
+        self.state.player_spell_inventory = SpellInventory(self.state)
 
-        equipment_component = Equipment(self.state, slot=Constants.RIGHT_HAND, power_bonus=2)
+        equipment_component = Equipment(slot=Constants.RIGHT_HAND, power_bonus=2)
         obj = Object(0, 0, '-', MapConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
         self.state.player_inventory.inventory.append(obj)
-        equipment_component.equip()
+        equipment_component.equip(self.state)
 
         self.state.game_map = Map(self.state)
         self.state.game_map.make_map(self.state)
@@ -101,7 +111,6 @@ class MainMenu:
         #main loop
         ###########################################
         while not libtcod.console_is_window_closed():
-
 
             self.state.turn += 1
             Util.render_all(self.state)
@@ -161,7 +170,7 @@ class MainMenu:
         # self.state.objects_map[self.state.dungeon_level] = self.state.objects
         self.state.dungeon_level += 1
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
-        self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2)
+        self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2, state)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
         if self.state.dungeon_level in self.state.game_map.complete_game_map:
             self.state.game_map.set_game_map(self.state.dungeon_level)

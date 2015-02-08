@@ -1,0 +1,23 @@
+__author__ = 'cmotevasselani'
+
+from item_functions.potion_functions import PotionFunctions
+from item_functions.scroll_functions import ScrollFunctions
+from lib.constants.constants import Constants
+from item import Item
+
+class Items:
+
+    def __init__(self):
+        self.items = {}
+        self.init_items()
+
+    def init_items(self):
+        with open(Constants.ITEM_FILE) as f:
+            item_file = f.readlines()
+        for line in item_file:
+            if '#' not in line:
+                line_array = line.split(' ')
+                item_name = line_array[0]
+                item_info = line_array[1]
+                item = Item(item_name, item_info)
+

@@ -281,18 +281,17 @@ class Util:
             choice = None
             while choice == None:
                 choice = Menu().display_menu('Level up! Choose a stat to raise:\n',
-                    ['Constitution (+20 HP, from ' + str(state.player.fighter.max_hp) + ')',
-                    'Strength (+1 attack, from ' + str(state.player.fighter.power) + ')',
-                    'Agility (+1 defense, from ' + str(state.player.fighter.defense) + ')'], MapConstants.LEVEL_SCREEN_WIDTH, state.con)
+                    ['Constitution (+20 HP, from ' + str(state.player.fighter.max_hp(state)) + ')',
+                    'Strength (+1 attack, from ' + str(state.player.fighter.power(state)) + ')',
+                    'Agility (+1 defense, from ' + str(state.player.fighter.defense(state)) + ')'], MapConstants.LEVEL_SCREEN_WIDTH, state.con)
             if choice == 0:
-                state.player.fighter.max_hp += 20
+                state.player.fighter.base_max_hp += 20
                 state.player.fighter.hp += 20
             elif choice == 1:
-                state.player.fighter.power += 1
+                state.player.fighter.base_power += 1
             elif choice == 2:
-                state.player.fighter.defense += 1
+                state.player.fighter.base_defense += 1
         Util.refresh(state)
-
 
     @staticmethod
     def from_dungeon_level(state, table):

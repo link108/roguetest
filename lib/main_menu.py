@@ -17,6 +17,7 @@ from lib.utility_functions.util import Util
 from lib.consoles.menu import Menu
 from lib.magic.magic import Magic
 from lib.magic.spell_inventory import SpellInventory
+from lib.characters.create_character import CreateCharacter
 
 def player_death(player, state):
     #the game ended, yasd?
@@ -70,28 +71,14 @@ class MainMenu:
     def battle(self):
         self.setup_game()
 
+    def choose_class(self, state):
+        CreateCharacter(state)
+
     def new_game(self):
         self.setup_game()
-
-        #create the player object
-        fighter_component = Fighter(hp=100, defense=1, power=4, xp=0, death_function=player_death)
-        # starting_spells = {Constants.FROST_SHOCK: self.state.magic.spells[Constants.FROST_SHOCK]}
-        # caster_component = Caster(mp=10, spell_power=4, spells=starting_spells)
-        caster_component = Caster(mp=10, spell_power=4, spells=[Constants.FROST_SHOCK])
-        self.state.player = Object(0, 0, '@', 'player', libtcod.white, blocks=True, fighter=fighter_component, caster=caster_component)
-        self.state.player.level = 1
-        #the list of all objects
-        #TODO Make objects container class
+        self.choose_class(self.state)
         self.state.objects_map[self.state.dungeon_level] = [self.state.player]
         self.state.objects = self.state.objects_map[self.state.dungeon_level]
-
-        self.state.player_inventory = Inventory(self.state)
-        self.state.player_spell_inventory = SpellInventory(self.state)
-
-        equipment_component = Equipment(slot=Constants.RIGHT_HAND, power_bonus=2)
-        obj = Object(0, 0, '-', MapConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
-        self.state.player_inventory.inventory.append(obj)
-        equipment_component.equip(self.state)
 
         self.state.game_map = Map(self.state)
         self.state.game_map.make_map(self.state)

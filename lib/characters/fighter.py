@@ -32,11 +32,7 @@ class Fighter:
         if damage > 0:
             self.hp -= damage
             if self.hp <= 0:
-                # function = self.death_function
-                # function = DeathFunctions.get_death_function(self.owner.name, state)
                 DeathFunctions.death(self.owner, state)
-                # if function is not None:
-                #     function(self.owner, state)
                 if self.owner != state.player:
                     state.player.fighter.xp += self.xp
 

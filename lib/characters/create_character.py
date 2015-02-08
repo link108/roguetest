@@ -49,9 +49,11 @@ class CreateCharacter:
 
     def choose_class(self):
         self.player_class = self.menu.display_menu_return_item('Choose a class:', [Constants.WARRIOR, Constants.MAGE, Constants.ARCHER], 30, self.state.con)
+        self.state.player_class = self.player_class
 
     def choose_race(self):
         self.player_race = self.menu.display_menu_return_item('Choose a race:', [Constants.ELF, Constants.HUMAN, Constants.DWARF], 30, self.state.con)
+        self.state.player_race = self.player_race
 
     def get_caster_component(self):
         self.caster_component = getattr(eval(self.player_class), 'get_caster_component')()

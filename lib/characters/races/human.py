@@ -8,4 +8,4 @@ class Human(BaseRace):
 
     @staticmethod
     def get_fighter_component():
-        return Fighter(hp=100, defense=1, power=4, xp=0, death_function=player_death)
+        return Fighter(hp=100, defense=1, power=4, xp=0)

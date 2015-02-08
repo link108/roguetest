@@ -52,19 +52,6 @@ def cast_lightning(state):
     monster.fighter.take_damage(Constants.LIGHTNING_DAMAGE, state)
 
 
-##### DeathFunctions
-
-# def monster_death(monster, state):
-#     #monster turns into a corpse, does not block, cant be attacked, does not move
-#     state.status_panel.message(monster.name.capitalize() + ' is dead! You gain ' + str(monster.fighter.xp) + ' xp!', libtcod.white)
-#     monster.char = '%'
-#     monster.color = libtcod.dark_red
-#     monster.blocks = False
-#     monster.fighter = None
-#     monster.ai = None
-#     monster.name = 'remains of ' + monster.name
-#     monster.send_to_back(state.objects)
-
 
 ###### PotionFunctions
 

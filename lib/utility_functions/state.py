@@ -28,4 +28,6 @@ class State:
         self.dungeon_level = None
         self.turn = None
         self.magic = None
+        self.player_class = None
+        self.player_race = None
 

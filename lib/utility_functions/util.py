@@ -193,7 +193,8 @@ class Util:
 
     @staticmethod
     def show_character_screen(state, level_up_xp):
-        Menu().display_menu_return_index('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
+        Menu().display_menu_return_index('Character Information\n\nRace: ' + str(state.player_race) + '\nClass: ' + str(state.player_class) +
+                    '\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
                     '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp(state)) +
                     '\nAttack: ' + str(state.player.fighter.power(state)) + '\nDefense: ' + str(state.player.fighter.defense(state)), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
         Util.set_player_action(Constants.DID_NOT_TAKE_TURN)

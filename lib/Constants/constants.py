@@ -51,3 +51,15 @@ class Constants:
     FROST_SHOCK = 'frost_shock'
     FROST_SHOCK_RANGE = 4
     FROST_SHOCK_DAMAGE = 20
+
+    # Character creation
+    PLAYER = 'player'
+    #classes
+    WARRIOR = 'Warrior'
+    MAGE = 'Mage'
+    ARCHER = 'Archer'
+
+    #races
+    ELF = 'Elf'
+    HUMAN = 'Human'
+    DWARF = 'Dwarf'

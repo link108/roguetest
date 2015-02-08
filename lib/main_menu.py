@@ -40,7 +40,7 @@ class MainMenu:
         while not libtcod.console_is_window_closed():
             # libtcod.image_blit_2x(img, 0, 0, 0)
 
-            choice = self.menu.display_menu('', ['Play a new game', 'Continue last game', 'Battle (work in progress)', 'Quit'], 30, self.state.con)
+            choice = self.menu.display_menu_return_index('', ['Play a new game', 'Continue last game', 'Battle (work in progress)', 'Quit'], 30, self.state.con)
             if choice == 0:
                 self.new_game()
                 self.play_game()
@@ -57,7 +57,7 @@ class MainMenu:
                 break
 
     def message_box(self, message, size = 50):
-        self.menu.display_menu(message, [], size, self.state.con)
+        self.menu.display_menu_return_index(message, [], size, self.state.con)
 
     def setup_game(self):
         #init magic system (maybe do this at startup?)
@@ -126,13 +126,14 @@ class MainMenu:
             if Util.get_game_state() == Constants.PLAYING and Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
                 for object in self.state.objects:
                     if object.ai:
-                        self.state.status_panel.message(object.ai.owner.name + ' took a turn')
+                        # self.state.status_panel.message(object.ai.owner.name + ' took a turn')
                         object.ai.take_turn(self.state)
             if Util.get_player_action() == Constants.NEXT_LEVEL:
                 self.next_level()
             if Util.get_player_action() == Constants.PREVIOUS_LEVEL:
                 self.previous_level()
             if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
+                Util.render_all(self.state)
                 self.save_game()
                 break
             self.state.status_panel.message('###### Turn ' + str(self.state.turn) + ' has ended')

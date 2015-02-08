@@ -54,16 +54,16 @@ def cast_lightning(state):
 
 ##### DeathFunctions
 
-def monster_death(monster, state):
-    #monster turns into a corpse, does not block, cant be attacked, does not move
-    state.status_panel.message(monster.name.capitalize() + ' is dead! You gain ' + str(monster.fighter.xp) + ' xp!', libtcod.white)
-    monster.char = '%'
-    monster.color = libtcod.dark_red
-    monster.blocks = False
-    monster.fighter = None
-    monster.ai = None
-    monster.name = 'remains of ' + monster.name
-    monster.send_to_back(state.objects)
+# def monster_death(monster, state):
+#     #monster turns into a corpse, does not block, cant be attacked, does not move
+#     state.status_panel.message(monster.name.capitalize() + ' is dead! You gain ' + str(monster.fighter.xp) + ' xp!', libtcod.white)
+#     monster.char = '%'
+#     monster.color = libtcod.dark_red
+#     monster.blocks = False
+#     monster.fighter = None
+#     monster.ai = None
+#     monster.name = 'remains of ' + monster.name
+#     monster.send_to_back(state.objects)
 
 
 ###### PotionFunctions
@@ -159,13 +159,13 @@ class Map:
                 choice = Util.random_choice(monster_chances)
                 if choice == MapConstants.ORC:
                     #create an orc
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35, death_function=monster_death)
+                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'o', MapConstants.ORC,  libtcod.desaturated_green, blocks=True,
                                      fighter=fighter_component, ai=ai_component)
                 elif choice == MapConstants.TROLL:
                     #Create a troll
-                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100, death_function=monster_death)
+                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100)
                     ai_component = BasicMonster()
                     monster = Object(x, y, 'T', MapConstants.TROLL, libtcod.darker_green, blocks=True,
                                      fighter=fighter_component, ai=ai_component)

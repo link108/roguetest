@@ -7,6 +7,17 @@ from lib.constants.map_constants import MapConstants
 
 class Menu:
 
+    def display_menu_return_index(self, header, options, width, con):
+        index = self.display_menu(header, options, width, con)
+        return index
+
+    def display_menu_return_item(self, header, options, width, con):
+        index = self.display_menu(header, options, width, con)
+        if index >= 0 and index < len(options):
+            return options[index]
+        else:
+            return index
+
     def display_menu(self, header, options, width, con):
         if len(options) > 26: raise ValueError('Cannot have a menu with more than 26 options.')
         #calculate total height for the header (after auto-wrap) and one line per option

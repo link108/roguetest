@@ -1,19 +1,19 @@
 from lib.random_libs import libtcodpy as libtcod
 from lib.utility_functions.util import Util
+from death_functions import DeathFunctions
 
 __author__ = 'cmotevasselani'
 
 
 class Fighter:
     #combat related properties and methods (npcs, monsters, player)
-    def __init__(self, hp, defense, power, xp, death_function=None):
+    def __init__(self, hp, defense, power, xp):
         self.level = 1
         self.base_max_hp = hp
         self.xp = xp
         self.hp = hp
         self.base_defense = defense
         self.base_power = power
-        self.death_function = death_function
 
     def power(self, state):
         bonus = sum(equipment.power_bonus for equipment in Util.get_all_equiped(state, self.owner))
@@ -32,9 +32,11 @@ class Fighter:
         if damage > 0:
             self.hp -= damage
             if self.hp <= 0:
-                function = self.death_function
-                if function is not None:
-                    function(self.owner, state)
+                # function = self.death_function
+                # function = DeathFunctions.get_death_function(self.owner.name, state)
+                DeathFunctions.death(self.owner, state)
+                # if function is not None:
+                #     function(self.owner, state)
                 if self.owner != state.player:
                     state.player.fighter.xp += self.xp
 

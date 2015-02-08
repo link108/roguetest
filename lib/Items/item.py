@@ -27,7 +27,7 @@ class Item:
     def use(self, state):
         #call use_function if defined
         if self.owner.equipment:
-            self.owner.equipment.toggle_equipment()
+            self.owner.equipment.toggle_equipment(state)
             return
         if self.use_function is None:
             state.status_panel.message('The ' + self.owner.name + ' cannot be used.')

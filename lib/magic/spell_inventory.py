@@ -26,8 +26,9 @@ class SpellInventory:
                     ', spell power: ' + str(spell.power)
                 options.append(text)
 
-        index = self.menu.display_menu(header, options, Constants.INVENTORY_WIDTH, state.con)
-        spell_name = options[index].split(' : ')[0]
+        index = self.menu.display_menu_return_index(header, options, Constants.INVENTORY_WIDTH, state.con)
+        if index is not None:
+            spell_name = options[index].split(' : ')[0]
 
         if index is None or len(self.spells) == 0:
             Util.set_player_action(Constants.DID_NOT_TAKE_TURN)

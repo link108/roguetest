@@ -193,7 +193,7 @@ class Util:
 
     @staticmethod
     def show_character_screen(state, level_up_xp):
-        Menu().display_menu('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
+        Menu().display_menu_return_index('Character Information\n\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
                     '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp(state)) +
                     '\nAttack: ' + str(state.player.fighter.power(state)) + '\nDefense: ' + str(state.player.fighter.defense(state)), [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
         Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
@@ -280,7 +280,7 @@ class Util:
             state.status_panel.message('You are now level ' + str(state.player.level) + '! You gain some skillz', libtcod.yellow)
             choice = None
             while choice == None:
-                choice = Menu().display_menu('Level up! Choose a stat to raise:\n',
+                choice = Menu().display_menu_return_index('Level up! Choose a stat to raise:\n',
                     ['Constitution (+20 HP, from ' + str(state.player.fighter.max_hp(state)) + ')',
                     'Strength (+1 attack, from ' + str(state.player.fighter.power(state)) + ')',
                     'Agility (+1 defense, from ' + str(state.player.fighter.defense(state)) + ')'], MapConstants.LEVEL_SCREEN_WIDTH, state.con)

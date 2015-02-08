@@ -8,4 +8,4 @@ class Warrior(BaseClass):
 
     @staticmethod
     def get_caster_component():
-        return Caster(mp=10, spell_power=4, spells=[Constants.FROST_SHOCK])
+        return Caster(mp=10, spell_power=4, spells=[])

@@ -6,7 +6,6 @@ from lib.constants.map_constants import MapConstants
 from lib.consoles.menu import Menu
 from lib.constants.constants import Constants
 
-
 class Util:
 
     target_x = None

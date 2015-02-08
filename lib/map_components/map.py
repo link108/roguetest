@@ -329,7 +329,6 @@ class Map:
     def set_game_map(self, dungeon_level):
         self.game_map = self.complete_game_map[dungeon_level]
 
-
     def get_map(self):
         return self.game_map
 

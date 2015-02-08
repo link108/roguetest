@@ -39,7 +39,7 @@ class MainMenu:
         while not libtcod.console_is_window_closed():
             # libtcod.image_blit_2x(img, 0, 0, 0)
 
-            choice = self.menu.display_menu('', ['Play a new game', 'Continue last game', 'Quit'], 24, self.state.con)
+            choice = self.menu.display_menu('', ['Play a new game', 'Continue last game', 'Battle (work in progress)', 'Quit'], 30, self.state.con)
             if choice == 0:
                 self.new_game()
                 self.play_game()
@@ -51,21 +51,27 @@ class MainMenu:
                     continue
                 self.play_game()
             elif choice == 2:
+                self.battle()
+            elif choice == 3:
                 break
 
     def message_box(self, message, size = 50):
         self.menu.display_menu(message, [], size, self.state.con)
 
-    def new_game(self):
-        #a warm welcoming message!
+    def setup_game(self):
+        #init magic system (maybe do this at startup?)
+        self.state.magic = Magic()
+        self.state.magic.init_spells()
         self.state.status_panel.game_messages = []
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         self.state.dungeon_level = 0
         self.state.turn = 0
 
-        #init magic system (maybe do this at startup?)
-        self.state.magic = Magic()
-        self.state.magic.init_spells()
+    def battle(self):
+        self.setup_game()
+
+    def new_game(self):
+        self.setup_game()
 
         #create the player object
         fighter_component = Fighter(hp=100, defense=1, power=4, xp=0, death_function=player_death)

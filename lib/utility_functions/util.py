@@ -5,7 +5,6 @@ __author__ = 'cmotevasselani'
 from lib.constants.map_constants import MapConstants
 from lib.consoles.menu import Menu
 from lib.constants.constants import Constants
-from lib.items.items import Items
 
 class Util:
 

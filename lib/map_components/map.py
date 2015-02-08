@@ -8,9 +8,11 @@ from lib.utility_functions.object import Object
 from lib.characters.fighter import Fighter
 from lib.ai.basic_monster import BasicMonster
 from lib.items.item import Item
+from lib.items.items import Items
 from lib.items.equipment import Equipment
 from lib.utility_functions.util import Util
 from lib.constants.map_constants import MapConstants
+from lib.constants.item_constants import ItemConstants
 from lib.constants.constants import Constants
 from lib.ai.confused_monster import ConfusedMonster
 
@@ -51,13 +53,13 @@ from lib.ai.confused_monster import ConfusedMonster
 #
 #
 ###### PotionFunctions
-
-def cast_heal(state):
-    if state.player.fighter.hp == state.player.fighter.max_hp:
-        state.status_panel.message('You are already at full health.', libtcod.red)
-        return Constants.CANCELLED
-    state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
-    state.player.fighter.heal(Constants.HEAL_AMOUNT, state)
+#
+# def cast_heal(state):
+#     if state.player.fighter.hp == state.player.fighter.max_hp:
+#         state.status_panel.message('You are already at full health.', libtcod.red)
+#         return Constants.CANCELLED
+#     state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
+#     state.player.fighter.heal(Constants.HEAL_AMOUNT, state)
 
 
 ####################################################
@@ -177,16 +179,16 @@ class Map:
                 choice = Util.random_choice(item_chances)
                 if choice == MapConstants.HEALTH_POTION:
                     #create a healing potion
-                    item_component = Item(use_function=cast_heal)
+                    item_component = Items.get_item(ItemConstants.HEALTH_POTION)
                     item = Object(x, y, '!', MapConstants.HEALTH_POTION, libtcod.violet, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_FIREBALL:
-                    item_component = Item(use_function=cast_fireball)
+                    item_component = Items.get_item(ItemConstants.SCROLL_OF_FIREBALL)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_FIREBALL, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_CONFUSE:
-                    item_component = Item(use_function=cast_confuse)
+                    item_component = Items.get_item(ItemConstants.SCROLL_OF_CONFUSE)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_CONFUSE, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_LIGHTNING_BOLT:
-                    item_component = Item(use_function=cast_lightning)
+                    item_component = Items.get_item(ItemConstants.SCROLL_OF_LIGHTNING_BOLT)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_LIGHTNING_BOLT, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SWORD:
                     equipment_component = Equipment(Constants.RIGHT_HAND, power_bonus=3)

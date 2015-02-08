@@ -8,8 +8,11 @@ from lib.utility_functions.util import Util
 
 class Item:
 
-    def __init__(self, use_function=None):
-        self.use_function = use_function
+    def __init__(self, name, item_string):
+        self.name = name
+        item_info = item_string.split('_XXX_')
+        self.item_class = item_info[0]
+        self.use_function = getattr(eval(self.item_class), self.name)
 
     # an item that can be picked up and used.
     def pick_up(self, state):

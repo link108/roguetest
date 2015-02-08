@@ -34,6 +34,7 @@ class Constants:
     # File names
     SAVE_FILE = 'savefile'
     SPELL_FILE = 'spellfile'
+    ITEM_FILE = 'itemfile'
 
     # MainMenu
     LEVEL_UP_BASE = 20

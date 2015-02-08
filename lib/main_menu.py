@@ -10,7 +10,7 @@ from lib.characters.caster import Caster
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
 from lib.items.inventory import Inventory
-from lib.items.equipment import Equipment
+from lib.items.items import Items
 from lib.constants.map_constants import MapConstants
 from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
@@ -63,6 +63,7 @@ class MainMenu:
         #init magic system (maybe do this at startup?)
         self.state.magic = Magic()
         self.state.magic.init_spells()
+        self.state.items = Items()
         self.state.status_panel.game_messages = []
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         self.state.dungeon_level = 0
@@ -164,7 +165,7 @@ class MainMenu:
         # self.state.objects_map[self.state.dungeon_level] = self.state.objects
         self.state.dungeon_level += 1
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
-        self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2, state)
+        self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2, self.state)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
         if self.state.dungeon_level in self.state.game_map.complete_game_map:
             self.state.game_map.set_game_map(self.state.dungeon_level)

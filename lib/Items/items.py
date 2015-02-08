@@ -21,6 +21,8 @@ class Items:
                 item_name = line_array[0]
                 item_info = line_array[1]
                 item = Item(item_name, item_info)
+                self.items[item_name] = item
 
     def get_item(self, item_name):
         return copy.deepcopy(self.items[item_name])
+        # return self.items[item_name]

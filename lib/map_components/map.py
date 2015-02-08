@@ -7,65 +7,11 @@ from lib.map_components.rectangle import Rect
 from lib.utility_functions.object import Object
 from lib.characters.fighter import Fighter
 from lib.ai.basic_monster import BasicMonster
-from lib.items.item import Item
-from lib.items.items import Items
 from lib.items.equipment import Equipment
 from lib.utility_functions.util import Util
 from lib.constants.map_constants import MapConstants
 from lib.constants.item_constants import ItemConstants
 from lib.constants.constants import Constants
-from lib.ai.confused_monster import ConfusedMonster
-
-#
-# ###### ScrollFunctions
-#
-# def cast_fireball(state):
-#     # TODO: Add range check
-#     x, y = Util.target_tile(state)
-#     state.game_map.get_map()[x][y].set_targeted(False)
-#     for object in state.objects:
-#         if object.distance(x,y) <= Constants.FIREBALL_RADIUS and object.fighter:
-#             state.status_panel.message('You sling a fireball at: ' + object.name + ' with a BAMboosh! The damage done is '
-#                                 + str(Constants.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
-#             object.fighter.take_damage(Constants.FIREBALL_DAMAGE, state)
-#
-# def cast_confuse(state):
-#     # monster = Constants.closest_monster(util, Constants.CONFUSE_RANGE)
-#     monster = Util.target_monster(state, Constants.CONFUSE_RANGE)
-#     if monster is None:
-#         state.status_panel.message('No enemy is close enough to confuse', libtcod.red)
-#         return Constants.CANCELLED
-#     old_ai = monster.ai
-#     monster.ai = ConfusedMonster(old_ai, state)
-#     monster.clear(state.con)
-#     monster.ai.owner = monster
-#     state.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
-#
-# def cast_lightning(state):
-#     monster = Util.closest_monster(state, Constants.LIGHTNING_RANGE)
-#     if monster is None:
-#         state.status_panel.message('No enemy is close enough to strike with lightning', libtcod.red)
-#         return Constants.CANCELLED
-#     state.status_panel.message('A lightning bolt strikes the ' + monster.name + ' with a ZAP! The damage done is '
-#                         + str(Constants.LIGHTNING_DAMAGE) + ' hp.', libtcod.light_blue)
-#     monster.fighter.take_damage(Constants.LIGHTNING_DAMAGE, state)
-#
-#
-#
-###### PotionFunctions
-#
-# def cast_heal(state):
-#     if state.player.fighter.hp == state.player.fighter.max_hp:
-#         state.status_panel.message('You are already at full health.', libtcod.red)
-#         return Constants.CANCELLED
-#     state.status_panel.message('Your wounds start to feel better', libtcod.light_violet)
-#     state.player.fighter.heal(Constants.HEAL_AMOUNT, state)
-
-
-####################################################
-#################### Map Class #####################
-####################################################
-
 
 class Map:
 
@@ -179,16 +125,16 @@ class Map:
                 choice = Util.random_choice(item_chances)
                 if choice == MapConstants.HEALTH_POTION:
                     #create a healing potion
-                    item_component = Items.get_item(ItemConstants.HEALTH_POTION)
+                    item_component = self.state.items.get_item(ItemConstants.HEALTH_POTION)
                     item = Object(x, y, '!', MapConstants.HEALTH_POTION, libtcod.violet, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_FIREBALL:
-                    item_component = Items.get_item(ItemConstants.SCROLL_OF_FIREBALL)
+                    item_component = self.state.items.get_item(ItemConstants.SCROLL_OF_FIREBALL)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_FIREBALL, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_CONFUSE:
-                    item_component = Items.get_item(ItemConstants.SCROLL_OF_CONFUSE)
+                    item_component = self.state.items.get_item(ItemConstants.SCROLL_OF_CONFUSE)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_CONFUSE, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_LIGHTNING_BOLT:
-                    item_component = Items.get_item(ItemConstants.SCROLL_OF_LIGHTNING_BOLT)
+                    item_component = self.state.items.get_item(ItemConstants.SCROLL_OF_LIGHTNING_BOLT)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_LIGHTNING_BOLT, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SWORD:
                     equipment_component = Equipment(Constants.RIGHT_HAND, power_bonus=3)

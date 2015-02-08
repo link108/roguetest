@@ -26,7 +26,7 @@ class Equipment:
     def equip(self, state):
         old_equipment = Util.get_equipped_in_slot(state, self.slot)
         if old_equipment is not None:
-            old_equipment.equipment.dequip()
+            old_equipment.equipment.dequip(state)
         self.is_equipped = True
         state.status_panel.message('Equiped ' + self.owner.name + ' on ' + self.slot + '.', libtcod.light_green)
 

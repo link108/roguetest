@@ -4,15 +4,19 @@ __author__ = 'cmotevasselani'
 
 from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
+from item_functions.potion_functions import PotionFunctions
+from item_functions.scroll_functions import ScrollFunctions
 
 
 class Item:
 
-    def __init__(self, name, item_string):
-        self.name = name
-        item_info = item_string.split('_XXX_')
-        self.item_class = item_info[0]
-        self.use_function = getattr(eval(self.item_class), self.name)
+    def __init__(self, name=None, item_string=None):
+        if name and item_string:
+            self.name = name
+            item_info = item_string.split('_XXX_')
+            self.item_class = item_info[0]
+            self.item_function = item_info[1].strip()
+            # self.use_function = getattr(eval(self.item_class), self.item_function)
 
     # an item that can be picked up and used.
     def pick_up(self, state):
@@ -25,17 +29,19 @@ class Item:
             state.status_panel.message('You picked up a ' + self.owner.name + '!', libtcod.green)
             equipment = self.owner.equipment
             if equipment and Util.get_equipped_in_slot(state, equipment.slot) is None:
-                equipment.equip()
+                equipment.equip(state)
 
     def use(self, state):
         #call use_function if defined
         if self.owner.equipment:
             self.owner.equipment.toggle_equipment(state)
             return
-        if self.use_function is None:
+        if self.item_class and self.item_function:
+            use_function = getattr(eval(self.item_class), self.item_function)
+        if use_function is None:
             state.status_panel.message('The ' + self.owner.name + ' cannot be used.')
         else:
-            if self.use_function(state) != Constants.CANCELLED:
+            if use_function(state) != Constants.CANCELLED:
                 state.player_inventory.inventory.remove(self.owner)    #destroy after use, unless cancelled
 
     def drop(self, state):

@@ -1,5 +1,5 @@
 # item_name, item_class
-health_potion PotionFunctions
-cast_fireball ScrollFunctions
-cast_confuse ScrollFunctions
-cast_lightning ScrollFunctions
+health_potion PotionFunctions_XXX_cast_heal
+cast_fireball ScrollFunctions_XXX_cast_fireball
+cast_confuse ScrollFunctions_XXX_cast_confuse
+cast_lightning ScrollFunctions_XXX_cast_lightning

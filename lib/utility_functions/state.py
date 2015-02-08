@@ -30,4 +30,5 @@ class State:
         self.magic = None
         self.player_class = None
         self.player_race = None
+        self.items = None
 

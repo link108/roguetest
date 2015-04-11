@@ -33,6 +33,9 @@ class MainMenu:
     def __init__(self):
         self.state = State()
         self.menu = Menu()
+        self.state.magic = Magic()
+        self.state.magic.init_spells()
+        self.state.items = Items()
 
     def main_menu(self):
         # img = libtcod.image_load('rl_image.png')
@@ -61,13 +64,11 @@ class MainMenu:
 
     def setup_game(self):
         #init magic system (maybe do this at startup?)
-        self.state.magic = Magic()
-        self.state.magic.init_spells()
-        self.state.items = Items()
         self.state.status_panel.game_messages = []
         self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.', libtcod.red)
         self.state.dungeon_level = 0
         self.state.turn = 0
+        self.state.score = 0
 
     def battle(self):
         self.setup_game()
@@ -175,6 +176,7 @@ class MainMenu:
         else:
             self.state.objects_map[self.state.dungeon_level] = [self.state.player]
             self.state.game_map.make_map(self.state)
+            self.state.score += self.state.dungeon_level * 10
         self.state.objects = self.state.objects_map[self.state.dungeon_level]
         self.initialize_fov(self.state.dungeon_level)
         Util.set_player_action(None)
@@ -192,6 +194,7 @@ class MainMenu:
         file['stairs'] = self.state.stairs
         file['dungeon_level'] = self.state.dungeon_level
         file['turn'] = self.state.turn
+        file['score'] = self.state.score
         file.close()
 
     # TODO Fix loading
@@ -207,6 +210,7 @@ class MainMenu:
         self.state.stairs = file['stairs']
         self.state.dungeon_level = file['dungeon_level']
         self.state.turn = file['turn']
+        self.state.score = file['score']
         file.close()
         self.state.player_spell_inventory = SpellInventory(self.state)
         self.initialize_fov(self.state.dungeon_level)

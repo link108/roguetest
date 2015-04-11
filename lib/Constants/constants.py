@@ -32,9 +32,11 @@ class Constants:
     PREVIOUS_LEVEL = 'previous-level'
 
     # File names
-    SAVE_FILE = 'savefile'
-    SPELL_FILE = 'spellfile'
-    ITEM_FILE = 'itemfile'
+    DATA_DIR = 'data'
+    SAVE_FILE = DATA_DIR + '/' + 'savefile'
+    SPELL_FILE = DATA_DIR + '/' + 'spellfile'
+    ITEM_FILE = DATA_DIR + '/' + 'itemfile'
+    HIGH_SCORE_FILE = DATA_DIR + '/' + 'highscorefile'
 
     # MainMenu
     LEVEL_UP_BASE = 20

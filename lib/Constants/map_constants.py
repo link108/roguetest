@@ -13,6 +13,7 @@ class MapConstants:
     MSG_X = BAR_WIDTH + 2
     MSG_WIDTH = SCREEN_WIDTH - BAR_WIDTH - 2
     MSG_HEIGHT = PANEL_HEIGHT - 1
+    MENU_HEIGHT_ADDITION = 5
     # LIMIT_FPS = 20
 
     MAP_WIDTH = 80

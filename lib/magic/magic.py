@@ -1,6 +1,7 @@
 __author__ = 'cmotevasselani'
 
 from lib.constants.constants import Constants
+
 from lib.magic.spell import Spell
 from lib.magic.frost_magic import FrostMagic
 

@@ -31,11 +31,7 @@ class Inventory:
                 if item.equipment and item.equipment.is_equipped:
                     text = text + ' (on ' + item.equipment.slot + ')'
                 options.append(text)
-
-
-
         index = self.menu.display_menu_return_index(header, options, Constants.INVENTORY_WIDTH, state.con)
-
         if index is None or len(self.inventory) == 0:
             Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
             return None;

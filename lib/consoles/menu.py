@@ -7,24 +7,24 @@ from lib.constants.map_constants import MapConstants
 
 class Menu:
 
-    def display_menu_return_index(self, header, options, width, con):
-        index = self.display_menu(header, options, width, con)
+    def display_menu_return_index(self, header, options, width, con, additional_height=0):
+        index = self.display_menu(header, options, width, con, additional_height)
         return index
 
-    def display_menu_return_item(self, header, options, width, con):
-        index = self.display_menu(header, options, width, con)
+    def display_menu_return_item(self, header, options, width, con, additional_height=0):
+        index = self.display_menu(header, options, width, con, additional_height)
         if index >= 0 and index < len(options):
             return options[index]
         else:
             return index
 
-    def display_menu(self, header, options, width, con):
+    def display_menu(self, header, options, width, con, additional_height=0):
         if len(options) > 26: raise ValueError('Cannot have a menu with more than 26 options.')
         #calculate total height for the header (after auto-wrap) and one line per option
         header_height = libtcod.console_get_height_rect(con, 0, 0, width, MapConstants.SCREEN_HEIGHT, header)
         if header == '':
             header_height = 0
-        height = len(options) + header_height
+        height = len(options) + header_height + additional_height
 
         #create an off-screen console that represents the menu's window
         window = libtcod.console_new(width, height)
@@ -58,3 +58,4 @@ class Menu:
         index = key.c - ord('a')
         if index >= 0 and index < len(options): return index
         return None
+

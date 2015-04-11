@@ -7,18 +7,18 @@ from lib.constants.map_constants import MapConstants
 
 class Menu:
 
-    def display_menu_return_index(self, header, options, width, con, override_height=0):
-        index = self.display_menu(header, options, width, con, override_height)
+    def display_menu_return_index(self, header, options, width, con, override_height=0, option_char=True):
+        index = self.display_menu(header, options, width, con, override_height, option_char)
         return index
 
-    def display_menu_return_item(self, header, options, width, con, override_height=0):
-        index = self.display_menu(header, options, width, con, override_height)
+    def display_menu_return_item(self, header, options, width, con, override_height=0, option_char=True):
+        index = self.display_menu(header, options, width, con, override_height, option_char)
         if index >= 0 and index < len(options):
             return options[index]
         else:
             return index
 
-    def display_menu(self, header, options, width, con, override_height=None):
+    def display_menu(self, header, options, width, con, override_height=None, option_char=True):
         if len(options) > 26: raise ValueError('Cannot have a menu with more than 26 options.')
         #calculate total height for the header (after auto-wrap) and one line per option
         header_height = libtcod.console_get_height_rect(con, 0, 0, width, MapConstants.SCREEN_HEIGHT, header)
@@ -39,7 +39,10 @@ class Menu:
         y = header_height
         letter_index = ord('a')
         for option_text in options:
-            text = '(' + chr(letter_index) + ') ' + str(option_text)
+            if option_char:
+                text = '(' + chr(letter_index) + ') ' + str(option_text)
+            else:
+                text = str(option_text)
             libtcod.console_print_ex(window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
             y += 1
             letter_index += 1

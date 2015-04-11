@@ -25,14 +25,17 @@ class HighScores:
         file['high_scores'] = self.get_high_scores()
         file.close()
 
-    def get_high_scores_for_menu(self):
-        return map(HighScore.to_quick_str, sorted(self.high_scores, key=lambda high_score: high_score.score, reverse=True)[:26])
-
     def get_high_scores(self):
         return sorted(self.high_scores, key=lambda high_score: high_score.score)[:26]
 
     def show_high_scores(self, state, menu):
-        menu.display_menu_return_index('High Score list', self.get_high_scores_for_menu(), MapConstants.MAP_WIDTH, state.con, override_height=MapConstants.MENU_HEIGHT_ADDITION)
+        high_scores = self.get_high_scores()
+        high_scores_to_display = map(HighScore.to_quick_str, high_scores)
+        index = menu.display_menu_return_index('High Score list', high_scores_to_display, MapConstants.MAP_WIDTH, state.con, override_height=MapConstants.MENU_HEIGHT_ADDITION)
+        if index:
+            chosen_high_score = high_scores[index]
+            menu.display_menu_return_index('High Score of ' + chosen_high_score.name, [str(chosen_high_score)], MapConstants.MAP_WIDTH, state.con, override_height=20, option_char=False)
+
 
     def add_high_score(self, state):
         score_to_add = HighScore(

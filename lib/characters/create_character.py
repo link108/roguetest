@@ -50,12 +50,12 @@ class CreateCharacter:
     def choose_class(self):
         # self.player_class = self.menu.display_menu_return_item('Choose a class:', [Constants.WARRIOR, Constants.MAGE, Constants.ARCHER], 30, self.state.con)
         while(self.player_class == None):
-            self.player_class = self.menu.display_menu_return_item('Choose a class:', [Constants.WARRIOR, Constants.MAGE, Constants.ARCHER], 30, self.state.con, additional_height=MapConstants.MENU_HEIGHT_ADDITION)
+            self.player_class = self.menu.display_menu_return_item('Choose a class:', [Constants.WARRIOR, Constants.MAGE, Constants.ARCHER], 30, self.state.con, override_height=MapConstants.MENU_HEIGHT_ADDITION)
         self.state.player_class = self.player_class
 
     def choose_race(self):
         while(self.player_race == None):
-            self.player_race = self.menu.display_menu_return_item('Choose a race:', [Constants.ELF, Constants.HUMAN, Constants.DWARF], 30, self.state.con, additional_height=MapConstants.MENU_HEIGHT_ADDITION)
+            self.player_race = self.menu.display_menu_return_item('Choose a race:', [Constants.ELF, Constants.HUMAN, Constants.DWARF], 30, self.state.con, override_height=MapConstants.MENU_HEIGHT_ADDITION)
         self.state.player_race = self.player_race
 
     def get_caster_component(self):

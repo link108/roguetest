@@ -4,9 +4,6 @@ __author__ = 'cmotevasselani'
 from lib.random_libs import libtcodpy as libtcod
 import shelve
 
-from lib.utility_functions.object import Object
-from lib.characters.fighter import Fighter
-from lib.characters.caster import Caster
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
 from lib.items.inventory import Inventory

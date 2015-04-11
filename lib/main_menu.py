@@ -15,6 +15,7 @@ from lib.consoles.menu import Menu
 from lib.magic.magic import Magic
 from lib.magic.spell_inventory import SpellInventory
 from lib.characters.create_character import CreateCharacter
+from lib.high_scores.high_scores import HighScores
 
 def player_death(player, state):
     #the game ended, yasd?
@@ -33,6 +34,7 @@ class MainMenu:
         self.state.magic = Magic()
         self.state.magic.init_spells()
         self.state.items = Items()
+        self.state.high_scores = HighScores()
 
     def main_menu(self):
         # img = libtcod.image_load('rl_image.png')
@@ -40,7 +42,7 @@ class MainMenu:
         while not libtcod.console_is_window_closed():
             # libtcod.image_blit_2x(img, 0, 0, 0)
 
-            choice = self.menu.display_menu_return_index('', ['Play a new game', 'Continue last game', 'Battle (work in progress)', 'Quit'], 30, self.state.con)
+            choice = self.menu.display_menu_return_index('', ['Play a new game', 'Continue last game', 'Battle (work in progress)', 'High Scores', 'Quit'], 30, self.state.con)
             if choice == 0:
                 self.new_game()
                 self.play_game()
@@ -54,7 +56,12 @@ class MainMenu:
             elif choice == 2:
                 self.battle()
             elif choice == 3:
+                self.show_high_scores()
+            elif choice == 4:
                 break
+
+    def show_high_scores(self):
+        self.state.high_scores.show_high_scores(self.state, self.menu)
 
     def message_box(self, message, size = 50):
         self.menu.display_menu_return_index(message, [], size, self.state.con)

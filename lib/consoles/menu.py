@@ -39,7 +39,7 @@ class Menu:
         y = header_height
         letter_index = ord('a')
         for option_text in options:
-            text = '(' + chr(letter_index) + ') ' + option_text
+            text = '(' + chr(letter_index) + ') ' + str(option_text)
             libtcod.console_print_ex(window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
             y += 1
             letter_index += 1
@@ -47,7 +47,7 @@ class Menu:
         #blit the contents of "window" to the root console
         x = MapConstants.SCREEN_WIDTH/2 - width/2
         y = MapConstants.SCREEN_HEIGHT/2 - height/2
-        libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
+        libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 1.0)
 
         #present the root console to the player and wait for a key-press
         libtcod.console_flush()

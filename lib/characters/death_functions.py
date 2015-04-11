@@ -42,4 +42,5 @@ class DeathFunctions:
         #player is a corpse
         state.player.char = '%'
         state.player.color = libtcod.dark_red
+        state.high_scores.add_high_score(state)
 

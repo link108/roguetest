@@ -31,4 +31,5 @@ class State:
         self.player_class = None
         self.player_race = None
         self.items = None
+        self.score = None
 

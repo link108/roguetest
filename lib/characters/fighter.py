@@ -7,13 +7,14 @@ __author__ = 'cmotevasselani'
 
 class Fighter:
     #combat related properties and methods (npcs, monsters, player)
-    def __init__(self, hp, defense, power, xp):
+    def __init__(self, hp, defense, power, xp, score=0):
         self.level = 1
         self.base_max_hp = hp
         self.xp = xp
         self.hp = hp
         self.base_defense = defense
         self.base_power = power
+        self.score = score
 
     def power(self, state):
         bonus = sum(equipment.power_bonus for equipment in Util.get_all_equiped(state, self.owner))

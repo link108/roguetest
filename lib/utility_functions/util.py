@@ -389,6 +389,7 @@ class Util:
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT, 'Dungeon level: ' + str(state.dungeon_level))
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 7, libtcod.BKGND_NONE, libtcod.LEFT, 'Game State: ' + str(Util.get_game_state()))
         libtcod.console_print_ex(state.status_panel.get_panel(), 1, 8, libtcod.BKGND_NONE, libtcod.LEFT, 'Player Action: ' + str(Util.get_player_action()))
+        libtcod.console_print_ex(state.status_panel.get_panel(), 1, 9, libtcod.BKGND_NONE, libtcod.LEFT, 'Score: ' + str(state.score))
         #blit the contents of "panel" to the root console
         libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0, 0, MapConstants.PANEL_Y)
         #show the player's stats

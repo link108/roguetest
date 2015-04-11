@@ -24,6 +24,7 @@ class DeathFunctions:
     def monster_death(monster, state):
         #monster turns into a corpse, does not block, cant be attacked, does not move
         state.status_panel.message(monster.name.capitalize() + ' is dead! You gain ' + str(monster.fighter.xp) + ' xp!', libtcod.white)
+        state.score += monster.fighter.score
         monster.char = '%'
         monster.color = libtcod.dark_red
         monster.blocks = False

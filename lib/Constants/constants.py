@@ -33,10 +33,10 @@ class Constants:
 
     # File names
     DATA_DIR = 'data'
-    SAVE_FILE = DATA_DIR + '/' + 'savefile'
+    SAVE_FILE = DATA_DIR + '/' + 'savefile.db'
     SPELL_FILE = DATA_DIR + '/' + 'spellfile'
     ITEM_FILE = DATA_DIR + '/' + 'itemfile'
-    HIGH_SCORE_FILE = DATA_DIR + '/' + 'highscorefile'
+    HIGH_SCORE_FILE = DATA_DIR + '/' + 'highscorefile.db'
 
     # MainMenu
     LEVEL_UP_BASE = 20

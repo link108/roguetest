@@ -128,13 +128,13 @@ class Map:
                     item_component = self.state.items.get_item(ItemConstants.HEALTH_POTION)
                     item = Object(x, y, '!', MapConstants.HEALTH_POTION, libtcod.violet, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_FIREBALL:
-                    item_component = self.state.items.get_item(ItemConstants.SCROLL_OF_FIREBALL)
+                    item_component = self.state.items.get_item(ItemConstants.CAST_FIREBALL)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_FIREBALL, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_CONFUSE:
-                    item_component = self.state.items.get_item(ItemConstants.SCROLL_OF_CONFUSE)
+                    item_component = self.state.items.get_item(ItemConstants.CAST_CONFUSE)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_CONFUSE, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SCROLL_OF_LIGHTNING_BOLT:
-                    item_component = self.state.items.get_item(ItemConstants.SCROLL_OF_LIGHTNING_BOLT)
+                    item_component = self.state.items.get_item(ItemConstants.CAST_LIGHTNING)
                     item = Object(x, y, '#', MapConstants.SCROLL_OF_LIGHTNING_BOLT, libtcod.light_yellow, item=item_component, always_visible=True)
                 elif choice == MapConstants.SWORD:
                     equipment_component = Equipment(Constants.RIGHT_HAND, power_bonus=3)

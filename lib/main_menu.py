@@ -165,7 +165,7 @@ class MainMenu:
         # self.state.objects_map[self.state.dungeon_level] = self.state.objects
         self.state.dungeon_level += 1
         self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
-        self.state.player.fighter.heal(self.state.player.fighter.max_hp / 2, self.state)
+        self.state.player.fighter.heal(self.state.player.fighter.max_hp(self.state) / 2, self.state)
         self.state.status_panel.message('and now you descend into the depths of the dungeon', libtcod.red)
         if self.state.dungeon_level in self.state.game_map.complete_game_map:
             self.state.game_map.set_game_map(self.state.dungeon_level)

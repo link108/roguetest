@@ -20,6 +20,7 @@ class ScrollFunctions:
                                     + str(Constants.FIREBALL_DAMAGE) + ' hp.', libtcod.light_blue)
                 object.fighter.take_damage(Constants.FIREBALL_DAMAGE, state)
 
+    @staticmethod
     def cast_confuse(state):
         # monster = Constants.closest_monster(util, Constants.CONFUSE_RANGE)
         monster = Util.target_monster(state, Constants.CONFUSE_RANGE)
@@ -32,6 +33,7 @@ class ScrollFunctions:
         monster.ai.owner = monster
         state.status_panel.message('The eyes of the ' + monster.name + ' look vacant, as he starts to stumble around!', libtcod.light_green)
 
+    @staticmethod
     def cast_lightning(state):
         monster = Util.closest_monster(state, Constants.LIGHTNING_RANGE)
         if monster is None:

@@ -3,4 +3,4 @@
 savefile.db
 todo
 resources/
-data/
+data/*.db

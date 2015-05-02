@@ -66,3 +66,4 @@ class Constants:
     ELF = 'Elf'
     HUMAN = 'Human'
     DWARF = 'Dwarf'
+

@@ -22,6 +22,7 @@ class MapConstants:
     ROOM_MIN_SIZE = 6
     MAX_ROOMS = 30
     MAX_ROOM_ITEMS = 7
+    MAX_FLOOR_DEPTH = 15
 
     FOV_ALGO = 0    #default FOV algorithm
     FOV_LIGHT_WALLS = True

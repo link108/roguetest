@@ -238,7 +238,6 @@ class Map:
             stairs_id = Util.get_padded_coords(stairs.x, stairs.y)
             self.state.stairs[self.state.dungeon_level][type][stairs_id] = None
 
-
     def connect_stairs(self, previous_player_coords):
         # down_stairs_ids are from the previous level
         down_stairs_ids = self.state.stairs[self.state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT].keys()

@@ -2,7 +2,7 @@ __author__ = 'cmotevasselani'
 
 import math
 
-from lib.utility_functions.util import *
+from lib.random_libs import libtcodpy as libtcod
 from lib.items.item import Item
 
 

@@ -25,4 +25,3 @@ class Items:
 
     def get_item(self, item_name):
         return copy.deepcopy(self.items[item_name])
-        # return self.items[item_name]

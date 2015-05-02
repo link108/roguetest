@@ -2,6 +2,7 @@
 __author__ = 'cmotevasselani'
 
 from lib.random_libs import libtcodpy as libtcod
+
 import shelve
 
 from lib.map_components.map import Map
@@ -16,15 +17,6 @@ from lib.magic.magic import Magic
 from lib.magic.spell_inventory import SpellInventory
 from lib.characters.create_character import CreateCharacter
 from lib.high_scores.high_scores import HighScores
-
-def player_death(player, state):
-    #the game ended, yasd?
-    # global game_state
-    state.status_panel.message('You died!', libtcod.white)
-    Util.set_game_state(Constants.DEAD)
-    #player is a corpse
-    state.player.char = '%'
-    state.player.color = libtcod.dark_red
 
 class MainMenu:
 
@@ -97,7 +89,8 @@ class MainMenu:
         libtcod.console_clear(self.state.con)
         for y in range(MapConstants.MAP_HEIGHT):
             for x in range(MapConstants.MAP_WIDTH):
-                libtcod.map_set_properties(self.state.fov_map_map[dungeon_level], x, y, not self.state.game_map.is_blocked_sight(self.state.objects, x, y),
+                libtcod.map_set_properties(self.state.fov_map_map[dungeon_level], x, y,
+                                           not self.state.game_map.is_blocked_sight(self.state.objects, x, y),
                                            not self.state.game_map.is_blocked_sight(self.state.objects, x, y))
         self.state.fov_map = self.state.fov_map_map[dungeon_level]
 

@@ -35,6 +35,7 @@ class Constants:
     DATA_DIR = 'data'
     SAVE_FILE = DATA_DIR + '/' + 'savefile.db'
     SPELL_FILE = DATA_DIR + '/' + 'spellfile'
+    MONSTER_FILE = DATA_DIR + '/' + 'monsterfile'
     ITEM_FILE = DATA_DIR + '/' + 'itemfile'
     HIGH_SCORE_FILE = DATA_DIR + '/' + 'highscorefile.db'
 

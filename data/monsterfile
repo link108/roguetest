@@ -1,0 +1,3 @@
+# monster_name (must match monsterConstant name), hp, defense, power, xp, score, AI, representation, blocks, color
+orc 20_XXX_0_XXX_4_XXX_35_XXX_3_XXX_BasicMonster_XXX_o_XXX_True_XXX_desaturated_green
+troll 30_XXX_2_XXX_8_XXX_100_XXX_5_XXX_BasicMonster_XXX_T_XXX_True_XXX_darker_green

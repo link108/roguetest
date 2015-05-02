@@ -1,11 +1,10 @@
+__author__ = 'cmotevasselani'
+
 from lib.random_libs import libtcodpy as libtcod
-from lib.constants.map_constants import MapConstants
+from lib.constants.monster_constants import MonsterConstants
 from lib.utility_functions.util import Util
 from lib.utility_functions.object import Object
-from lib.characters.fighter import Fighter
-from lib.ai.basic_monster import BasicMonster
 
-__author__ = 'cmotevasselani'
 
 class MonsterPlacer:
 
@@ -16,8 +15,8 @@ class MonsterPlacer:
 
         #choose random number of monsters
         monster_chances = {
-            MapConstants.ORC: 80,
-            MapConstants.TROLL: Util.from_dungeon_level(state, [[15, 3], [30, 5], [60, 7]])
+            MonsterConstants.ORC: 80,
+            MonsterConstants.TROLL: Util.from_dungeon_level(state, [[15, 3], [30, 5], [60, 7]])
         }
         num_monsters = libtcod.random_get_int(0, 0, max_monsters)
         for i in range(num_monsters):
@@ -27,17 +26,6 @@ class MonsterPlacer:
 
             if not game_map.is_blocked(objects, x, y):
                 choice = Util.random_choice(monster_chances)
-                if choice == MapConstants.ORC:
-                    #create an orc
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35, score=3)
-                    ai_component = BasicMonster()
-                    monster = Object(x, y, 'o', MapConstants.ORC,  libtcod.desaturated_green, blocks=True,
-                                     fighter=fighter_component, ai=ai_component)
-                elif choice == MapConstants.TROLL:
-                    #Create a troll
-                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100, score=5)
-                    ai_component = BasicMonster()
-                    monster = Object(x, y, 'T', MapConstants.TROLL, libtcod.darker_green, blocks=True,
-                                     fighter=fighter_component, ai=ai_component)
-                objects.append(monster)
+                monster = state.monsters.get_monster(choice)
+                objects.append(monster.get_monster(x, y))
 

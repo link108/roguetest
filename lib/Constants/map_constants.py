@@ -44,22 +44,15 @@ class MapConstants:
     CHARACTER_SCREEN_WIDTH = 30
 
 
-    #Monsters
-    TROLL = 'troll'
-    ORC = 'orc'
-
     #Stairs
     UP_STAIRS = 'up-stairs'
     DOWN_STAIRS = 'down-stairs'
 
     #items
-    HEALTH_POTION = 'health potion'
-    SCROLL_OF_FIREBALL = 'scroll of fireball'
-    SCROLL_OF_CONFUSE = 'scroll of confuse'
-    SCROLL_OF_LIGHTNING_BOLT = 'scroll of lightning-bolt'
-    SWORD = 'sword'
-    SHIELD = 'shield'
-    DAGGER = 'dagger'
+    # HEALTH_POTION = 'health potion'
+    # SCROLL_OF_FIREBALL = 'scroll of fireball'
+    # SCROLL_OF_CONFUSE = 'scroll of confuse'
+    # SCROLL_OF_LIGHTNING_BOLT = 'scroll of lightning-bolt'
 
 
 

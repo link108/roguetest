@@ -1,26 +1,28 @@
 __author__ = 'cmotevasselani'
 
+import copy
 from lib.constants.constants import Constants
+from lib.monsters.monster import Monster
 
-from lib.magic.spell import Spell
-from lib.magic.frost_magic import FrostMagic
 
-class Magic:
+class Monsters:
 
     def __init__(self):
-        self.spells = {}
-        self.init_spells()
+        self.monsters = {}
+        self.init_monsters()
 
-    def init_spells(self):
-        with open(Constants.SPELL_FILE) as f:
-            spell_file = f.readlines()
-        for line in spell_file:
+    def init_monsters(self):
+        with open(Constants.MONSTER_FILE) as f:
+            monster_file = f.readlines()
+        for line in monster_file:
             if '#' not in line:
                 line_array = line.split(' ')
-                spell_name = line_array[0]
-                spell_stuff = line_array[1]
-                spell = Spell(spell_name, spell_stuff)
+                monster_name = line_array[0]
+                monster_stuff = line_array[1]
+                monster = Monster(monster_name, monster_stuff)
                 # spell.set_use_function(getattr(eval(spell.magic_class), spell_name))
-                self.spells[spell_name] = spell
+                self.monsters[monster_name] = monster
 
+    def get_monster(self, monster_name):
+        return copy.deepcopy(self.monsters[monster_name])
 

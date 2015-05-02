@@ -1,4 +1,4 @@
-Followed this tutorial as a start: http://www.roguebasin.com/index.php?title=Complete_Roguelike_Tutorial,_using_python%2Blibtcod
+Followed [this](http://www.roguebasin.com/index.php?title=Complete_Roguelike_Tutorial,_using_python%2Blibtcod) tutorial as a start:
 
 Extras:
 

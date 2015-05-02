@@ -13,7 +13,4 @@ class ItemConstants:
     SCROLL_OF_FIREBALL = 'scroll_of_fireball'
     SCROLL_OF_CONFUSE = 'scroll_of_confuse'
     SCROLL_OF_LIGHTNING_BOLT = 'scroll_of_lightning-bolt'
-    SWORD = 'sword'
-    SHIELD = 'shield'
-    DAGGER = 'dagger'
 

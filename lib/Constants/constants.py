@@ -37,6 +37,7 @@ class Constants:
     SPELL_FILE = DATA_DIR + '/' + 'spellfile'
     MONSTER_FILE = DATA_DIR + '/' + 'monsterfile'
     ITEM_FILE = DATA_DIR + '/' + 'itemfile'
+    EQUIPMENT_FILE = DATA_DIR + '/' + 'equipmentfile'
     HIGH_SCORE_FILE = DATA_DIR + '/' + 'highscorefile.db'
 
     # MainMenu
@@ -44,11 +45,6 @@ class Constants:
     LEVEL_UP_FACTOR = 70
     #  LEVEL_UP_BASE = 200
     #  LEVEL_UP_FACTOR = 150
-
-    # Equipment
-    RIGHT_HAND = 'right-hand'
-    LEFT_HAND = 'left-hand'
-
 
     # Spells
     MAGIC_MISSILE = 'magic-missile'

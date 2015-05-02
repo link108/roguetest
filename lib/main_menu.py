@@ -16,6 +16,7 @@ from lib.utility_functions.util import Util
 from lib.consoles.menu import Menu
 from lib.magic.magic import Magic
 from lib.magic.spell_inventory import SpellInventory
+from lib.items.equipments import Equipments
 from lib.characters.create_character import CreateCharacter
 from lib.high_scores.high_scores import HighScores
 
@@ -27,6 +28,7 @@ class MainMenu:
         self.state.magic = Magic()
         self.state.items = Items()
         self.state.monsters = Monsters()
+        self.state.equipment = Equipments()
         self.state.high_scores = HighScores()
 
     def main_menu(self):

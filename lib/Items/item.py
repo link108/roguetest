@@ -1,13 +1,14 @@
-from lib.random_libs import libtcodpy as libtcod
 
 __author__ = 'cmotevasselani'
 
+from lib.random_libs import libtcodpy as libtcod
 from lib.constants.constants import Constants
 from lib.utility_functions.util import Util
 from lib.utility_functions.object import Object
+
+# Must include all item modules here
 from item_functions.potion_functions import PotionFunctions
 from item_functions.scroll_functions import ScrollFunctions
-
 
 class Item:
 
@@ -21,11 +22,8 @@ class Item:
             self.representation = item_info[2]
             self.color = getattr(libtcod, item_info[3])
             self.always_visible = bool(item_info[4])
-            # self.use_function = getattr(eval(self.item_class), self.item_function)
 
-    # an item that can be picked up and used.
     def pick_up(self, state):
-        #add to the player's inventory and remove from the map
         if len(state.player_inventory.inventory) >= 26:
             state.inventory.status_panel.message('Your inventory is full, cannot pick up ' + self.owner.name + '.', libtcod.red)
         else:

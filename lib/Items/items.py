@@ -1,8 +1,6 @@
 __author__ = 'cmotevasselani'
 
 import copy
-from item_functions.potion_functions import PotionFunctions
-from item_functions.scroll_functions import ScrollFunctions
 from lib.constants.constants import Constants
 from item import Item
 

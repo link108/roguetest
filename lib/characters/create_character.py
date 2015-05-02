@@ -5,6 +5,7 @@ from caster import Caster
 from fighter import Fighter
 from lib.constants.constants import Constants
 from lib.constants.map_constants import MapConstants
+from lib.constants.equipment_constants import EquipmentConstants
 from lib.utility_functions.util import Util
 from lib.utility_functions.object import Object
 from lib.random_libs import libtcodpy as libtcod
@@ -69,9 +70,9 @@ class CreateCharacter:
         # self.fighter_component = Fighter(hp=100, defense=1, power=4, xp=0, death_function=player_death)
 
     def get_starting_equipment(self):
-        equipment_component = Equipment(slot=Constants.RIGHT_HAND, power_bonus=2)
-        obj = Object(0, 0, '-', ItemConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
-        self.state.player_inventory.inventory.append(obj)
+        equipment_component = self.state.equipment.get_equipment(EquipmentConstants.DAGGER)
+        item = equipment_component.get_equipment(0, 0)
+        self.state.player_inventory.inventory.append(item)
         equipment_component.equip(self.state)
 
 

@@ -1,0 +1,4 @@
+# equipment_name (name must match itemConstants), power_bonus, defense_bonus, hp_bonus, representation, color, slot, always_visible
+sword 3_XXX_0_XXX_0_XXX_/_XXX_red_XXX_RIGHT_HAND_XXX_True
+shield 0_XXX_1_XXX_0_XXX_]_XXX_red_XXX_LEFT_HAND_XXX_True
+dagger 2_XXX_1_XXX_0_XXX_-_XXX_red_XXX_RIGHT_HAND_XXX_True

@@ -20,7 +20,6 @@ class Monsters:
                 monster_name = line_array[0]
                 monster_stuff = line_array[1]
                 monster = Monster(monster_name, monster_stuff)
-                # spell.set_use_function(getattr(eval(spell.magic_class), spell_name))
                 self.monsters[monster_name] = monster
 
     def get_monster(self, monster_name):

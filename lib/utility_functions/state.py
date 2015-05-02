@@ -32,4 +32,5 @@ class State:
         self.score = None
         self.high_scores = None
         self.monsters = None
+        self.equipment = None
 

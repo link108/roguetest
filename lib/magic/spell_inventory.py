@@ -35,6 +35,7 @@ class SpellInventory:
             return None;
         return state.magic.spells[spell_name]
 
+    # TODO either remove or add forget spell functionality (should have reason behind adding it)
     # def drop(self, object):
     #     self.objects.append(object.owner)
     #     self.inventory.remove(object.owner)

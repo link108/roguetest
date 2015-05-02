@@ -5,6 +5,7 @@ from lib.random_libs import libtcodpy as libtcod
 
 import shelve
 
+from lib.monsters.monsters import Monsters
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
 from lib.items.inventory import Inventory
@@ -24,8 +25,8 @@ class MainMenu:
         self.state = State()
         self.menu = Menu()
         self.state.magic = Magic()
-        self.state.magic.init_spells()
         self.state.items = Items()
+        self.state.monsters = Monsters()
         self.state.high_scores = HighScores()
 
     def main_menu(self):

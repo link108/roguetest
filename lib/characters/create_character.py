@@ -1,3 +1,4 @@
+
 __author__ = 'cmotevasselani'
 
 from caster import Caster
@@ -11,6 +12,7 @@ from lib.items.inventory import Inventory
 from lib.items.equipment import Equipment
 from lib.magic.spell_inventory import SpellInventory
 from lib.consoles.menu import Menu
+from lib.constants.item_constants import ItemConstants
 from classes.warrior import Warrior
 from classes.mage import Mage
 from classes.archer import Archer
@@ -68,7 +70,7 @@ class CreateCharacter:
 
     def get_starting_equipment(self):
         equipment_component = Equipment(slot=Constants.RIGHT_HAND, power_bonus=2)
-        obj = Object(0, 0, '-', MapConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
+        obj = Object(0, 0, '-', ItemConstants.DAGGER, libtcod.red, equipment=equipment_component, always_visible=True)
         self.state.player_inventory.inventory.append(obj)
         equipment_component.equip(self.state)
 

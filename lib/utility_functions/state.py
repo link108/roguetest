@@ -13,7 +13,6 @@ class State:
         self.con = libtcod.console_new(MapConstants.SCREEN_WIDTH, MapConstants.SCREEN_HEIGHT)
         self.status_panel = StatusPanel(MapConstants.SCREEN_WIDTH,MapConstants.PANEL_HEIGHT, MapConstants.MSG_WIDTH, MapConstants.MSG_HEIGHT)
         self.util = None
-        # self.fov_map = None
         self.fov_map = None
         self.fov_map_map = {}
         self.fov_recompute = True
@@ -23,7 +22,6 @@ class State:
         self.player = None
         self.player_inventory = None
         self.player_spell_inventory = None
-        # self.stairs = None
         self.stairs = {}
         self.dungeon_level = None
         self.turn = None
@@ -33,4 +31,5 @@ class State:
         self.items = None
         self.score = None
         self.high_scores = None
+        self.monsters = None
 

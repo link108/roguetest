@@ -16,7 +16,7 @@ class Items:
         with open(Constants.ITEM_FILE) as f:
             item_file = f.readlines()
         for line in item_file:
-            if '#' not in line:
+            if not line[0] == '#':
                 line_array = line.split(' ')
                 item_name = line_array[0]
                 item_info = line_array[1]

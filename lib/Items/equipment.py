@@ -2,11 +2,13 @@ __author__ = 'cmotevasselani'
 
 from lib.random_libs import libtcodpy as libtcod
 from lib.utility_functions.util import Util
+from lib.items.item import Item
 
 
 class Equipment:
 
     def __init__(self, slot, power_bonus=0, defense_bonus=0, hp_bonus=0):
+        self.item = Item()
         self.power_bonus = power_bonus
         self.defense_bonus = defense_bonus
         self.hp_bonus = hp_bonus

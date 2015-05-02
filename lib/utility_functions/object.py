@@ -3,8 +3,6 @@ __author__ = 'cmotevasselani'
 import math
 
 from lib.random_libs import libtcodpy as libtcod
-from lib.items.item import Item
-
 
 class Object:
     #generic object class: player, monsters, items, etc.
@@ -30,7 +28,7 @@ class Object:
         self.equipment = equipment
         if self.equipment:
             self.equipment.owner = self
-            self.item = Item()
+            self.item = self.equipment.item
             self.item.owner = self
         self.caster = caster        # let the ai component know who owns it
         if self.caster:

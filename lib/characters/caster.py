@@ -1,6 +1,5 @@
 __author__ = 'cmotevasselani'
 
-# from lib.magic.magic import Magic
 
 class Caster:
   def __init__(self, mp, spell_power, spells):
@@ -32,4 +31,6 @@ class Caster:
         #     if spell_name in self.spells:
         #         spell = Magic.spells[spell_name]
 
+  def get_info(self, state):
+    return "Max MP: " + str(self.max_mp(state)) + ", Spell Power: " + str(self.spell_power)
 

@@ -37,7 +37,6 @@ class DeathFunctions:
   @staticmethod
   def player_death(player, state):
     # the game ended, yasd?
-    # global game_state
     state.status_panel.message('You died!', libtcod.red)
     Util.set_game_state(Constants.DEAD)
     # player is a corpse

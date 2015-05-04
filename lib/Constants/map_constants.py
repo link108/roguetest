@@ -39,6 +39,7 @@ class MapConstants:
   DOWN_STAIRS_OBJECT = '>'
   UP_STAIRS_OBJECT = '<'
 
+  INFO_SCREEN_WIDTH = 60
   LEVEL_SCREEN_WIDTH = 40
   CHARACTER_SCREEN_WIDTH = 30
 
@@ -46,12 +47,6 @@ class MapConstants:
   # Stairs
   UP_STAIRS = 'up-stairs'
   DOWN_STAIRS = 'down-stairs'
-
-  # items
-  # HEALTH_POTION = 'health potion'
-  # SCROLL_OF_FIREBALL = 'scroll of fireball'
-  # SCROLL_OF_CONFUSE = 'scroll of confuse'
-  # SCROLL_OF_LIGHTNING_BOLT = 'scroll of lightning-bolt'
 
 
 

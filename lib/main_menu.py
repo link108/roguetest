@@ -37,7 +37,6 @@ class MainMenu:
     # show the background image, at twice the regular console resolution
     while not libtcod.console_is_window_closed():
       # libtcod.image_blit_2x(img, 0, 0, 0)
-
       choice = self.menu.display_menu_return_index('', ['Play a new game', 'Continue last game',
                                                         'Battle (work in progress)', 'High Scores', 'Quit'], 30,
                                                    self.state.con)
@@ -65,7 +64,6 @@ class MainMenu:
     self.menu.display_menu_return_index(message, [], size, self.state.con)
 
   def setup_game(self):
-    # init magic system (maybe do this at startup?)
     self.state.status_panel.game_messages = []
     self.state.status_panel.message('Welcome stranger! Prepare to perish in the Tombs of the Ancient Kings.',
                                     libtcod.red)
@@ -84,7 +82,6 @@ class MainMenu:
     self.choose_class(self.state)
     self.state.objects_map[self.state.dungeon_level] = [self.state.player]
     self.state.objects = self.state.objects_map[self.state.dungeon_level]
-
     self.state.game_map = Map(self.state)
     self.state.game_map.make_map(self.state)
     self.state.game_map.set_game_map(self.state.dungeon_level)
@@ -187,7 +184,6 @@ class MainMenu:
     self.state.fov_recompute = True
     Util.render_all(self.state)
 
-  # TODO Fix saving
   def save_game(self):
     file = shelve.open(Constants.SAVE_FILE, 'n')
     file['game_map'] = self.state.game_map.game_map
@@ -201,7 +197,6 @@ class MainMenu:
     file['score'] = self.state.score
     file.close()
 
-  # TODO Fix loading
   def load_game(self):
     self.state.game_map = Map(self.state)
     self.state.player_inventory = Inventory(self.state)

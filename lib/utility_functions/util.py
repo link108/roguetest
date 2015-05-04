@@ -207,49 +207,31 @@ class Util:
   def get_info(state, object):
     Menu().display_menu_return_index(
       object.get_info(state),
-      [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
+      [], MapConstants.INFO_SCREEN_WIDTH, state.con)
     Util.set_player_action(Constants.NOT_VALID_KEY)
-
 
   @staticmethod
   def look(state):
     Util.set_game_state(Constants.TARGETING)
+    x, y = state.player.x, state.player.y
     while Util.get_game_state() == Constants.TARGETING:
-      (x, y) = Util.target_tile(state)
+      (x, y) = Util.target_tile(state, x, y)
       if x is None or y is None:
         return Constants.CANCELLED
       for object in state.objects:
-        if object.x == x and object.y == y and object.fighter and object != state.player:
+        if object.x == x and object.y == y:
           Util.get_info(state, object)
-
-    # Util.set_game_state(Constants.TARGETING)
-    # Util.set_target(state.player.x, state.player.y)
-    #
-    # while Util.get_game_state() == Constants.TARGETING:
-    #   Util.handle_keys(state)
-    #   Util.refresh(state)
-    #
-    #   if Util.get_game_state() == Constants.FOUND_TARGET:
-    #     x, y = Util.get_target_coords()
-    #     for object in state.objects:
-    #       if object.x == x and object.y == y:
-    #         Util.get_info(state, object)
-    #     Util.set_game_state(Constants.TARGETING)
-    # # TODO: Make target class? how to save/where to save targeting coords?
-    # # while
-    # if Util.get_target_x() is None or Util.get_target_y() is None:
-    #   return Constants.CANCELLED
-    # state.game_map.get_map()[Util.get_target_x()][Util.get_target_y()].set_targeted(False)
-    # return Util.get_target_x(), Util.get_target_y()
+          Util.set_game_state(Constants.TARGETING)
+          Util.set_target(x, y)
 
   @staticmethod
   def show_character_screen(state, level_up_xp):
     Menu().display_menu_return_index(
-      'Character Information\n\nRace: ' + str(state.player_race) + '\nClass: ' + str(state.player_class) +
-      '\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
-      '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp(state)) +
-      '\nAttack: ' + str(state.player.fighter.power(state)) + '\nDefense: ' + str(state.player.fighter.defense(state)),
-      [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
+        'Character Information\n\nRace: ' + str(state.player_race) + '\nClass: ' + str(state.player_class) +
+        '\nLevel: ' + str(state.player.level) + '\nExperience: ' + str(state.player.fighter.xp) +
+        '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp(state)) +
+        '\nAttack: ' + str(state.player.fighter.power(state)) + '\nDefense: ' + str(state.player.fighter.defense(state)),
+        [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
     Util.set_player_action(Constants.NOT_VALID_KEY)
 
   @staticmethod
@@ -265,21 +247,20 @@ class Util:
     choice = 0
     for w in chances:
       running_sum += w
-
       if dice <= running_sum:
         return choice
       choice += 1
 
   @staticmethod
-  def target_tile(state):
+  def target_tile(state, start_x=None, start_y=None):
     Util.set_game_state(Constants.TARGETING)
-    Util.set_target(state.player.x, state.player.y)
-
+    if start_x is None or start_y is None:
+      Util.set_target(state.player.x, state.player.y)
+    else:
+      Util.set_target(start_x, start_y)
     while Util.get_game_state() == Constants.TARGETING:
-      # How to deal with returning either multiple values or single value: ie x, y or gamestate
       Util.handle_keys(state)
       Util.refresh(state)
-      # Util.set_game_state(Util.handle_keys(state))
 
     if Util.get_game_state() == Constants.FOUND_TARGET:
       x, y = Util.get_target_coords()
@@ -301,10 +282,8 @@ class Util:
 
   @staticmethod
   def closest_monster(state, max_range):
-    # Find closest enemy, up to a max range and within the player's FOV
     closest_enemy = None
     closest_dist = max_range + 1
-
     for object in state.objects:
       if object.fighter and not object == state.player and libtcod.map_is_in_fov(state.fov_map, object.x, object.y):
         dist = state.player.distance_to(object)
@@ -460,8 +439,4 @@ class Util:
     # blit the contents of "panel" to the root console
     libtcod.console_blit(state.status_panel.get_panel(), 0, 0, MapConstants.SCREEN_WIDTH, MapConstants.PANEL_HEIGHT, 0,
       0, MapConstants.PANEL_Y)
-    # show the player's stats
-    # libtcod.console_set_default_foreground(con, libtcod.white)
-    # libtcod.console_print_ex(0, 1, SCREEN_HEIGHT - 2, libtcod.BKGND_NONE, libtcod.LEFT,
-    #         'HP: ' + str(player.fighter.hp) + '/' + str(player.fighter.max_hp))
 

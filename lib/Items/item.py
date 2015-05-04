@@ -61,3 +61,6 @@ class Item:
                   self.color,
                   item=self,
                   always_visible=self.always_visible)
+
+  def get_info(self, state):
+    return ""

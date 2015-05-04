@@ -49,3 +49,6 @@ class Equipment:
                   equipment=self,
                   always_visible=True)
 
+  def get_info(self, state):
+    return "Power Bonus: " + str(self.power_bonus) + ", Defense Bonus: " + str(self.defense_bonus) + ", HP Bonus: " + str(self.hp_bonus)
+

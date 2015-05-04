@@ -1,12 +1,14 @@
+
 __author__ = 'cmotevasselani'
 
 from lib.random_libs import libtcodpy as libtcod
-from lib.map_components.map_utils import MapUtils
 from lib.constants.map_constants import MapConstants
 from lib.utility_functions.object import Object
 from lib.utility_functions.util import Util
 from lib.map_components.tile import Tile
 from lib.map_components.rectangle import Rect
+from lib.map_components.item_placer import ItemPlacer
+from lib.map_components.monster_placer import MonsterPlacer
 
 
 class MapCreation:
@@ -48,31 +50,42 @@ class MapCreation:
     return failed
 
   @staticmethod
+  def place_objects(state, game_map, room, objects):
+    MonsterPlacer.place_monsters(state, game_map, room, objects)
+    ItemPlacer.place_items(state, game_map, room, objects)
+
+
+  @staticmethod
   def make_map(state):
     state.game_map.game_map = [[Tile(True)
                                 for y in range(MapConstants.MAP_HEIGHT)]
                                for x in range(MapConstants.MAP_WIDTH)]
     rooms = []
     num_rooms = 0
-    old_player_coords = (state.player.x, state.player.y)
     for r in range(MapConstants.MAX_ROOMS):
       new_room = MapCreation.create_rect_for_room()
       room_overlaps = MapCreation.check_for_room_overlap(rooms, new_room)
       if not room_overlaps:
         MapCreation.add_room(state, new_room, rooms, num_rooms)
         num_rooms += 1
+    return rooms
+
+  @staticmethod
+  def place_stairs(state, rooms, old_player_coords):
     down_stairs, up_stairs = MapCreation.generate_stairs(state, rooms)
     MapCreation.create_stairs(state, down_stairs, up_stairs, old_player_coords)
-    state.game_map.complete_game_map[state.dungeon_level] = state.game_map.game_map
+
+  @staticmethod
+  def populate_rooms(state, rooms):
+    for room in rooms:
+      MapCreation.place_objects(state, state.game_map, room, state.objects_map[state.dungeon_level])
 
   @staticmethod
   def add_room(state, new_room, rooms, num_rooms):
     MapCreation.create_room(state.game_map.game_map, new_room)
-    MapUtils.place_objects(state, state.game_map, new_room, state.objects_map[state.dungeon_level])
     (new_x, new_y) = new_room.center()
     if num_rooms == 0:
-      state.player.x = new_x
-      state.player.y = new_y
+      state.player.x, state.player.y = new_x, new_y
     else:
       (prev_x, prev_y) = rooms[num_rooms - 1].center()
       MapCreation.connect_two_rooms(state.game_map.game_map, prev_x, prev_y, new_x, new_y)
@@ -120,13 +133,11 @@ class MapCreation:
 
   @staticmethod
   def connect_stairs(state, previous_player_coords):
-    # down_stairs_ids are from the previous level
     down_stairs_ids = state.stairs[state.dungeon_level - 1][MapConstants.DOWN_STAIRS_OBJECT].keys()
     up_stairs_ids = state.stairs[state.dungeon_level][MapConstants.UP_STAIRS_OBJECT].keys()
     old_down_stair_id = Util.get_padded_coords(previous_player_coords[0], previous_player_coords[1])
     new_up_stair_id = Util.get_padded_coords(state.player.x, state.player.y)
     MapCreation.connect_two_stairs(state, new_up_stair_id, old_down_stair_id)
-
     down_stairs_ids.remove(old_down_stair_id)
     up_stairs_ids.remove(new_up_stair_id)
     for down_stair_id in down_stairs_ids:

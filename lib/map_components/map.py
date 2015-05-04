@@ -1,9 +1,12 @@
+
 __author__ = 'cmotevasselani'
 
 from lib.map_components.map_creation import MapCreation
+from lib.constants.map_constants import MapConstants
 
 
 class Map:
+
   def __init__(self, state):
     self.state = state
     self.game_map = None
@@ -11,28 +14,27 @@ class Map:
     self.stairs_map = {}
 
   def is_blocked_sight(self, objects, x, y):
-    # first test the map tile
     if self.game_map[x][y].block_sight:
       return True
-    # now check for any blocking objects
     for object in objects:
       if object.blocks and object.x == x and object.y == y:
         return True
     return False
 
   def is_blocked(self, objects, x, y):
-    # first test the map tile
     if self.game_map[x][y].blocked:
       return True
-    # now check for any blocking objects
     for object in objects:
       if object.blocks and object.x == x and object.y == y:
         return True
     return False
 
-  def make_map(self, state):
-    MapCreation.make_map(state)
-
+  def generate_map(self, state, level):
+    old_player_coords = (state.player.x, state.player.y)
+    rooms = MapCreation.make_map(state)
+    MapCreation.populate_rooms(state, rooms)
+    MapCreation.place_stairs(state, rooms, old_player_coords)
+    self.complete_game_map[level] = self.game_map
 
   def set_game_map(self, dungeon_level):
     self.game_map = self.complete_game_map[dungeon_level]

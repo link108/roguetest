@@ -83,7 +83,8 @@ class MainMenu:
     self.state.objects_map[self.state.dungeon_level] = [self.state.player]
     self.state.objects = self.state.objects_map[self.state.dungeon_level]
     self.state.game_map = Map(self.state)
-    self.state.game_map.make_map(self.state)
+    # Map.make_map(self.state, self.state.dungeon_level)
+    self.state.game_map.generate_map(self.state, self.state.dungeon_level)
     self.state.game_map.set_game_map(self.state.dungeon_level)
     self.initialize_fov(self.state.dungeon_level)
     Util.set_player_action(None)
@@ -176,7 +177,8 @@ class MainMenu:
       self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(up_stairs_id)
     else:
       self.state.objects_map[self.state.dungeon_level] = [self.state.player]
-      self.state.game_map.make_map(self.state)
+      # Map.make_map(self.state, self.state.dungeon_level)
+      self.state.game_map.generate_map(self.state, self.state.dungeon_level)
       self.state.score += self.state.dungeon_level * 10
     self.state.objects = self.state.objects_map[self.state.dungeon_level]
     self.initialize_fov(self.state.dungeon_level)

@@ -4,8 +4,7 @@ __author__ = 'cmotevasselani'
 
 
 class Console:
-
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.console = libtcod.console_new(width, height)
+  def __init__(self, width, height):
+    self.width = width
+    self.height = height
+    self.console = libtcod.console_new(width, height)

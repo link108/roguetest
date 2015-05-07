@@ -10,6 +10,7 @@ from lib.map_components.rectangle import Rect
 from lib.map_components.item_placer import ItemPlacer
 from lib.map_components.monster_placer import MonsterPlacer
 
+DEBUG = False
 
 class MapCreation:
   @staticmethod
@@ -58,16 +59,20 @@ class MapCreation:
   @staticmethod
   def make_map(state):
     state.game_map.game_map = [[Tile(True)
-                                for y in range(MapConstants.MAP_HEIGHT)]
+                               for y in range(MapConstants.MAP_HEIGHT)]
                                for x in range(MapConstants.MAP_WIDTH)]
     rooms = []
     num_rooms = 0
+    old_room = None
     for r in range(MapConstants.MAX_ROOMS):
       new_room = MapCreation.create_rect_for_room()
       room_overlaps = MapCreation.check_for_room_overlap(rooms, new_room)
       if not room_overlaps:
-        MapCreation.add_room(state, new_room, rooms, num_rooms)
+        MapCreation.add_room(state, new_room, rooms)
+        MapCreation.connect_two_rooms(state.game_map.game_map, old_room, new_room)
         num_rooms += 1
+        old_room = new_room
+    state.player.x, state.player.y = rooms[0].center()
     return rooms
 
   @staticmethod
@@ -81,24 +86,31 @@ class MapCreation:
       MapCreation.place_objects(state, state.game_map, room, state.objects_map[state.dungeon_level])
 
   @staticmethod
-  def add_room(state, new_room, rooms, num_rooms):
+  def add_room(state, new_room, rooms):
     MapCreation.create_room(state.game_map.game_map, new_room)
-    (new_x, new_y) = new_room.center()
-    if num_rooms == 0:
-      state.player.x, state.player.y = new_x, new_y
-    else:
-      (prev_x, prev_y) = rooms[num_rooms - 1].center()
-      MapCreation.connect_two_rooms(state.game_map.game_map, prev_x, prev_y, new_x, new_y)
     rooms.append(new_room)
 
   @staticmethod
-  def connect_two_rooms(game_map, prev_x, prev_y, new_x, new_y):
-    if libtcod.random_get_int(0, 0, 1) == 1:
-      MapCreation.create_h_tunnel(game_map, prev_x, new_x, prev_y)
-      MapCreation.create_v_tunnel(game_map, prev_y, new_y, new_x)
-    else:
-      MapCreation.create_v_tunnel(game_map, prev_y, new_y, prev_x)
-      MapCreation.create_h_tunnel(game_map, prev_x, new_x, new_y)
+  def connect_two_rooms(game_map, old_room, new_room):
+    if old_room and new_room:
+      choice_points = libtcod.random_get_int(0, 0, 3)
+      cx1, cy1 = old_room.center()
+      cx2, cy2 = new_room.center()
+      rx1, ry1 = old_room.get_random_point()
+      rx2, ry2 = new_room.get_random_point()
+
+      if choice_points == 0:
+        MapCreation.create_h_tunnel(game_map, cx1, cx2, cy1)
+        MapCreation.create_v_tunnel(game_map, cy1, cy2, cx2)
+      elif choice_points == 1:
+        MapCreation.create_v_tunnel(game_map, cy1, cy2, cx2)
+        MapCreation.create_h_tunnel(game_map, cx1, cx2, cy2)
+      elif choice_points == 2:
+        MapCreation.create_h_tunnel(game_map, rx1, rx2, ry1)
+        MapCreation.create_v_tunnel(game_map, ry1, ry2, rx2)
+      elif choice_points == 3:
+        MapCreation.create_v_tunnel(game_map, ry1, ry2, rx2)
+        MapCreation.create_h_tunnel(game_map, rx1, rx2, ry2)
 
   # TODO Fix this, hacky
   @staticmethod

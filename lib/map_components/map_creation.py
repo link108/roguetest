@@ -55,12 +55,16 @@ class MapCreation:
     MonsterPlacer.place_monsters(state, game_map, room, objects)
     ItemPlacer.place_items(state, game_map, room, objects)
 
-
   @staticmethod
   def make_map(state):
-    state.game_map.game_map = [[Tile(True)
+    state.game_map.game_map = [[Tile(True, explored=state.debug)
                                for y in range(MapConstants.MAP_HEIGHT)]
                                for x in range(MapConstants.MAP_WIDTH)]
+    rooms = MapCreation.create_rooms(state)
+    return rooms
+
+  @staticmethod
+  def create_rooms(state):
     rooms = []
     num_rooms = 0
     old_room = None

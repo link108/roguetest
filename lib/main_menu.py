@@ -22,8 +22,10 @@ from lib.monsters.monster import Monster
 
 
 class MainMenu:
-  def __init__(self):
+
+  def __init__(self, args):
     self.state = State()
+    self.state.debug = bool(args.debug)
     self.menu = Menu()
     self.state.magic = DatafileLoader(data_file=Constants.SPELL_FILE, data_class=Spell, map_name="spells")
     self.state.items = DatafileLoader(data_file=Constants.ITEM_FILE, data_class=Item, map_name="items")

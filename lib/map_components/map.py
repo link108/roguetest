@@ -4,7 +4,6 @@ __author__ = 'cmotevasselani'
 from lib.map_components.map_creation import MapCreation
 from lib.constants.map_constants import MapConstants
 
-
 class Map:
 
   def __init__(self, state):

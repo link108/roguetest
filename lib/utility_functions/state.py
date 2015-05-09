@@ -34,4 +34,5 @@ class State:
     self.high_scores = None
     self.monsters = None
     self.equipment = None
+    self.debug = None
 

@@ -54,6 +54,7 @@ class MainMenu:
         self.play_game()
       elif choice == 2:
         self.battle()
+        self.play_game()
       elif choice == 3:
         self.show_high_scores()
       elif choice == 4:
@@ -75,6 +76,14 @@ class MainMenu:
 
   def battle(self):
     self.setup_game()
+    self.choose_class(self.state)
+    self.state.objects_map[self.state.dungeon_level] = [self.state.player]
+    self.state.objects = self.state.objects_map[self.state.dungeon_level]
+    self.state.game_map = Map(self.state)
+    self.state.game_map.generate_battle_map(self.state)
+    self.state.game_map.set_game_map(self.state.dungeon_level)
+    self.initialize_fov(self.state.dungeon_level)
+    Util.set_player_action(None)
 
   def choose_class(self, state):
     CreateCharacter(state)
@@ -85,7 +94,6 @@ class MainMenu:
     self.state.objects_map[self.state.dungeon_level] = [self.state.player]
     self.state.objects = self.state.objects_map[self.state.dungeon_level]
     self.state.game_map = Map(self.state)
-    # Map.make_map(self.state, self.state.dungeon_level)
     self.state.game_map.generate_map(self.state, self.state.dungeon_level)
     self.state.game_map.set_game_map(self.state.dungeon_level)
     self.initialize_fov(self.state.dungeon_level)
@@ -115,16 +123,16 @@ class MainMenu:
       Util.render_all(self.state)
       libtcod.console_flush()
       Util.check_level_up(self.state)
-
       # erase all objects at their old locations, before they move
       for object in self.state.objects:
         object.clear(self.state.con)
-
       Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
       while Util.get_player_action() == Constants.DID_NOT_TAKE_TURN:
         # handle keys and exit game
         Util.handle_keys(self.state)
-      if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
+
+      player_action = Util.get_player_action()
+      if player_action == Constants.EXIT or self.state.player.color == libtcod.dark_red:
         self.save_game()
         break
 
@@ -132,13 +140,12 @@ class MainMenu:
       if Util.get_game_state() == Constants.PLAYING and Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
         for object in self.state.objects:
           if object.ai:
-            # self.state.status_panel.message(object.ai.owner.name + ' took a turn')
             object.ai.take_turn(self.state)
-      if Util.get_player_action() == Constants.NEXT_LEVEL:
+      if player_action == Constants.NEXT_LEVEL:
         self.next_level()
-      if Util.get_player_action() == Constants.PREVIOUS_LEVEL:
+      elif player_action == Constants.PREVIOUS_LEVEL:
         self.previous_level()
-      if Util.get_player_action() == Constants.EXIT or self.state.player.color == libtcod.dark_red:
+      elif player_action == Constants.EXIT or self.state.player.color == libtcod.dark_red:
         Util.render_all(self.state)
         self.save_game()
         break

@@ -4,7 +4,7 @@ import random
 
 
 class Rect:
-  # a rectangl on the map, used for a room (usually)
+  # a rectangle on the map, used for a room (usually)
   def __init__(self, x, y, w, h):
     self.x1 = x
     self.y1 = y

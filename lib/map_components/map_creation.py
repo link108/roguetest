@@ -64,6 +64,20 @@ class MapCreation:
     return rooms
 
   @staticmethod
+  def make_battle_map(state):
+    state.game_map.game_map = [[Tile(True, explored=state.debug)
+                               for y in range(MapConstants.MAP_HEIGHT)]
+                               for x in range(MapConstants.MAP_WIDTH)]
+    w = 0
+    h = 0
+    x = MapConstants.MAP_WIDTH
+    y = MapConstants.MAP_HEIGHT
+    rooms = [Rect(w, h, x, y)]
+    MapCreation.add_room(state, rooms[0], rooms)
+    state.player.x, state.player.y = rooms[0].center()
+    return rooms
+
+  @staticmethod
   def create_rooms(state):
     rooms = []
     num_rooms = 0

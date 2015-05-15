@@ -28,6 +28,12 @@ class Map:
         return True
     return False
 
+  def generate_battle_map(self, state):
+    old_player_coords = (state.player.x, state.player.y)
+    rooms = MapCreation.make_battle_map(state)
+    MapCreation.populate_rooms(state, rooms)
+    self.complete_game_map[0] = self.game_map
+
   def generate_map(self, state, level):
     old_player_coords = (state.player.x, state.player.y)
     rooms = MapCreation.make_map(state)

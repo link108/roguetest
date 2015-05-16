@@ -37,3 +37,35 @@ class State:
     self.debug = None
     self.god_mode = None
 
+    self.game_state = None
+    self.player_action = None
+    self.target_x = None
+    self.target_y = None
+
+  def set_player_action(self, player_action):
+    self.player_action = player_action
+
+  def get_player_action(self):
+    return self.player_action
+
+  def set_game_state(self, game_state):
+    self.game_state = game_state
+
+  def get_game_state(self):
+    return self.game_state
+
+  def set_target(self, x, y):
+    self.target_x = x
+    self.target_y = y
+
+  def get_target_x(self):
+    return self.target_x
+
+  def get_target_y(self):
+    return self.target_y
+
+  def get_target_coords(self):
+    x = self.target_x
+    y = self.target_y
+    return x, y
+

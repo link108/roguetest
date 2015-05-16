@@ -26,7 +26,7 @@ class Inventory:
         options.append(text)
     index = self.menu.display_menu_return_index(header, options, Constants.INVENTORY_WIDTH, state.con)
     if index is None or len(self.inventory) == 0:
-      Util.set_player_action(Constants.NOT_VALID_KEY)
+      state.set_player_action(Constants.NOT_VALID_KEY)
       Util.refresh(state)
       return None
     return self.inventory[index].item

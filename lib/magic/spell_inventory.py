@@ -32,7 +32,7 @@ class SpellInventory:
       spell_name = options[index].split(' : ')[0]
 
     if index is None or len(self.spells) == 0:
-      Util.set_player_action(Constants.NOT_VALID_KEY)
+      state.set_player_action(Constants.NOT_VALID_KEY)
       Util.refresh(state)
       return None
     return state.magic.spells[spell_name]

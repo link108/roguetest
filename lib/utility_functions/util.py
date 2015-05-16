@@ -8,54 +8,16 @@ from lib.constants.constants import Constants
 
 
 class Util:
-  target_x = None
-  target_y = None
-  player_action = None
-
-  @staticmethod
-  def set_player_action(player_action):
-    Util.player_action = player_action
-
-  @staticmethod
-  def get_player_action():
-    return Util.player_action
-
-  @staticmethod
-  def set_game_state(game_state):
-    Util.game_state = game_state
-
-  @staticmethod
-  def get_game_state():
-    return Util.game_state
-
-  @staticmethod
-  def set_target(x, y):
-    Util.target_x = x
-    Util.target_y = y
-
-  @staticmethod
-  def get_target_x():
-    return Util.target_x
-
-  @staticmethod
-  def get_target_y():
-    return Util.target_y
 
   @staticmethod
   def player_move_or_attack(state, dx, dy):
-
-    # the coordinates the player is moving to/attacking
     x = state.player.x + dx
     y = state.player.y + dy
-
-    # try to find an attackable target
     target = None
     for object in state.objects:
       if object.fighter and object.x == x and object.y == y:
         target = object
         break
-
-    # attack if target found, move otherwise
     if target is not None:
       state.player.fighter.attack(target, state)
     else:
@@ -64,51 +26,47 @@ class Util:
 
   @staticmethod
   def player_target(state, dx, dy):
-
-    # the coordinates the player is moving to/attacking
-    state.game_map.get_map()[Util.get_target_x()][Util.get_target_y()].set_targeted(False)
-    x = Util.get_target_x() + dx
-    y = Util.get_target_y() + dy
+    state.game_map.get_map()[state.get_target_x()][state.get_target_y()].set_targeted(False)
+    x = state.get_target_x() + dx
+    y = state.get_target_y() + dy
     state.game_map.get_map()[x][y].set_targeted(True)
-
-    # try tofind an attackable target
     for object in state.objects:
       if object.x == x and object.y == y:
         state.status_panel.message('You see a : ' + object.name)
         break
-    Util.set_target(x, y)
-    Util.set_game_state(Constants.TARGETING)
+    state.set_target(x, y)
+    state.set_game_state(Constants.TARGETING)
 
   @staticmethod
-  def wait_for_keypress():
+  def wait_for_keypress(state):
     key = libtcod.console_wait_for_keypress(True)
     if key.pressed == False:  # to prevent actions from being preformed twice
-      Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+      state.set_player_action(Constants.DID_NOT_TAKE_TURN)
     return key
 
   @staticmethod
   def handle_keys(state):
-    key = Util.wait_for_keypress()
+    key = Util.wait_for_keypress(state)
     while key.vk == libtcod.KEY_SHIFT:
-      key = Util.wait_for_keypress()
+      key = Util.wait_for_keypress(state)
 
     if key.vk == libtcod.KEY_ENTER and key.lalt:  # Toggle fullscreen
       libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
     elif key.vk == libtcod.KEY_ESCAPE:
-      Util.set_player_action(Constants.EXIT)
+      state.set_player_action(Constants.EXIT)
 
-    game_state = Util.get_game_state()
+    game_state = state.get_game_state()
     if game_state == Constants.PLAYING:
       Util.handle_playing_keys(key, state)
     elif game_state == Constants.TARGETING:
       Util.handle_targeting_keys(key, state)
     elif game_state == Constants.FOUND_TARGET:
-      Util.set_game_state(Constants.FOUND_TARGET)
+      state.set_game_state(Constants.FOUND_TARGET)
 
-    if Util.get_player_action() == Constants.DID_NOT_TAKE_TURN:
-      Util.set_player_action(None)
-    elif Util.get_player_action() == Constants.NOT_VALID_KEY:
-      Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
+    if state.get_player_action() == Constants.DID_NOT_TAKE_TURN:
+      state.set_player_action(None)
+    elif state.get_player_action() == Constants.NOT_VALID_KEY:
+      state.set_player_action(Constants.DID_NOT_TAKE_TURN)
 
   @staticmethod
   def handle_targeting_keys(key, state):
@@ -130,13 +88,13 @@ class Util:
       elif key.c == ord('n'):
         return Util.player_target(state, 1, 1)
       else:
-        Util.set_player_action(Constants.NOT_VALID_KEY)
+        state.set_player_action(Constants.NOT_VALID_KEY)
     elif key.vk == libtcod.KEY_ESCAPE:
-      Util.set_game_state(Constants.PLAYING)
+      state.set_game_state(Constants.PLAYING)
     elif key.vk == libtcod.KEY_ENTER:
-      Util.set_game_state(Constants.FOUND_TARGET)
+      state.set_game_state(Constants.FOUND_TARGET)
     else:
-      Util.set_player_action(Constants.NOT_VALID_KEY)
+      state.set_player_action(Constants.NOT_VALID_KEY)
 
   @staticmethod
   def handle_playing_keys(key, state):
@@ -161,14 +119,14 @@ class Util:
         pass
       elif key.c == ord('v'):
         Util.look(state)
-        Util.set_player_action(Constants.NOT_VALID_KEY)
+        state.set_player_action(Constants.NOT_VALID_KEY)
       elif key.c == ord('i'):
         chosen_item = state.player_inventory.inventory_menu(
           'Press the key next to an item to use it, or any other to cancel.\n', state)
         if chosen_item is not None:
           chosen_item.use(state)
           # else:
-          #     Util.set_player_action(Constants.NOT_VALID_KEY)
+          #     state.set_player_action(Constants.NOT_VALID_KEY)
       elif key.c == ord('I'):
         chosen_spell = state.player_spell_inventory.spell_menu(
           'Press the key next to a spell to use it, or any other to cancel.\n', state)
@@ -188,39 +146,39 @@ class Util:
       elif key.c == ord('>'):
         padded_player_coords = Util.get_padded_coords(state.player.x, state.player.y)
         if padded_player_coords in state.stairs[state.dungeon_level][MapConstants.DOWN_STAIRS_OBJECT].keys():
-          Util.set_player_action(Constants.NEXT_LEVEL)
+          state.set_player_action(Constants.NEXT_LEVEL)
       elif key.c == ord('<'):
         padded_player_coords = Util.get_padded_coords(state.player.x, state.player.y)
         if padded_player_coords in state.stairs[state.dungeon_level][MapConstants.UP_STAIRS_OBJECT].keys():
-          Util.set_player_action(Constants.PREVIOUS_LEVEL)
+          state.set_player_action(Constants.PREVIOUS_LEVEL)
       elif key.c == ord('c'):
         # show character information
         level_up_xp = Constants.LEVEL_UP_BASE + state.player.level * Constants.LEVEL_UP_FACTOR
         Util.show_character_screen(state, level_up_xp)
         Util.refresh(state)
       else:
-        Util.set_player_action(Constants.NOT_VALID_KEY)
+        state.set_player_action(Constants.NOT_VALID_KEY)
 
   @staticmethod
   def get_info(state, object):
     Menu().display_menu_return_index(
       object.get_info(state),
       [], MapConstants.INFO_SCREEN_WIDTH, state.con)
-    Util.set_player_action(Constants.NOT_VALID_KEY)
+    state.set_player_action(Constants.NOT_VALID_KEY)
 
   @staticmethod
   def look(state):
-    Util.set_game_state(Constants.TARGETING)
+    state.set_game_state(Constants.TARGETING)
     x, y = state.player.x, state.player.y
-    while Util.get_game_state() == Constants.TARGETING:
+    while state.get_game_state() == Constants.TARGETING:
       (x, y) = Util.target_tile(state, x, y)
       if x is None or y is None:
         return Constants.CANCELLED
       for object in state.objects:
         if object.x == x and object.y == y:
-          Util.get_info(state, object)
-          Util.set_game_state(Constants.TARGETING)
-          Util.set_target(x, y)
+          state.get_info(state, object)
+          state.set_game_state(Constants.TARGETING)
+          state.set_target(x, y)
 
   @staticmethod
   def show_character_screen(state, level_up_xp):
@@ -230,7 +188,7 @@ class Util:
         '\nExperience to level up: ' + str(level_up_xp) + '\n\nMaximum HP: ' + str(state.player.fighter.max_hp(state)) +
         '\nAttack: ' + str(state.player.fighter.power(state)) + '\nDefense: ' + str(state.player.fighter.defense(state)),
         [], MapConstants.CHARACTER_SCREEN_WIDTH, state.con)
-    Util.set_player_action(Constants.NOT_VALID_KEY)
+    state.set_player_action(Constants.NOT_VALID_KEY)
 
   @staticmethod
   def random_choice(chances_dict):
@@ -251,24 +209,24 @@ class Util:
 
   @staticmethod
   def target_tile(state, start_x=None, start_y=None):
-    Util.set_game_state(Constants.TARGETING)
+    state.set_game_state(Constants.TARGETING)
     if start_x is None or start_y is None:
-      Util.set_target(state.player.x, state.player.y)
+      state.set_target(state.player.x, state.player.y)
     else:
-      Util.set_target(start_x, start_y)
-    while Util.get_game_state() == Constants.TARGETING:
+      state.set_target(start_x, start_y)
+    while state.get_game_state() == Constants.TARGETING:
       Util.handle_keys(state)
       Util.refresh(state)
 
-    if Util.get_game_state() == Constants.FOUND_TARGET:
-      x, y = Util.get_target_coords()
-      Util.set_game_state(Constants.PLAYING)
+    if state.get_game_state() == Constants.FOUND_TARGET:
+      x, y = state.get_target_coords()
+      state.set_game_state(Constants.PLAYING)
     # TODO: Make target class? how to save/where to save targeting coords?
     # while
-    if Util.get_target_x() is None or Util.get_target_y() is None:
+    if state.get_target_x() is None or state.get_target_y() is None:
       return Constants.CANCELLED
-    state.game_map.get_map()[Util.get_target_x()][Util.get_target_y()].set_targeted(False)
-    return Util.get_target_x(), Util.get_target_y()
+    state.game_map.get_map()[state.get_target_x()][state.get_target_y()].set_targeted(False)
+    return state.get_target_x(), state.get_target_y()
 
   @staticmethod
   def refresh(state):
@@ -292,8 +250,8 @@ class Util:
 
   @staticmethod
   def target_monster(state, max_range=None):
-    Util.set_game_state(Constants.TARGETING)
-    while Util.get_game_state() == Constants.TARGETING:
+    state.set_game_state(Constants.TARGETING)
+    while state.get_game_state() == Constants.TARGETING:
       (x, y) = Util.target_tile(state)
       if x is None or y is None:
         return Constants.CANCELLED
@@ -335,11 +293,6 @@ class Util:
         return value
     return 0
 
-  @staticmethod
-  def get_target_coords():
-    x = Util.get_target_y()
-    y = Util.get_target_y()
-    return x, y
 
   @staticmethod
   def get_equipped_in_slot(state, slot):
@@ -429,9 +382,9 @@ class Util:
     libtcod.console_print_ex(state.status_panel.get_panel(), 1, 6, libtcod.BKGND_NONE, libtcod.LEFT,
       'Dungeon level: ' + str(state.dungeon_level))
     libtcod.console_print_ex(state.status_panel.get_panel(), 1, 7, libtcod.BKGND_NONE, libtcod.LEFT,
-      'Game State: ' + str(Util.get_game_state()))
+      'Game State: ' + str(state.get_game_state()))
     libtcod.console_print_ex(state.status_panel.get_panel(), 1, 8, libtcod.BKGND_NONE, libtcod.LEFT,
-      'Player Action: ' + str(Util.get_player_action()))
+      'Player Action: ' + str(state.get_player_action()))
     libtcod.console_print_ex(state.status_panel.get_panel(), 1, 9, libtcod.BKGND_NONE, libtcod.LEFT,
       'Score: ' + str(state.score))
     # blit the contents of "panel" to the root console

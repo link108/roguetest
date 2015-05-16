@@ -82,7 +82,7 @@ class MainMenu:
     self.state.game_map.generate_battle_map(self.state)
     self.state.game_map.set_game_map(self.state.dungeon_level)
     self.initialize_fov(self.state.dungeon_level)
-    Util.set_player_action(None)
+    self.state.set_player_action(None)
 
   def choose_class(self, state):
     CreateCharacter(state)
@@ -93,7 +93,7 @@ class MainMenu:
     self.state.game_map.generate_map(self.state, self.state.dungeon_level)
     self.state.game_map.set_game_map(self.state.dungeon_level)
     self.initialize_fov(self.state.dungeon_level)
-    Util.set_player_action(None)
+    self.state.set_player_action(None)
 
   def initialize_fov(self, dungeon_level):
     self.state.fov_map_map[dungeon_level] = libtcod.map_new(MapConstants.MAP_WIDTH, MapConstants.MAP_HEIGHT)
@@ -106,8 +106,8 @@ class MainMenu:
     self.state.fov_map = self.state.fov_map_map[dungeon_level]
 
   def play_game(self):
-    Util.set_game_state(Constants.PLAYING)
-    Util.set_player_action(None)
+    self.state.set_game_state(Constants.PLAYING)
+    self.state.set_player_action(None)
     self.state.fov_recompute = True
 
     while not libtcod.console_is_window_closed():
@@ -117,16 +117,16 @@ class MainMenu:
       Util.check_level_up(self.state)
       for object in self.state.objects:
         object.clear(self.state.con)
-      Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
-      while Util.get_player_action() == Constants.DID_NOT_TAKE_TURN:
+      self.state.set_player_action(Constants.DID_NOT_TAKE_TURN)
+      while self.state.get_player_action() == Constants.DID_NOT_TAKE_TURN:
         Util.handle_keys(self.state)
 
-      player_action = Util.get_player_action()
+      player_action = self.state.get_player_action()
       if player_action == Constants.EXIT or self.state.player.color == libtcod.dark_red:
         self.save_game()
         break
 
-      if Util.get_game_state() == Constants.PLAYING and Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
+      if self.state.get_game_state() == Constants.PLAYING and self.state.get_player_action() != Constants.DID_NOT_TAKE_TURN:
         for object in self.state.objects:
           if object.ai:
             object.ai.take_turn(self.state)
@@ -145,7 +145,7 @@ class MainMenu:
     down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id, self.state.dungeon_level)
     self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
     if self.state.dungeon_level == 0:
-      Util.set_player_action(Constants.EXIT)
+      self.state.set_player_action(Constants.EXIT)
       return
     else:
       self.state.dungeon_level -= 1
@@ -154,7 +154,7 @@ class MainMenu:
     # TODO Make fov_map container class
     self.state.fov_map = self.state.fov_map_map[self.state.dungeon_level]
     self.initialize_fov(self.state.dungeon_level)
-    Util.set_player_action(None)
+    self.state.set_player_action(None)
     self.state.fov_recompute = True
 
   def follow_stairs(self, type_entered, stairs_id_entered, stairs_entered_dungeon_level):
@@ -177,7 +177,7 @@ class MainMenu:
       self.state.score += self.state.dungeon_level * 10
     self.state.objects = self.state.objects_map[self.state.dungeon_level]
     self.initialize_fov(self.state.dungeon_level)
-    Util.set_player_action(None)
+    self.state.set_player_action(None)
     self.state.fov_recompute = True
     Util.render_all(self.state)
 

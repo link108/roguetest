@@ -52,8 +52,8 @@ class MapCreation:
 
   @staticmethod
   def place_objects(state, game_map, room, objects):
-    MonsterPlacer.place_monsters(state, game_map, room, objects)
-    ItemPlacer.place_items(state, game_map, room, objects)
+    MonsterPlacer.place_monsters_in_room(state, game_map, room, objects)
+    ItemPlacer.place_items_in_room(state, game_map, room, objects)
 
   @staticmethod
   def make_map(state):
@@ -68,11 +68,11 @@ class MapCreation:
     state.game_map.game_map = [[Tile(True, explored=state.debug)
                                for y in range(MapConstants.MAP_HEIGHT)]
                                for x in range(MapConstants.MAP_WIDTH)]
-    w = 0
-    h = 0
-    x = MapConstants.MAP_WIDTH
-    y = MapConstants.MAP_HEIGHT
-    rooms = [Rect(w, h, x, y)]
+    x = 0
+    y = 0
+    w = MapConstants.MAP_WIDTH - 1
+    h = MapConstants.MAP_HEIGHT - 1
+    rooms = [Rect(x, y, w, h)]
     MapCreation.add_room(state, rooms[0], rooms)
     state.player.x, state.player.y = rooms[0].center()
     return rooms
@@ -116,7 +116,6 @@ class MapCreation:
       cx2, cy2 = new_room.center()
       rx1, ry1 = old_room.get_random_point()
       rx2, ry2 = new_room.get_random_point()
-
       if choice_points == 0:
         MapCreation.create_h_tunnel(game_map, cx1, cx2, cy1)
         MapCreation.create_v_tunnel(game_map, cy1, cy2, cx2)

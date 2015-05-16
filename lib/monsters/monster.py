@@ -34,7 +34,7 @@ class Monster:
   def get_ai_component(self):
     return eval(self.ai)()
 
-  def get_monster(self, x, y):
+  def create_at_location(self, x, y):
     return Object(x, y,
                   self.representation,
                   self.name,

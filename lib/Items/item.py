@@ -54,7 +54,7 @@ class Item:
     self.owner.y = state.player.y
     state.status_panel.message('You drop a ' + self.owner.name + '.', libtcod.turquoise)
 
-  def get_item(self, x, y):
+  def create_at_location(self, x, y):
     return Object(x, y,
                   self.representation,
                   self.display_name,

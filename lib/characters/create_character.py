@@ -61,7 +61,7 @@ class CreateCharacter:
   # TODO Make this fit the class / race better
   def get_starting_equipment(self):
     equipment_component = self.state.equipment.get_data_object(EquipmentConstants.DAGGER)
-    item = equipment_component.get_equipment(0, 0)
+    item = equipment_component.create_at_location(0, 0)
     self.state.player_inventory.inventory.append(item)
     equipment_component.equip(self.state)
 

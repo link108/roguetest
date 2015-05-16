@@ -41,7 +41,7 @@ class Equipment:
     self.is_equipped = True
     state.status_panel.message('Equiped ' + self.owner.name + ' on ' + self.slot + '.', libtcod.light_green)
 
-  def get_equipment(self, x, y):
+  def create_at_location(self, x, y):
     return Object(x, y,
                   self.representation,
                   self.display_name,

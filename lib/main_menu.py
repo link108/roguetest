@@ -24,6 +24,7 @@ class MainMenu:
 
   def __init__(self, args):
     self.state = State()
+    self.state.init_stuff()
     self.state.debug = bool(args.debug)
     self.state.god_mode = bool(args.god_mode)
     self.menu = Menu()
@@ -90,7 +91,7 @@ class MainMenu:
 
   def new_game(self):
     self.setup_game()
-    self.state.game_map = Map(self.state)
+    self.state.game_map = Map()
     self.state.game_map.generate_map(self.state, self.state.dungeon_level)
     self.state.game_map.set_game_map(self.state.dungeon_level)
     self.initialize_fov(self.state.dungeon_level)

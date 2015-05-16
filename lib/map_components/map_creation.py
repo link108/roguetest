@@ -90,7 +90,7 @@ class MapCreation:
         MapCreation.connect_two_rooms(state.game_map.game_map, old_room, new_room)
         num_rooms += 1
         old_room = new_room
-    state.player.x, state.player.y = rooms[0].center()
+    # state.player.x, state.player.y = rooms[0].center()
     return rooms
 
   @staticmethod
@@ -138,7 +138,10 @@ class MapCreation:
     down_stairs_1 = rooms[3].center()
     down_stairs_2 = rooms[4].center()
     offset_player_coords = (state.player.x - 1, state.player.y - 1)
-    down_stairs = [down_stairs_1, down_stairs_2, offset_player_coords]
+    if state.debug:
+      down_stairs = [down_stairs_1, down_stairs_2, player_coords]
+    else:
+      down_stairs = [down_stairs_1, down_stairs_2, offset_player_coords]
     up_stairs = [up_stairs_1, up_stairs_2, player_coords]
     return down_stairs, up_stairs
 

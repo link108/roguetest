@@ -72,14 +72,6 @@ class Util:
       choice += 1
 
   @staticmethod
-  def refresh(state):
-    state.fov_recompute = True
-    Util.render_all(state)
-    libtcod.console_flush()
-    for object in state.objects:
-      object.clear(state.con)
-
-  @staticmethod
   def closest_monster(state, max_range):
     closest_enemy = None
     closest_dist = max_range + 1
@@ -90,7 +82,6 @@ class Util:
           closest_enemy = object
           closest_dist = dist
     return closest_enemy
-
 
   @staticmethod
   def check_level_up(state):
@@ -155,6 +146,14 @@ class Util:
     x = padded_coords[:len(padded_coords) / 2]
     y = padded_coords[len(padded_coords) / 2:]
     return int(x), int(y)
+
+  @staticmethod
+  def refresh(state):
+    state.fov_recompute = True
+    Util.render_all(state)
+    libtcod.console_flush()
+    for object in state.objects:
+      object.clear(state.con)
 
   @staticmethod
   def render_all(state):

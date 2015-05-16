@@ -38,7 +38,7 @@ class DeathFunctions:
   def player_death(player, state):
     # the game ended, yasd?
     state.status_panel.message('You died!', libtcod.red)
-    Util.set_game_state(Constants.DEAD)
+    state.set_game_state(Constants.DEAD)
     # player is a corpse
     state.player.char = '%'
     state.player.color = libtcod.dark_red

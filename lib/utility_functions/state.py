@@ -35,4 +35,5 @@ class State:
     self.monsters = None
     self.equipment = None
     self.debug = None
+    self.god_mode = None
 

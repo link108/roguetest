@@ -1,9 +1,7 @@
 __author__ = 'cmotevasselani'
 
-from lib.random_libs import libtcodpy as libtcod
-
 import shelve
-
+from lib.random_libs import libtcodpy as libtcod
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
 from lib.items.inventory import Inventory
@@ -26,12 +24,12 @@ class MainMenu:
   def __init__(self, args):
     self.state = State()
     self.state.debug = bool(args.debug)
+    self.state.god_mode = bool(args.god_mode)
     self.menu = Menu()
     self.state.magic = DatafileLoader(data_file=Constants.SPELL_FILE, data_class=Spell, map_name="spells")
     self.state.items = DatafileLoader(data_file=Constants.ITEM_FILE, data_class=Item, map_name="items")
     self.state.monsters = DatafileLoader(data_file=Constants.MONSTER_FILE, data_class=Monster, map_name="monsters")
-    self.state.equipment = DatafileLoader(data_file=Constants.EQUIPMENT_FILE, data_class=Equipment,
-                                          map_name="equipments")
+    self.state.equipment = DatafileLoader(data_file=Constants.EQUIPMENT_FILE, data_class=Equipment, map_name="equipments")
     self.state.high_scores = HighScores()
 
   def main_menu(self):
@@ -73,12 +71,13 @@ class MainMenu:
     self.state.dungeon_level = 0
     self.state.turn = 0
     self.state.score = 0
-
-  def battle(self):
-    self.setup_game()
     self.choose_class(self.state)
     self.state.objects_map[self.state.dungeon_level] = [self.state.player]
     self.state.objects = self.state.objects_map[self.state.dungeon_level]
+
+
+  def battle(self):
+    self.setup_game()
     self.state.game_map = Map(self.state)
     self.state.game_map.generate_battle_map(self.state)
     self.state.game_map.set_game_map(self.state.dungeon_level)
@@ -90,9 +89,6 @@ class MainMenu:
 
   def new_game(self):
     self.setup_game()
-    self.choose_class(self.state)
-    self.state.objects_map[self.state.dungeon_level] = [self.state.player]
-    self.state.objects = self.state.objects_map[self.state.dungeon_level]
     self.state.game_map = Map(self.state)
     self.state.game_map.generate_map(self.state, self.state.dungeon_level)
     self.state.game_map.set_game_map(self.state.dungeon_level)
@@ -114,21 +110,15 @@ class MainMenu:
     Util.set_player_action(None)
     self.state.fov_recompute = True
 
-    ###########################################
-    # main loop
-    ###########################################
     while not libtcod.console_is_window_closed():
-
       self.state.turn += 1
       Util.render_all(self.state)
       libtcod.console_flush()
       Util.check_level_up(self.state)
-      # erase all objects at their old locations, before they move
       for object in self.state.objects:
         object.clear(self.state.con)
       Util.set_player_action(Constants.DID_NOT_TAKE_TURN)
       while Util.get_player_action() == Constants.DID_NOT_TAKE_TURN:
-        # handle keys and exit game
         Util.handle_keys(self.state)
 
       player_action = Util.get_player_action()
@@ -136,7 +126,6 @@ class MainMenu:
         self.save_game()
         break
 
-      # let monsters take their turn
       if Util.get_game_state() == Constants.PLAYING and Util.get_player_action() != Constants.DID_NOT_TAKE_TURN:
         for object in self.state.objects:
           if object.ai:
@@ -152,7 +141,6 @@ class MainMenu:
       self.state.status_panel.message('###### Turn ' + str(self.state.turn) + ' has ended')
 
   def previous_level(self):
-    # self.state.objects_map[self.state.dungeon_level] = self.state.objects
     up_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
     down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id, self.state.dungeon_level)
     self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
@@ -174,7 +162,6 @@ class MainMenu:
     return other_stairs_id
 
   def next_level(self):
-    # self.state.objects_map[self.state.dungeon_level] = self.state.objects
     self.state.dungeon_level += 1
     self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
     self.state.player.fighter.heal(self.state.player.fighter.max_hp(self.state) / 2, self.state)
@@ -186,7 +173,6 @@ class MainMenu:
       self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(up_stairs_id)
     else:
       self.state.objects_map[self.state.dungeon_level] = [self.state.player]
-      # Map.make_map(self.state, self.state.dungeon_level)
       self.state.game_map.generate_map(self.state, self.state.dungeon_level)
       self.state.score += self.state.dungeon_level * 10
     self.state.objects = self.state.objects_map[self.state.dungeon_level]

@@ -36,7 +36,6 @@ class State:
     self.equipment = None
     self.debug = None
     self.god_mode = None
-
     self.game_state = None
     self.player_action = None
     self.target_x = None

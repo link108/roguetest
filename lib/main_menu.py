@@ -17,6 +17,7 @@ from lib.magic.spell import Spell
 from lib.items.item import Item
 from lib.items.equipment import Equipment
 from lib.monsters.monster import Monster
+from lib.utility_functions.input.input import Input
 
 
 class MainMenu:
@@ -119,7 +120,7 @@ class MainMenu:
         object.clear(self.state.con)
       self.state.set_player_action(Constants.DID_NOT_TAKE_TURN)
       while self.state.get_player_action() == Constants.DID_NOT_TAKE_TURN:
-        Util.handle_keys(self.state)
+        Input.handle_keys(self.state)
 
       player_action = self.state.get_player_action()
       if player_action == Constants.EXIT or self.state.player.color == libtcod.dark_red:

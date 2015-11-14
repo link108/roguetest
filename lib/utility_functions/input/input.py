@@ -144,7 +144,7 @@ class Input:
     state.set_game_state(Constants.TARGETING)
     x, y = state.player.x, state.player.y
     while state.get_game_state() == Constants.TARGETING:
-      (x, y) = Util.target_tile(state, x, y)
+      (x, y) = Input.target_tile(state, x, y)
       if x is None or y is None:
         return Constants.CANCELLED
       for object in state.objects:

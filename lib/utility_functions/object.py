@@ -82,6 +82,7 @@ class Object:
 
   def get_info(self, state):
     str = "Name: " + self.name + "\n"
+    # Update, try out iterating through over an object's attrs' and check if they have a get_info method, if so, then call it and append + newline
     if self.fighter:
       str += self.fighter.get_info(state) + "\n"
     if self.item:

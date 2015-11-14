@@ -91,7 +91,7 @@ class Input:
       elif key.c == ord('.'):
         pass
       elif key.c == ord('v'):
-        Util.look(state)
+        Input.look(state)
         state.set_player_action(Constants.NOT_VALID_KEY)
       elif key.c == ord('i'):
         chosen_item = state.player_inventory.inventory_menu(

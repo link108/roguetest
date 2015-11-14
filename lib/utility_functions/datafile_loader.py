@@ -4,6 +4,7 @@ import copy
 
 
 class DatafileLoader:
+
   def __init__(self, data_file, data_class, map_name):
     self.data_file = data_file
     self.data_class = data_class

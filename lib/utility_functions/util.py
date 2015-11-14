@@ -160,8 +160,12 @@ class Util:
     if state.fov_recompute:
       # recompute FOV if needed
       state.fov_recompute = False
-      libtcod.map_compute_fov(state.fov_map, state.player.x, state.player.y, MapConstants.TORCH_RADIUS,
-                              MapConstants.FOV_LIGHT_WALLS, MapConstants.FOV_ALGO)
+      if state.game_type == Constants.BATTLE:
+        libtcod.map_compute_fov(state.fov_map, state.player.x, state.player.y, MapConstants.BATTLE_TORCH_RADIUS,
+                                MapConstants.FOV_LIGHT_WALLS, MapConstants.FOV_ALGO)
+      else:
+        libtcod.map_compute_fov(state.fov_map, state.player.x, state.player.y, MapConstants.TORCH_RADIUS,
+                                MapConstants.FOV_LIGHT_WALLS, MapConstants.FOV_ALGO)
       for y in range(MapConstants.MAP_HEIGHT):
         for x in range(MapConstants.MAP_WIDTH):
           visible = libtcod.map_is_in_fov(state.fov_map, x, y)

@@ -26,6 +26,7 @@ class MapConstants:
   FOV_ALGO = 0  # default FOV algorithm
   FOV_LIGHT_WALLS = True
   TORCH_RADIUS = 10
+  BATTLE_TORCH_RADIUS = 999
   MAX_ROOM_MONSTERS = 3
 
   COLOR_DARK_WALL = libtcod.Color(0, 0, 100)

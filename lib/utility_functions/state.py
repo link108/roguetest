@@ -35,6 +35,7 @@ class State:
     self.player_action = None
     self.target_x = None
     self.target_y = None
+    self.game_type = None
 
   def init_stuff(self):
     libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)

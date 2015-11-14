@@ -80,10 +80,12 @@ class MainMenu:
 
   def battle(self):
     self.setup_game()
-    self.state.game_map = Map(self.state)
+    self.state.game_type = Constants.BATTLE
+    self.state.game_map = Map()
     self.state.game_map.generate_battle_map(self.state)
     self.state.game_map.set_game_map(self.state.dungeon_level)
-    self.initialize_fov(self.state.dungeon_level)
+    self.initialize_battle_fov(self.state.dungeon_level)
+    # self.initialize_fov(self.state.dungeon_level)
     self.state.set_player_action(None)
 
   def choose_class(self, state):
@@ -91,6 +93,7 @@ class MainMenu:
 
   def new_game(self):
     self.setup_game()
+    self.state.game_type = Constants.CRAWL
     self.state.game_map = Map()
     self.state.game_map.generate_map(self.state, self.state.dungeon_level)
     self.state.game_map.set_game_map(self.state.dungeon_level)
@@ -105,6 +108,15 @@ class MainMenu:
         libtcod.map_set_properties(self.state.fov_map_map[dungeon_level], x, y,
                                    not self.state.game_map.is_blocked_sight(self.state.objects, x, y),
                                    not self.state.game_map.is_blocked_sight(self.state.objects, x, y))
+    self.state.fov_map = self.state.fov_map_map[dungeon_level]
+
+  def initialize_battle_fov(self, dungeon_level):
+    self.state.fov_map_map[dungeon_level] = libtcod.map_new(MapConstants.MAP_WIDTH, MapConstants.MAP_HEIGHT)
+    libtcod.console_clear(self.state.con)
+    for y in range(MapConstants.MAP_HEIGHT):
+      for x in range(MapConstants.MAP_WIDTH):
+        libtcod.map_set_properties(self.state.fov_map_map[dungeon_level], x, y,
+                                   True, True)
     self.state.fov_map = self.state.fov_map_map[dungeon_level]
 
   def play_game(self):

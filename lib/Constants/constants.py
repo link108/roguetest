@@ -19,6 +19,11 @@ class Constants:
   # Potion functions
   HEAL_AMOUNT = 40
 
+  # Game types
+  BATTLE = 'battle'
+  CRAWL = 'crawl'
+
+
   # Util
   TARGETING = 'targeting'
   FOUND_TARGET = 'found-target'

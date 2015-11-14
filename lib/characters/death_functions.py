@@ -6,6 +6,7 @@ from lib.utility_functions.util import Util
 
 
 class DeathFunctions:
+
   @staticmethod
   def get_death_function(name, state):
     if name == Constants.PLAYER:

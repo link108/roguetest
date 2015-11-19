@@ -32,6 +32,8 @@ class Map:
     rooms = MapCreation.make_battle_map(state)
     MapCreation.populate_rooms(state, rooms)
     self.complete_game_map[0] = self.game_map
+    if state.dungeon_level >= 1:
+      state.player.x, state.player.y = old_player_coords
 
   def generate_map(self, state, level):
     old_player_coords = (state.player.x, state.player.y)

@@ -141,9 +141,15 @@ class MainMenu:
         break
 
       if self.state.get_game_state() == Constants.PLAYING and self.state.get_player_action() != Constants.DID_NOT_TAKE_TURN:
+        monsters_still_alive = False
         for object in self.state.objects:
           if object.ai:
+            monsters_still_alive = True
             object.ai.take_turn(self.state)
+        if not monsters_still_alive and self.state.game_type == Constants.BATTLE:
+          old_player_coords = self.state.player.x, self.state.player.y
+          self.state.game_map.generate_battle_map(self.state)
+          self.state.player.x, self.state.player.y = old_player_coords
       if player_action == Constants.NEXT_LEVEL:
         self.next_level()
       elif player_action == Constants.PREVIOUS_LEVEL:

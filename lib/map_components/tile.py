@@ -4,10 +4,14 @@ __author__ = 'cmotevasselani'
 class Tile:
   # a tile of the map and its properties
 
-  def __init__(self, blocked, block_sight=None, explored=None):
+  def __init__(self, x, y, blocked, block_sight=None, explored=None):
     self.blocked = blocked
     if explored is None: explored = False
     self.explored = explored
+    self.dist_from_player = None
+    self.dijkstra_visited = None
+    self.x = x
+    self.y = y
 
     # by default, if a tile is blocked, also blocks sight
     if block_sight is None: block_sight = blocked  # must specify block_sight is false to get transparent, impassable tiles

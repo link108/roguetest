@@ -57,7 +57,7 @@ class MapCreation:
 
   @staticmethod
   def make_map(state):
-    state.game_map.game_map = [[Tile(True, explored=state.debug)
+    state.game_map.game_map = [[Tile(x, y, True, explored=state.debug)
                                for y in range(MapConstants.MAP_HEIGHT)]
                                for x in range(MapConstants.MAP_WIDTH)]
     rooms = MapCreation.create_rooms(state)
@@ -65,7 +65,7 @@ class MapCreation:
 
   @staticmethod
   def make_battle_map(state):
-    state.game_map.game_map = [[Tile(True, explored=state.debug)
+    state.game_map.game_map = [[Tile(x, y, True, explored=state.debug)
                                for y in range(MapConstants.MAP_HEIGHT)]
                                for x in range(MapConstants.MAP_WIDTH)]
     x = 0

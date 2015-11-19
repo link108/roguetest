@@ -10,6 +10,21 @@ from lib.constants.constants import Constants
 class Util:
 
   @staticmethod
+  def get_adjacent_tiles(state, x, y):
+    adjacent_tiles = []
+    for i in range(-1, 2):
+      for j in range(-1, 2):
+        if i == 0 and j == 0:
+          continue
+        else:
+            temp_x = x + i
+            temp_y = y + j
+            if temp_x < len(state.game_map.game_map) and temp_y < len(state.game_map.game_map[temp_x]):
+              adjacent_tiles.append(state.game_map.game_map[temp_x][temp_y])
+    return adjacent_tiles
+
+
+  @staticmethod
   def player_move_or_attack(state, dx, dy):
     x = state.player.x + dx
     y = state.player.y + dy

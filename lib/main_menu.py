@@ -1,6 +1,7 @@
 __author__ = 'cmotevasselani'
 
 import shelve
+from lib.utility_functions.ai_utils import AiUtils
 from lib.random_libs import libtcodpy as libtcod
 from lib.map_components.map import Map
 from lib.utility_functions.state import State
@@ -141,6 +142,7 @@ class MainMenu:
         break
 
       if self.state.get_game_state() == Constants.PLAYING and self.state.get_player_action() != Constants.DID_NOT_TAKE_TURN:
+        AiUtils.dijkstra_on_map(self.state, self.state.player.x, self.state.player.y)
         monsters_still_alive = False
         for object in self.state.objects:
           if object.ai:

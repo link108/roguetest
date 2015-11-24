@@ -36,7 +36,8 @@ class State:
     self.target_x = None
     self.target_y = None
     self.game_type = None
-    self.dijkstra_map = {}
+    self.dijkstra_map = None
+    self.dijkstra_map_update = True
 
   def init_stuff(self):
     libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)

@@ -3,7 +3,6 @@ __author__ = 'cmotevasselani'
 from lib.random_libs import libtcodpy as libtcod
 from lib.constants.monster_constants import MonsterConstants
 from lib.utility_functions.util import Util
-from lib.utility_functions.object import Object
 
 
 class MonsterPlacer:

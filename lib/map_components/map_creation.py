@@ -183,3 +183,14 @@ class MapCreation:
       prev_level_down_stairs_id] = new_level_up_stairs_id
 
 
+  @staticmethod
+  def create_map_layout(state, level):
+    rooms = MapCreation.make_map(state)
+    state.game_map.complete_game_map[level] = state.game_map.game_map
+    return rooms
+
+  @staticmethod
+  def place_objects_in_rooms(state, rooms, old_player_coords):
+    MapCreation.populate_rooms(state, rooms)
+    MapCreation.place_stairs(state, rooms, old_player_coords)
+

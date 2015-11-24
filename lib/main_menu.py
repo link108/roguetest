@@ -165,6 +165,7 @@ class MainMenu:
   def previous_level(self):
     up_stairs_id = Util.get_padded_coords(self.state.player.x, self.state.player.y)
     down_stairs_id = self.follow_stairs(MapConstants.UP_STAIRS_OBJECT, up_stairs_id, self.state.dungeon_level)
+    self.state.dijkstra_map_update = True
     self.state.player.x, self.state.player.y = Util.get_coords_from_padded_coords(down_stairs_id)
     if self.state.dungeon_level == 0:
       self.state.set_player_action(Constants.EXIT)
@@ -184,6 +185,7 @@ class MainMenu:
     return other_stairs_id
 
   def next_level(self):
+    self.state.dijkstra_map_update = True
     self.state.dungeon_level += 1
     self.state.status_panel.message('You take a moment to rest and recover 50% health', libtcod.violet)
     self.state.player.fighter.heal(self.state.player.fighter.max_hp(self.state) / 2, self.state)

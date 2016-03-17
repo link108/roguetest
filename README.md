@@ -14,6 +14,8 @@ Extras:
 
 * Added High Score list
 
+* Improved AI for monsters
+
 
 In Progress:
 

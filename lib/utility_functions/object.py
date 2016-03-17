@@ -3,6 +3,7 @@ __author__ = 'cmotevasselani'
 import math
 
 from lib.random_libs import libtcodpy as libtcod
+from util import Util
 
 
 class Object:
@@ -41,6 +42,20 @@ class Object:
     if not game_map.is_blocked(objects, self.x + dx, self.y + dy):
       self.x += dx
       self.y += dy
+
+  def move_away_from_player(self, state):
+    adjacent_tiles = Util.get_adjacent_tiles(state, self.x, self.y)
+    print 'hihi'
+    max_dist_from_player = 0
+    target_x = 0
+    target_y = 0
+    for tile in adjacent_tiles:
+      dist_from_player = state.dijkstra_map[tile.x][tile.y]
+      if dist_from_player > max_dist_from_player and dist_from_player < 100:
+        max_dist_from_player = dist_from_player
+        target_x = tile.x
+        target_y = tile.y
+    self.move_towards(state.objects, state.game_map, target_x, target_y)
 
   def move_towards(self, objects, game_map, target_x, target_y):
     # vector from this object to the target, and distance

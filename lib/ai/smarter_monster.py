@@ -10,7 +10,9 @@ class SmarterMonster:
     monster = self.owner
     if libtcod.map_is_in_fov(state.fov_map, monster.x, monster.y):
       # move towards player if far away
-      if monster.distance_to(state.player) >= 2:
+      if monster.fighter.hp < monster.fighter.base_max_hp * .25:
+        monster.move_away_from_player(state)
+      elif monster.distance_to(state.player) >= 2:
         monster.move_towards(state.objects, state.game_map, state.player.x, state.player.y)
 
       # attack if close enough

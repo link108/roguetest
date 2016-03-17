@@ -5,8 +5,10 @@ from lib.random_libs import libtcodpy as libtcod
 from lib.characters.fighter import Fighter
 from lib.utility_functions.object import Object
 
+
 # Must include all ai modules here
 from lib.ai.basic_monster import BasicMonster
+from lib.ai.smarter_monster import SmarterMonster
 
 
 class Monster:
@@ -18,6 +20,7 @@ class Monster:
       self.defense = int(monster_info[1])
       self.power = int(monster_info[2])
       self.xp = int(monster_info[3])
+      self.max_xp = self.xp
       self.score = int(monster_info[4])
       self.ai = monster_info[5]
       self.representation = monster_info[6]

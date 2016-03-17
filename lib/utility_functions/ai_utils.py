@@ -32,7 +32,6 @@ class AiUtils:
                         state.dijkstra_map[neighbor.x][neighbor.y] = temp_dist
                         unvisited_tiles.put((temp_dist, (neighbor.x, neighbor.y)))
                         neighbor.dist_from_player = temp_dist
-        print 'hi'
 
 
         # player_coords = state.player.x, state.player.y
